@@ -28,13 +28,17 @@ const int main_task_period_ms = 20; // define main task period time in ms e.g. 2
 
 // objects for user button (blue button) handling on nucleo board
 DebounceIn user_button(USER_BUTTON); // create DebounceIn object to evaluate the user button
-                                     // falling and rising edge
+
+void user_button_pressed();
 // Variables and function calls
 DigitalOut board_led(LED1);
 
 // main runs as an own thread
 int main()
 {
+    printf("Setup\n");
+    //attach user_button_pressed to the user button, so that it executes when pressed on falling edge.
+    user_button.fall(&user_button_pressed);
 
 }
 
