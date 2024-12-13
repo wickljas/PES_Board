@@ -22,7 +22,7 @@ const float counts_per_turn = 64.0f; // define counts per turn at gearbox end: c
 const float kn = 33.0f / 12.0f;               // define motor constant in RPM/V
 const float max_speed_rps = 67.0f/60.0f;
 const float calibration_speed = 0.2f; // Speed for calibration
-const float load_factor_threshold = 0.1f;
+const float load_factor_threshold = 0.17f;
 
 volatile float motor_angle = 0.0f;
 
@@ -32,9 +32,14 @@ bool do_reset_all_once = false;    // this variable is used to reset certain var
                                    // shows how you can run a code segment only once
 
 
-enum MotorState { Idle, Moving, Calibration };
+enum MotorState { Idle, Moving, Calibration, ShutDown };
 const char* motorStateNames[] = { "Idle", "Moving", "Calibration" };
-MotorState motor_state = Idle;
+volatile MotorState motor_state = Idle;
+
+// Variables for calibration and movement
+float start_position = 0.0f;
+float end_position = 5.0f;
+bool moving_to_end = true;
 
 InterruptIn mech_button(BUTTONPIN);
 const auto debounce_delay = 50ms; // Adjust debounce delay (50 ms is typical)
@@ -72,8 +77,8 @@ int main()
     
     const float kn2 = (33.0f / 12.0f) / 60.0f;
                
-    motor_M1.enableMotionPlanner(true);
-    motor_M1.setVelocityCntrl(2.5f, 0.3f, 0.01f);
+    //motor_M1.enableMotionPlanner(true);
+    motor_M1.setVelocityCntrl(5.0f, 0.7f, 0.01f);
     motor_M1.setVelocityCntrlIntegratorLimitsPercent(5.0f);
     motor_M1.setMaxAcceleration(acceleration);
   
@@ -88,19 +93,34 @@ int main()
         switch (motor_state) {
             case Idle:
                 //printf("Idle\n");
+                //if (-0.01f <= start_position-motor_M1.getRotation() && start_position - motor_M1.getRotation() <= 0.01f) {
+                //    motor_state = ShutDown;
+                //}
                 motor_M1.setVelocity(0.0f);  // Stop the motor
+                
                 board_led = 0;               // LED off in Idle
                 break;
 
             case Moving:
-                //printf("Moving\n");
-                motor_M1.setVelocity(1.0f);  // Move with specified velocity
+                printf("Moving\n");
+                motor_M1.setMaxVelocity(0.3f);  // Move with specified velocity
+                motor_M1.getRotation();
+                
+                if (-0.01f <= start_position-motor_M1.getRotation() && start_position - motor_M1.getRotation() <= 0.01f) {
+                    thread_sleep_for(280);
+                    motor_M1.setRotation(end_position);
+                } else if (-0.01f <= end_position - motor_M1.getRotation() && end_position - motor_M1.getRotation() <= 0.01f) {
+                    thread_sleep_for(1000);
+                    motor_M1.setRotation(start_position);
+                    
+                }
+                
 
                 board_led = 1;               // LED on to indicate Moving mode
                 break;      
 
             case Calibration:
-                //printf("Calibrating\n");
+                printf("Calibrating\n");
                 motor_M1.setVelocity(calibration_speed);  // Move slowly
                 board_led = !board_led;                   // Blink LED to indicate Calibration mode
 
@@ -114,16 +134,37 @@ int main()
                 if (calibration_timer.elapsed_time() >= 500ms) {
                     // Check for resistance and stop if detected
                     if (detectResistance()) {
-                        motor_state = Idle;  // Return to Idle after calibration
+                        if (start_position == 0.0f) {
+                            start_position = motor_M1.getRotation();
+                            motor_M1.setVelocity(0.0f);
+                            thread_sleep_for(5000);
+                        } else if (end_position == 5.0f) {
+                            end_position = motor_M1.getRotation();
+                            motor_M1.setVelocity(0.0f);
+                            thread_sleep_for(2000);
+                            motor_state = ShutDown;
+                        }
+
+                        
                         calibration_timer.stop();  // Reset the timer
                         calibration_timer.reset();
                         printf("Calibration stopped due to detected resistance\n");
                     }
                 }
-                break;                    
+                break;   
+
+            case ShutDown:
+                motor_M1.setMaxVelocity(0.4f);
+                motor_M1.setRotation(start_position);
+                
+                if (motor_M1.getRotation() <= 0.01f) {
+                    motor_state = Idle; // Transition to Idle when at position 0
+                    motor_M1.setMaxVelocity(1.0f);
+                }
+                break;                 
         }
 
-        detectResistance();
+        //detectResistance();
         //printf("Velocity: %f, Motor Pos: %f, Voltage: %f\n", motor_M1.getVelocity(), motor_M1.getRotation(), motor_M1.getVoltage());
         
 
@@ -154,7 +195,7 @@ void handleButtonEvent() {
             motor_state = Calibration; // Long press: Calibration mode
             //printf("Long Press: Entering Calibration mode\n");
         } else {
-            motor_state = (motor_state == Moving) ? Idle : Moving; // Short press: Toggle Moving/Idle
+            motor_state = (motor_state == Moving) ? ShutDown : Moving; // Short press: Toggle Moving/Idle
             //printf("Short Press: Toggled to %s\n", motorStateNames[motor_state]);
         }
         button_pressed = false; // Reset button state
@@ -165,6 +206,7 @@ bool detectResistance()
     // Calculate expected velocity for no-load condition
     float appliedVoltage = motor_M1.getVoltage();
     float expectedVelocity = kn * appliedVoltage / 60.0f;
+    float velocityReading = motor_M1.getVelocity();
 
     // Check if expectedVelocity is too low to calculate load factor
     if (expectedVelocity < 0.01f) {
