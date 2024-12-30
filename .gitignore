@@ -1,7 +1,4 @@
 .vscode
 BUILD
 .mbed
-eigen
 mbed-os
-pm2_drivers
-
