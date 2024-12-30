@@ -21,12 +21,16 @@
 [0]: https://os.mbed.com/platforms/ST-Nucleo-F446RE/
 [1]: https://www.st.com/en/microcontrollers-microprocessors/stm32f446re.html#documentation
 
-# PM2 PES Board, Hardware and Driver Documentation
+# PES Board - Hardware and Driver Documentation
 
-| Michael E. Peter | Michael Wüthrich | Maciej Szarek |
-|-|-|-|
-| pmic@zhaw.ch | wuem@zhaw.ch | szar@zhaw.ch |
-| TE 307 | TE 301 | TE 302 |
+| Michael Peter |
+| ------------- |
+| pmic@zhaw.ch  |
+| TE 307        |
+
+Big shoutout to the following contributors for their help and support:
+- Maciej Szarek (https://github.com/szar99)
+- Camille Huber (https://github.com/hurcIMS)
 
 # Table of Contents
 1. [Course Setup](#course-setup)
@@ -77,8 +81,10 @@ During the course, we will use the Nucleo-F446RE board from ST in combination wi
 >**IMPORTANT NOTE:**
 >
 >- <b>When working with hardware (connecting, reconnecting etc.), it is recommended that all power sources are disconnected. This is a general safety measurement! So for us, the Nucleo is disconnected and the PES Board **Power Switch** is **OFF** when ever we change someting at the hardware setup.</b>
->- <b>The USB cable should only be connected to the computer after the power switch has been switched on.</b> 
->- <b>Various Nucleo boards, PES Borads and even laptops have been damaged in the past.</b>
+>- <b>The USB cable should only be connected to the computer after the power switch has been switched on.</b>
+>- <b>To not connect the charger when the battery packs are not connected, otherwise the PES Board will be damaged.</b>
+>- <b>Using the PES Board with power ON and hardware running while connected to your computer/laptop happens at your own risk. There was a case where the students laptop was damaged in the past.</b>
+>- <b>Various Nucleo boards, PES Borads and even laptops have been damaged in the past, so make sure to stick to the rules above.</b>
 
 ### Nucleo F446RE
 
@@ -107,7 +113,6 @@ The PES Board is a hardware board with additional sensors, devices and power ele
 - 9-axis IMU (accelerometer, gyroscope, magnetometer)
 
 >**IMPORTANT NOTE:**
->- <b>Using the PES Board with power ON and hardware running while connected to your computer/laptop happens at your own risk. There was a case where the students laptop was damaged in the past.</b>
 >- <b>The voltage of the DO (servos) is set via the switch behind the charging socket: 3.3 V or 5 V</b>
 >- <b>Motor encoder soldering can be wrong. Do not assume that if you plug in one motor and everything works you can then also use the same connections with different motor. You have to make sure that the physical rotation is according to your assumption and that a positive input leads to a positive change of increments.</b>
 >- <b>Depending on the PES Board version DCMotor M3 rotation direction might be inverted.</b>
@@ -197,10 +202,11 @@ And here you find all the solutions, as well as some additional examples:
 - [Example Gimbal](docs/solutions/gimbal.cpp)
 - [Example Line Follower Base Example](docs/solutions/main_line_follower_base_ss24.cpp)
 - [Example Differential Drive Robot Kinematics Calibration](docs/solutions/main_calib_kinematic_ss24.cpp)
+- TODO: Add stepper motor example here
 
 In the folder (docs/cad/WS2) and (docs/cad/WS3) you will find the printable files needed to build the demonstration model for workshop 2 and workshop 3. For workshop 3, you need to edit the parts: rack and gear wheel because they are only available in STL print-ready format. Editing can be done in Prusa Slicer, which offers the possibility of minor modification.
-- rack - one hole should be added, in order to screw the rack to the carriage on which the sensor is located, or possibly lengthen this element (details available: https://www.printables.com/de/model/522220-universal-gear-rack-collection-different-modules)
-- make a hole in the element for the motor shaft (details available: https://www.printables.com/de/model/516177-universal-spur-gears-collection-module-15)
+- Rack - one hole should be added, in order to screw the rack to the carriage on which the sensor is located, or possibly lengthen this element (details available: https://www.printables.com/de/model/522220-universal-gear-rack-collection-different-modules)
+- Make a hole in the element for the motor shaft (details available: https://www.printables.com/de/model/516177-universal-spur-gears-collection-module-15)
 
 ### Additional Information
 - [Differential Drive Kinematics](docs/markdown/kinematics.md)
@@ -231,18 +237,6 @@ In the folder (docs/cad/WS2) and (docs/cad/WS3) you will find the printable file
 - https://www.conrad.ch
 - https://www.distrelec.ch
 
-## C++ Online Compiler and Example Projects (at your own risk : - ))
-
 ### Online C++ Compiler
 
 - Online C++ Compiler: https://www.onlinegdb.com/online_c++_compiler
-
-### C/C++ for Visual Studio Code
-
-- C/C++ for Visual Studio Code: https://code.visualstudio.com/docs/languages/cpp
-
-The following links are kind of older projects, but they might help you to get started with C++ in Visual Studio Code.
-
-#### Example Projects:
-  - Windows: https://github.com/pichim/chirp
-  - Windows using WSL (Windows Subsystem for Linux): https://github.com/pichim/mag_calib
