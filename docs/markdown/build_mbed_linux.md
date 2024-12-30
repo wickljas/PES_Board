@@ -1,0 +1,121 @@
+# Build Mbed OS projects on Ubuntu or Windows Subsystem for Linux with VSCode
+
+Tested on Ubuntu 20.04 and Ubuntu 24.04. Last tested on 30.12.2024.
+
+## Set up Conda environment for the Build Tools
+
+### Install Miniforge (Conda)
+
+Just answer all prompts with `yes` and `Enter`.
+
+```bash
+wget "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh"
+bash Miniforge3-$(uname)-$(uname -m).sh
+```
+
+### Update Conda
+
+```bash
+conda update --all
+```
+
+### Disable Conda's Auto-Activation (Optional)
+
+```bash
+conda config --set auto_activate_base false
+```
+
+## Install Conda environment for Mbed
+
+
+TODO: Add correct path for mbed-env-linux.yml
+
+```bash
+conda env create -f mbed-env-linux.yml
+```
+
+## Install GCC ARM Embedded Toolchain
+
+TODO: Add correct path for gcc-arm-none-eabi.tar.xz
+
+```bash
+sudo mkdir /opt/gcc-arm-none-eabi
+sudo tar xf gcc-arm-none-eabi.tar.xz --strip-components=1 -C /opt/gcc-arm-none-eabi
+echo 'export PATH=$PATH:/opt/gcc-arm-none-eabi/bin' | sudo tee -a /etc/profile.d/gcc-arm-none-eabi.sh
+```
+
+## Install Node.js, Npm and Mbed VSCode Generator
+
+```bash
+sudo apt install -y nodejs
+sudo apt install -y npm
+sudo npm install -y mbed-vscode-generator -g
+```
+
+## Clone the Mbed project
+
+TODO: Add correct path for the Mbed project
+
+```bash
+git clone ...
+```
+
+## Recommended Extensions in VSCode (might not all be necessary)
+
+- `C/C++ Extension Pack` by Microsoft
+- `Python` by Microsoft
+- `Pylaunch` by Microsoft
+- `Black Formatter` by Microsoft
+- `Python Debugger` by Microsoft
+- `CMake` by twxs
+- `CMake Tools` by Microsoft
+- `Makefile Tools` by Microsoft
+
+## Activate the Conda environment in VSCode
+
+You have to open the folder of the Mbed project in VSCode.
+
+Press Cntrl+Shift+P and type `Python: Select Interpreter` and select the `mbed-env` environment.
+
+## Set up the Mbed Tools
+
+Use the terminal in VSCode for the following commands.
+
+```bash
+mbed toolchain GCC_ARM
+mbed config GCC_ARM_PATH "/opt/gcc-arm-none-eabi/bin"
+mbed-vscode-generator -m NUCLEO_F446RE
+```
+
+Replace the `gcc-x64` with `gcc-arm` in the `.vscode/c_cpp_properties.json` and `--profile=debug` with `--profile=develop` in the `.vscode/tasks.json` files
+
+```bash
+sed -i 's/"gcc-x64"/"gcc-arm"/g' .vscode/c_cpp_properties.json
+sed -i 's/--profile=debug/--profile=develop/g' .vscode/tasks.json
+```
+
+## Build the project
+
+Press Cntrl+Shift+B and select `Build Mbed OS application`.
+
+The binary file will be in the `BUILD/NUCLEO_F446RE/GCC_ARM-DEVELOP/Your_Project_Name.bin` directory.
+
+## Flash the binary file to the board
+
+You can flash the binary file to the board using the USB cable. Just drag and drop the binary file to the board.
+
+## Serial Monitor in VSCode
+
+You can use the extension
+
+- `Serial Monitor` by Microsoft
+
+to monitor the serial output of the board in VSCode directly.
+
+## Building in WSL (Windows Subsystem for Linux)
+
+You need to install the extension
+
+- `WSL` by Microsoft
+
+activate it and open the folder in WSL.

@@ -34,7 +34,6 @@
     * [Software](docs/markdown/general_info.md#software)
     * [GitHub](docs/markdown/general_info.md#github)
     * [Arm MBed](docs/markdown/general_info.md#arm-mbed)
-
 2. [Hardware](#hardware)
     * [Nucleo F446RE](#nucleo-f446re)
         * [Nucleo Pinmap][0]
@@ -52,12 +51,13 @@
     * [Programming](docs/markdown/tips.md#programming)
         * [Main file description](docs/markdown/main_description.md)
     * [Structuring a Robot Task](docs/markdown/tips.md#structuring-a-robot-task)
-
 4. [Workshops, Solutions and Examples](#workshops)
     * [Workshop 1](docs/markdown/ws1.md)
     * [Workshop 2](docs/markdown/ws2.md)
     * [Workshop 3](docs/markdown/ws3.md)
-5. [Links](#links)
+5. [Build Mbed OS project with VScode](#build-mbed-os-project-with-vscode)
+    * [Build on Linux/WSL](docs/markdown/build_mbed_linux.md) 
+6. [Links](#links)
 
 ## Course Setup
 
