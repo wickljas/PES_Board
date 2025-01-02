@@ -14,14 +14,14 @@ Next a map / dictionary of the PES board is included. In here we specify a namin
 
 ```
 // pes board pin map
-#include "pm2_drivers/PESBoardPinMap.h"
+#include "pesboard-lib/PESBoardPinMap.h"
 ```
 
 Next we define additional drivers for hardware that we use in the project, for now we only include the ``DebounceIn.h`` driver, which is the driver we use to read in the blue **USER** button on the Nucleo board.
 
 ```
 // drivers
-#include "pm2_drivers/DebounceIn.h"
+#include "pesboard-lib/DebounceIn.h"
 ```
 
 Beginning now until the beginning of the ``main()`` function is space to define global variables and functions. These are placed outside of any scope, e.g. the scope of the ``main(){scope from main}`` function and are there for known by any scope within the ***main.cpp*** file (can be accessed from every scope).

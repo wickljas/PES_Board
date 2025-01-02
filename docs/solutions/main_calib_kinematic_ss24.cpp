@@ -1,11 +1,11 @@
 #include "mbed.h"
 
 // pes board pin map
-#include "pm2_drivers/PESBoardPinMap.h"
+#include "pesboard-lib/PESBoardPinMap.h"
 
 // drivers
-#include "pm2_drivers/DebounceIn.h"
-#include "pm2_drivers/DCMotor.h"
+#include "pesboard-lib/DebounceIn.h"
+#include "pesboard-lib/DCMotor.h"
 #include "eigen/Dense.h"
 
 #define M_PIf 3.14159265358979323846f /* pi */

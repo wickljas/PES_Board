@@ -3,7 +3,8 @@
         "*": {
             "target.components_add": ["SD"],
             "target.printf_lib": "std",
-            "platform.stdio-baud-rate": 115200
+            "platform.stdio-baud-rate": 115200,
+            "sd.INIT_FREQUENCY": 100000
         }
     },
     "config": {

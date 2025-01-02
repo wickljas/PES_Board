@@ -74,7 +74,7 @@ To establish the connection, utilize the cable displayed in the following image,
 In the given example, the sensor is plugged into pin **D3** on the PES Board. Initially, it's essential to add the suitable driver to the ***main.cpp*** file and then create an `` UltrasonicSensor`` object inside ``main()`` function with the pin's name passed as an argument along with the variable definition that will handle the reading from sensor.
 
 ```
-#include "pm2_drivers/UltrasonicSensor.h"
+#include "pesboard-lib/UltrasonicSensor.h"
 ```
 
 ```

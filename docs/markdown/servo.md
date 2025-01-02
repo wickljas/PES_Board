@@ -67,7 +67,7 @@ PB_D3
 Add the servo driver ``Servo.h`` to the top of the ***main.cpp*** file:
 
 ```
-#include "pm2_drivers/Servo.h"
+#include "pesboard-lib/Servo.h"
 ```
 
 To be able to start to use the ``servo`` driver, the initial step is to create the servo objects and specify the pins to which the hardware will be connected in the ``main()`` scope.

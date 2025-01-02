@@ -1,11 +1,11 @@
 #include "mbed.h"
 
 // pes board pin map
-#include "pm2_drivers/PESBoardPinMap.h"
+#include "pesboard-lib/PESBoardPinMap.h"
 
 // drivers
-#include "pm2_drivers/DebounceIn.h"
-#include "pm2_drivers/Servo.h"
+#include "pesboard-lib/DebounceIn.h"
+#include "pesboard-lib/Servo.h"
 
 bool do_execute_main_task = false; // this variable will be toggled via the user button (blue button) and
                                    // decides whether to execute the main task or not

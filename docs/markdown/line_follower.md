@@ -80,7 +80,7 @@ To plug the power source you will need to use:
 Include the necessary driver in the ***main.cpp*** file
 
 ```
-#include "pm2_drivers/SensorBar.h"
+#include "pesboard-lib/SensorBar.h"
 ```
 
 and create a variable for the distance from the wheel axis to the LEDs on the sensor bar / array and a ``SensorBar`` object with the pin names for the I2C communication 
@@ -166,7 +166,7 @@ To start using the ``LineFollower`` driver, the initial step in the ***main.cpp*
 To set up the module in the main function, it's necessary that you define two DC motor objects. To do so, please see the instructions provided in [DC Motor](../markdown/dc_motor.md). Code snipets that should be placed in the correct places:
 
 ```
-#include "pm2_drivers/DCMotor.h"
+#include "pesboard-lib/DCMotor.h"
 ```
 
 ```
@@ -202,7 +202,7 @@ Initially, it's essential to add the suitable driver to our ***main.cpp*** file 
 The remaining values are defined by default, but there is a possibility to change some of the parameters, as described below the description of the internal algorithm.
 
 ```
-#include "pm2_drivers/LineFollower.h"
+#include "pesboard-lib/LineFollower.h"
 ```
 
 ```

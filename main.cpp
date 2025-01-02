@@ -1,39 +1,21 @@
-/**
- * TODO:
- % - measure the actual current limit voltage for the 2 motors
- * - introduce enable ping
- * - test current fuctionality
- * - write Stepper md file with a smal example
- * - intruduce enable pin again (if there is enough DOs)
- * 
- * notes:
- * - 5V output from PES Board does not deliver enough current, so students need to use
- *   an additional battery pack
- * - enable pin is active when low
- * - potentiometer was adjusted so that when two motors are rotating with 0.1 rps and 4.0 rps for the bigger motor
- *   and 5.0 rps for the smaller motors, the motors are spinning without humming without microstepping
- * - min and max speed in rps (tested with one battery pack half charged):
- *     SY35ST36-1004A, smaller motor    |  SY42STH38-1684A, bigger motor
- *         min:   0.1 rps               |    0.1 rps
- *             full steps / micro steps res 16
- *         max:   5.0 / 6.0 rps         |    4.0 / 5.0 rps
- * - with a 200 step motor and using max res 16 micorstepping the max speed at 50 mus update frequency is 6.25 rps
- *   1.0e6 / (200.0 * 50 * 16) = 6.2500 which seems reasonable
- * - microstepping is way more smooth, only tested 16 times resolution by connecting ms1, ms2, ms3 to 5V
- * 
- * theoretical current limit:
- * - SY35ST36-1004A, smaller motor, Vref : 8 * 1.00 * 0.068 = 0.5440 V
- * - SY42STH38-1684A, bigger motor, Vref : 8 * 1.68 * 0.068 = 0.9139 V
- */
+// rotc:  SDFileSystem sd(PB_5, PB_4, PB_3, PB_10, "sd"); //mosi, miso, sclk, cs
+// - this might be the old version of the pes board
+
+// borla: SDFileSystem sd(PC_12, PC_11, PC_10, PD_2, "sd"); // mosi miso clk cs
+// - PC_12 SPI3_MOSI mosi
+// - PC_11 SPI3_MISO miso
+// - PC_10 SPI3_SCK  clk
+// - PD_2  PD2       cs
+
 
 #include "mbed.h"
 
 // pes board pin map
-#include "pm2_drivers/PESBoardPinMap.h"
+#include "pesboard-lib/PESBoardPinMap.h"
 
 // drivers
-#include "pm2_drivers/DebounceIn.h"
-#include "pm2_drivers/Stepper.h"
+#include "pesboard-lib/DebounceIn.h"
+#include "pesboard-lib/Stepper.h"
 
 bool do_execute_main_task = false; // this variable will be toggled via the user button (blue button) and
                                    // decides whether to execute the main task or not

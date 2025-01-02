@@ -205,7 +205,7 @@ The provided examples show three different used cases of a DC motor and how to u
 To use Motor M1 in an open loop configuration (no feedback, therefor no encoder needed), start by adding the ``FastPWM.h`` driver to the ***main.cpp*** file. Next, create an object by passing the pin names as arguments. 
 
 ```
-#include "pm2_drivers/FastPWM/FastPWM.h"
+#include "pesboard-lib/FastPWM/FastPWM.h"
 ```
 
 Then a ``FastPWM`` object needs to be created, which is used to command the voltage applied to the DC motor:
@@ -240,7 +240,7 @@ Since we are reusing the pins from M1, we can leave the motor connected to M1. T
 Motor M2 operates in a closed loop to control the velocity. To be able to use this functionallity it is necessary to include the ``DCMotor.h`` driver in the ***main.cpp*** file.
 
 ```
-#include "pm2_drivers/DCMotor.h"
+#include "pesboard-lib/DCMotor.h"
 ```
 
 When declaring a ``DCMotor`` object for closed-loop control, it is necessary to specify the following arguments related to the motor parameters. Including gear ratio, motor constant, and the maximum available voltage based on the number of battery packs you are using.

@@ -99,7 +99,7 @@ There is no need to plug anything as IMU is an integral part of the PES Board. P
 Add the IMU driver ``IMU.h`` to the top of the ***main.cpp*** file:
 
 ```
-#include "pm2_drivers/IMU.h"
+#include "pesboard-lib/IMU.h"
 ```
 
 To be able to start to use the ``IMU`` driver, the initial step is to create the IMU object and specify the pins to which the hardware is connected in the ``main()`` scope.
@@ -164,8 +164,8 @@ The gimbal allows image stabilization in two axes. Assuming that the horizontal 
 ### Software
 - The ***main.cpp*** file has the standard form known from the base file. Add the IMU ``IMU.h`` and  servo ``Servo.h`` driver to the top of the ***main.cpp*** file, as well as ``complex`` for mathematical operations:
 ```
-#include "pm2_drivers/IMU.h"
-#include "pm2_drivers/Servo.h"
+#include "pesboard-lib/IMU.h"
+#include "pesboard-lib/Servo.h"
 #include <complex>
 ```
 - In order to properly program the gimbal, it is necessary to define few objects - the servo responsible for roll and the servo responsible for pitch but also IMU along with the object for collecting data.

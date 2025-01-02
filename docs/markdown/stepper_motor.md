@@ -99,7 +99,7 @@ The electronics connection is included in the file, which can be found [HERE](..
 Initially, it's essential to add the suitable drivers to the ***main.cpp*** file and then create an `` Stepper`` object inside ``main()`` function with the pin's names passed as an argument.
 
 ```
-#include "pm2_drivers/Stepper.h"
+#include "pesboard-lib/Stepper.h"
 ```
 
 ```
@@ -151,9 +151,9 @@ The example below integrates the driver with a main loop that runs continuously,
 #include "mbed.h"
 
 // Include necessary headers
-#include "pm2_drivers/PESBoardPinMap.h"
-#include "pm2_drivers/DebounceIn.h"
-#include "pm2_drivers/Stepper.h"
+#include "pesboard-lib/PESBoardPinMap.h"
+#include "pesboard-lib/DebounceIn.h"
+#include "pesboard-lib/Stepper.h"
 
 bool do_execute_main_task = false; // Flag to control the main task execution
 bool do_reset_all_once = false;    // Flag to reset variables and states once
