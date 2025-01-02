@@ -1,7 +1,7 @@
 #ifndef STEPPER_H_
 #define STEPPER_H_
 
-#include "mbed.h"
+#include <mbed.h>
 #include "ThreadFlag.h"
 
 class Stepper
@@ -62,7 +62,7 @@ private:
 #ifndef STEPPER_H_
 #define STEPPER_H_
 
-#include "mbed.h"
+#include <mbed.h>
 #include "ThreadFlag.h"
 
 class Stepper

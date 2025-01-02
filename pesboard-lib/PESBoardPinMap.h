@@ -31,6 +31,12 @@
     #define PB_IMU_SDA PC_9
     #define PB_IMU_SCL PA_8
 
+    // SD-Card
+    #define PB_SD_MOSI PC_12
+    #define PB_SD_MISO PC_11
+    #define PB_SD_SCK PC_10
+    #define PB_SD_CS PD_2
+
 #else
     #define USER_BUTTON PC_13
     #define USER_LED PA_5

@@ -35,7 +35,7 @@
 #ifndef ULTRASONIC_SENSOR_H_
 #define ULTRASONIC_SENSOR_H_
 
-#include "mbed.h"
+#include <mbed.h>
 
 #include "ThreadFlag.h"
 
@@ -102,6 +102,6 @@ private:
     void measureTimeAndUpdateDistance();
 
     void threadTask();
-    void sendThreadFlag(); 
+    void sendThreadFlag();
 };
 #endif /* ULTRASONIC_SENSOR_H_ */

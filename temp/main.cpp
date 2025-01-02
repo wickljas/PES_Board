@@ -26,7 +26,7 @@
  * - SY42STH38-1684A, bigger motor, Vref : 8 * 1.68 * 0.068 = 0.9139 V
  */
 
-#include "mbed.h"
+#include <mbed.h>
 
 // pes board pin map
 #include "pesboard-lib/PESBoardPinMap.h"

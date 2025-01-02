@@ -29,7 +29,7 @@ Distributed as-is; no warranty is given.
 //  #include "pins_arduino.h"
 //#endif
 
-#include "mbed.h"
+#include <mbed.h>
 
 #include "LSM9DS1_Registers.h"
 #include "LSM9DS1_Types.h"

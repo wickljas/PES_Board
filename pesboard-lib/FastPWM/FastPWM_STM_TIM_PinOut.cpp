@@ -1,4 +1,4 @@
-#include "mbed.h"
+#include <mbed.h>
 
 #if defined (TARGET_NUCLEO_F030R8) || (TARGET_DISCO_F051R8)
 __IO uint32_t* getChannel(TIM_TypeDef* pwm, PinName pin) {

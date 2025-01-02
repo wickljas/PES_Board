@@ -7,15 +7,16 @@
 // - PC_10 SPI3_SCK  clk
 // - PD_2  PD2       cs
 
-
-#include "mbed.h"
+#include <mbed.h>
 
 // pes board pin map
 #include "pesboard-lib/PESBoardPinMap.h"
 
 // drivers
 #include "pesboard-lib/DebounceIn.h"
-#include "pesboard-lib/Stepper.h"
+
+#include "SDWriter.h"  // <--- ADDED
+#include "SDLogger.h"  // <--- ADDED
 
 bool do_execute_main_task = false; // this variable will be toggled via the user button (blue button) and
                                    // decides whether to execute the main task or not
@@ -27,6 +28,9 @@ DebounceIn user_button(USER_BUTTON); // create DebounceIn object to evaluate the
                                      // falling and rising edge
 void toggle_do_execute_main_fcn();   // custom function which is getting executed when user
                                      // button gets pressed, definition below
+
+// function declaration, definition at the end
+float ir_sensor_compensation(float ir_distance_mV);
 
 // main runs as an own thread
 int main()
@@ -44,9 +48,20 @@ int main()
     // led on nucleo board
     DigitalOut user_led(USER_LED);
 
-    // stepper motors
-    Stepper stepper_M1(PB_9, PB_8);
-    Stepper stepper_M2(PB_4, PA_7);
+    // additional led
+    // create DigitalOut object to command extra led, you need to add an aditional resistor, e.g. 220...500 Ohm
+    // a led has an anode (+) and a cathode (-), the cathode needs to be connected to ground via a resistor
+    DigitalOut led1(PB_9);
+
+    // ir distance sensor
+    float ir_distance_mV = 0.0f; // define a variable to store measurement (in mV)
+    float ir_distance_cm = 0.0f;
+    AnalogIn ir_analog_in(PC_2); // create AnalogIn object to read in the infrared distance sensor
+                                 // 0...3.3V are mapped to 0...1
+
+    // sd card logging
+    const uint8_t floats_per_sample = 50;
+    SDLogger sd_logger(PB_SD_MOSI, PB_SD_MISO, PB_SD_SCK, PB_SD_CS, floats_per_sample);
 
     // start timer
     main_task_timer.start();
@@ -57,27 +72,66 @@ int main()
 
         if (do_execute_main_task) {
 
-            // stepper_M1.setVelocity(0.1f);
-            // stepper_M2.setVelocity(-0.1f);
-            stepper_M1.setRotation(-1.0f, 1.0f);
-            stepper_M2.setRotation(+2.0f, 1.0f);
+            // visual feedback that the main task is executed, setting this once would actually be enough
+            led1 = 1;
 
+            // read analog input
+            ir_distance_mV = 1.0e3f * ir_analog_in.read() * 3.3f;
+            ir_distance_cm = ir_sensor_compensation(ir_distance_mV);
+
+            // --- BEGIN: median filter of length 3 for ir_distance_cm ---
+            static float median_window[3] = {0.0f, 0.0f, 0.0f};
+            static int median_idx = 0;
+
+            // store current reading
+            median_window[median_idx] = ir_distance_cm;
+            median_idx = (median_idx + 1) % 3;
+
+            // copy values into local array and sort them
+            float arr[3] = {
+                median_window[0],
+                median_window[1],
+                median_window[2]
+            };
+            // simple bubble sort or insertion sort for 3 elements
+            for (int i = 0; i < 2; i++) {
+                for (int j = i + 1; j < 3; j++) {
+                    if (arr[i] > arr[j]) {
+                        float tmp = arr[i];
+                        arr[i] = arr[j];
+                        arr[j] = tmp;
+                    }
+                }
+            }
+            // middle element is the median
+            ir_distance_cm = arr[1];
+            // --- END: median filter ---
+
+            // write data to the SD card
+            float data[floats_per_sample]; // array of floats_per_sample floats
+            for (int i = 0; i < floats_per_sample; i += 2) {
+                data[i]     = ir_distance_mV;
+                data[i + 1] = ir_distance_cm;
+            }
+            // log all floats in a single record
+            sd_logger.logFloats(data, floats_per_sample);
         } else {
             // the following code block gets executed only once
             if (do_reset_all_once) {
                 do_reset_all_once = false;
 
-                stepper_M1.setRotationRelative(-1.0f, 1.0f);
-                stepper_M2.setRotationRelative(+2.0f, 1.0f);
-                
+                // reset variables and objects
+                led1 = 0;
+                ir_distance_mV = 0.0f;
+                ir_distance_cm = 0.0f;
             }
         }
 
-        printf("Stepper M1: %d, %d, %0.3f, ", stepper_M1.getStepsSetpoint(), stepper_M1.getSteps(), stepper_M1.getRotation());
-        printf("M2: %d, %d, %0.3f \n", stepper_M2.getStepsSetpoint(), stepper_M2.getSteps(), stepper_M2.getRotation());
-
         // toggling the user led
         user_led = !user_led;
+
+        // print to the serial terminal
+        printf("IR distance mV: %f IR distance cm: %f \n", ir_distance_mV, ir_distance_cm);
 
         // read timer and make the main thread sleep for the remaining time span (non blocking)
         int main_task_elapsed_time_ms = std::chrono::duration_cast<std::chrono::milliseconds>(main_task_timer.elapsed_time()).count();
@@ -92,4 +146,17 @@ void toggle_do_execute_main_fcn()
     // set do_reset_all_once to true if do_execute_main_task changed from false to true
     if (do_execute_main_task)
         do_reset_all_once = true;
+}
+
+float ir_sensor_compensation(float ir_distance_mV)
+{
+    // insert values that you got from the MATLAB file
+    static const float a = 2.574e+04f;
+    static const float b = -29.37f;
+
+    // avoid division by zero by adding a small value to the denominator
+    if (ir_distance_mV + b == 0.0f)
+        ir_distance_mV -= 0.001f;
+
+    return a / (ir_distance_mV + b);
 }

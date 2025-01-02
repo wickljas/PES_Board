@@ -254,4 +254,4 @@ servo_pitch.setNormalisedPulseWidth(pitch_servo_width);
 printf("Roll: %f, Pitch: %f \n", roll_servo_width, pitch_servo_width);
 ```
 ------------------------------------
-The full working solution can be found in [Gimbal](../solutions/gimbal.cpp)
+The full working solution can be found in [Gimbal](../solutions/main_gimbal.cpp)

@@ -148,7 +148,7 @@ The driver is designed to work with stepper motors that require direction and st
 The example below integrates the driver with a main loop that runs continuously, allowing the stepper motor to be controlled dynamically based on a button press.
 
 ```cpp
-#include "mbed.h"
+#include <mbed.h>
 
 // Include necessary headers
 #include "pesboard-lib/PESBoardPinMap.h"

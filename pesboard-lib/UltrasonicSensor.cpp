@@ -88,4 +88,3 @@ void UltrasonicSensor::sendThreadFlag()
     // set the thread flag to trigger the thread task
     m_Thread.flags_set(m_ThreadFlag);
 }
-

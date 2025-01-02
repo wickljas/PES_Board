@@ -57,7 +57,7 @@
 #endif
 
 #if PERFORM_CHIRP_MEAS
-#include "mbed.h"
+#include <mbed.h>
 #include "Chirp.h"
 #define BUFFER_LENGTH 20 // 5 float values
 #endif

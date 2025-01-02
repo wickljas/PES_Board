@@ -199,7 +199,7 @@ And here you find all the solutions, as well as some additional examples:
 - [Solution Workshop 3, Part 1](docs/solutions/main_ws3_p1.cpp)
 - [Solution Workshop 3, Part 2](docs/solutions/main_ws3_p2.cpp)
 - [Example Line Follower](docs/solutions/main_line_follower.cpp)
-- [Example Gimbal](docs/solutions/gimbal.cpp)
+- [Example Gimbal](docs/solutions/main_gimbal.cpp)
 - [Example Line Follower Base Example](docs/solutions/main_line_follower_base_ss24.cpp)
 - [Example Differential Drive Robot Kinematics Calibration](docs/solutions/main_calib_kinematic_ss24.cpp)
 - TODO: Add stepper motor example here

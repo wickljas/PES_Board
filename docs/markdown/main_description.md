@@ -7,7 +7,7 @@ The main file is the file that contains the ``main()`` function, which is the fu
 At the very beginning of the file, the mbed library is included, which is a library that contains all the necessary functions and objects for the microcontroller to work properly with the mbed operating system.
 
 ```
-#include "mbed.h"
+#include <mbed.h>
 ```
 
 Next a map / dictionary of the PES board is included. In here we specify a naming conventaion to translate pin names from the PES board to the Nucleo board, see also [pes_board_peripherals.pdf](docs/datasheets/pes_board_peripherals.pdf).
