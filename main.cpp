@@ -1,12 +1,3 @@
-// rotc:  SDFileSystem sd(PB_5, PB_4, PB_3, PB_10, "sd"); //mosi, miso, sclk, cs
-// - this might be the old version of the pes board
-
-// borla: SDFileSystem sd(PC_12, PC_11, PC_10, PD_2, "sd"); // mosi miso clk cs
-// - PC_12 SPI3_MOSI mosi
-// - PC_11 SPI3_MISO miso
-// - PC_10 SPI3_SCK  clk
-// - PD_2  PD2       cs
-
 #include <mbed.h>
 
 // pes board pin map
@@ -14,9 +5,9 @@
 
 // drivers
 #include "pesboard-lib/DebounceIn.h"
-
-#include "SDWriter.h"  // <--- ADDED
-#include "SDLogger.h"  // <--- ADDED
+#include "pesboard-lib/MedianFilter3.h"
+#include "pesboard-lib/SDWriter.h"
+#include "pesboard-lib/SDLogger.h"
 
 bool do_execute_main_task = false; // this variable will be toggled via the user button (blue button) and
                                    // decides whether to execute the main task or not
@@ -29,7 +20,7 @@ DebounceIn user_button(USER_BUTTON); // create DebounceIn object to evaluate the
 void toggle_do_execute_main_fcn();   // custom function which is getting executed when user
                                      // button gets pressed, definition below
 
-// function declaration, definition at the end
+// function declarations, definitions at the end
 float ir_sensor_compensation(float ir_distance_mV);
 
 // main runs as an own thread
@@ -59,60 +50,59 @@ int main()
     AnalogIn ir_analog_in(PC_2); // create AnalogIn object to read in the infrared distance sensor
                                  // 0...3.3V are mapped to 0...1
 
-    // sd card logging
-    const uint8_t floats_per_sample = 50;
+    // sd card logger
+    const uint8_t floats_per_sample = 75 + 1; // first sample is time in seconds    
     SDLogger sd_logger(PB_SD_MOSI, PB_SD_MISO, PB_SD_SCK, PB_SD_CS, floats_per_sample);
+    float data[floats_per_sample]; // data storage array
 
     // start timer
     main_task_timer.start();
 
+    // additional timer to measure time
+    Timer logging_timer;
+    logging_timer.start();
+
+    // median filter for ir_distance_cm_median
+    float ir_distance_cm_median = 0.0f;
+    MedianFilter3 ir_distance_cm_median_filter;
+
     // this loop will run forever
     while (true) {
         main_task_timer.reset();
+
+        // measure delta time
+        static microseconds time_previous_us{0}; // static variables are only initialized once
+        const microseconds time_us = logging_timer.elapsed_time();
+        const float dtime_us = duration_cast<microseconds>(time_us - time_previous_us).count();
+        time_previous_us = time_us;
+
+        // read analog input
+        ir_distance_mV = 1.0e3f * ir_analog_in.read() * 3.3f;
+        ir_distance_cm = ir_sensor_compensation(ir_distance_mV);
+
+        // median filtered distance
+        static bool is_first_run = true;
+        if (is_first_run) {
+            ir_distance_cm_median_filter.reset(ir_distance_cm);
+            is_first_run = false;
+        } else
+            ir_distance_cm_median = ir_distance_cm_median_filter.apply(ir_distance_cm);
 
         if (do_execute_main_task) {
 
             // visual feedback that the main task is executed, setting this once would actually be enough
             led1 = 1;
 
-            // read analog input
-            ir_distance_mV = 1.0e3f * ir_analog_in.read() * 3.3f;
-            ir_distance_cm = ir_sensor_compensation(ir_distance_mV);
+            // store detla time in microseconds
+            data[0] = dtime_us;
 
-            // --- BEGIN: median filter of length 3 for ir_distance_cm ---
-            static float median_window[3] = {0.0f, 0.0f, 0.0f};
-            static int median_idx = 0;
-
-            // store current reading
-            median_window[median_idx] = ir_distance_cm;
-            median_idx = (median_idx + 1) % 3;
-
-            // copy values into local array and sort them
-            float arr[3] = {
-                median_window[0],
-                median_window[1],
-                median_window[2]
-            };
-            // simple bubble sort or insertion sort for 3 elements
-            for (int i = 0; i < 2; i++) {
-                for (int j = i + 1; j < 3; j++) {
-                    if (arr[i] > arr[j]) {
-                        float tmp = arr[i];
-                        arr[i] = arr[j];
-                        arr[j] = tmp;
-                    }
-                }
-            }
-            // middle element is the median
-            ir_distance_cm = arr[1];
-            // --- END: median filter ---
-
-            // write data to the SD card
-            float data[floats_per_sample]; // array of floats_per_sample floats
-            for (int i = 0; i < floats_per_sample; i += 2) {
+            // store values in the array, we store the same values floats_per_sample/3 times as an example
+            for (int i = 1; i < floats_per_sample; i += 3) {
                 data[i]     = ir_distance_mV;
                 data[i + 1] = ir_distance_cm;
+                data[i + 2] = ir_distance_cm_median;
             }
+
             // log all floats in a single record
             sd_logger.logFloats(data, floats_per_sample);
         } else {
@@ -131,11 +121,14 @@ int main()
         user_led = !user_led;
 
         // print to the serial terminal
-        printf("IR distance mV: %f IR distance cm: %f \n", ir_distance_mV, ir_distance_cm);
+        printf("IR distance mV: %f IR distance cm: %f IR distance cm median: %f \n", ir_distance_mV, ir_distance_cm, ir_distance_cm_median);
 
         // read timer and make the main thread sleep for the remaining time span (non blocking)
         int main_task_elapsed_time_ms = std::chrono::duration_cast<std::chrono::milliseconds>(main_task_timer.elapsed_time()).count();
-        thread_sleep_for(main_task_period_ms - main_task_elapsed_time_ms);
+        if (main_task_period_ms - main_task_elapsed_time_ms < 0)
+            printf("Warning: Main task took longer than main_task_period_ms\n");
+        else
+            thread_sleep_for(main_task_period_ms - main_task_elapsed_time_ms);
     }
 }
 

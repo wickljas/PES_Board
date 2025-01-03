@@ -3,8 +3,9 @@ clc, clear all
 
 % openlager
 file_id = fopen('002.bin');
-
 file_id = fopen('004.bin'); % with median filter
+file_id = fopen('008.bin'); % with median filter
+file_id = fopen('014.bin'); % with median filter
 
 num_of_floats = fread(file_id, 1, 'uint8')
 
@@ -20,16 +21,37 @@ data_raw = data_raw(1:floor( length(data_raw)/num_of_floats ) * num_of_floats);
 
 data.values = reshape(data_raw, [num_of_floats, length(data_raw)/num_of_floats]).';
             
-% data.time = cumsum(data.values(:,1)) * 1e-6;
-% data.time = data.time - data.time(1);
-% 
-% data.values = data.values(:,2:end);
+data.time = cumsum(data.values(:,1)) * 1e-6;
+data.time = data.time - data.time(1);
+
+data.values = data.values(:,2:end);
+
+
+%%
+
+Ts = mean(diff(data.time));
 
 figure(1)
-subplot(121)
-plot(data.values(:,1:2:end)), grid on
-subplot(122)
-plot(data.values(:,2:2:end)), grid on
+plot(data.time(1:end-1), diff(data.time * 1e6)), grid on
+title( sprintf(['Mean %0.0f mus, ', ...
+                'Std. %0.0f mus, ', ...
+                'Med. dT = %0.0f mus'], ...
+                mean(diff(data.time * 1e6)), ...
+                std(diff(data.time * 1e6)), ...
+                median(diff(data.time * 1e6))) )
+xlabel('Time (sec)'), ylabel('dTime (mus)')
+xlim([0 data.time(end-1)])
+ylim([0 1.2*max(diff(data.time * 1e6))])
+
+figure(2)
+ax(1) = subplot(131);
+plot(data.time, data.values(:,1:3:end)), grid on
+ax(2) = subplot(132);
+plot(data.time, data.values(:,2:3:end)), grid on
+ax(3) = subplot(133);
+plot(data.time, data.values(:,3:3:end)), grid on
+linkaxes(ax, 'x'), clear ax
+xlim([0 data.time(end)])
 
 
 

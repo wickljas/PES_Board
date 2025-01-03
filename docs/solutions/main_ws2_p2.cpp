@@ -177,7 +177,10 @@ int main()
 
         // read timer and make the main thread sleep for the remaining time span (non blocking)
         int main_task_elapsed_time_ms = std::chrono::duration_cast<std::chrono::milliseconds>(main_task_timer.elapsed_time()).count();
-        thread_sleep_for(main_task_period_ms - main_task_elapsed_time_ms);
+        if (main_task_period_ms - main_task_elapsed_time_ms < 0)
+            printf("Warning: Main task took longer than main_task_period_ms\n");
+        else
+            thread_sleep_for(main_task_period_ms - main_task_elapsed_time_ms);
     }
 }
 

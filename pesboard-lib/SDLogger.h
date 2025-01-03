@@ -1,35 +1,35 @@
 
 /**
- * @file UltrasonicSensor.h
- * @brief This file defines the UltrasonicSensor class, used for measuring distances using the Ultrasonic Ranger V2.0.
+ * @file SDLogger.h
+ * @brief This file defines the SDLogger class, used for logging float data to an SD card.
  *
- * The UltrasonicSensor class provides functionality to measure distances by emitting ultrasonic pulses 
- * and measuring the time taken for the echo to return. It encapsulates the details of interfacing with the
- * sensor hardware and offers a simple interface for obtaining distance measurements in centimeters.
- * Maximum measurment distance is approximately 2 meters (measured 198.1 cm) with a mearuement period of 12000
- * microseconds. If no new valid measurement is available, the read() function returns -1.0f.
+ * The SDLogger class provides functionality to queue floating-point samples using a ring buffer
+ * and write them to an SD card at low priority in bursts. It encapsulates the details of thread creation,
+ * periodic flushing, and synchronization, offering a simple interface for robust logging.
+ *
+ * Maximum throughput depends on SD card speed and buffer size. When the buffer fills up, additional data
+ * is discarded. By default, data is flushed to disk every second to minimize data loss on power failure.
  *
  * @dependencies
  * This class relies on the following components:
- * - DigitalInOut: For toggling the ultrasonic sensor's pin between output and input.
- * - InterruptIn: For detecting the echo signal.
- * - Timer: For measuring the time interval of the echo.
- * - Timeout: For managing pulse emission timing.
- * - ThreadFlag: For managing threading and synchronization.
+ * - SDWriter: A minimal class for handling mount/unmount, file creation, and binary writes on the SD card.
+ * - CircularBuffer<float>: For buffering incoming float data.
+ * - ThreadFlag and Ticker: For scheduling periodic tasks to pull data from the buffer and write to the SD card.
+ * - Mutex: For thread-safe access to the buffer.
  *
  * Usage:
- * To use the UltrasonicSensor class, create an instance with the pin connected to the sensor.
- * Measure the distance using read(). The class also provides an operator float() for direct reading.
+ * To use the SDLogger class, create an instance by specifying the SPI pins for the SD card and the number of floats per record.
+ * Then call logFloats(...) to queue up data, and the logger thread writes it to the SD in the background.
  *
  * Example:
  * ```
- * UltrasonicSensor ultrasonicSensor(PIN_NAME);
- * float distance = ultrasonicSensor.read();
- * // or simply
- * float distance = ultrasonicSensor;
+ * SDLogger logger(MOSI_PIN, MISO_PIN, SCK_PIN, CS_PIN, 50);
+ * float myData[50];
+ * // fill myData...
+ * logger.logFloats(myData, 50);
  * ```
  *
- * @author M. E. Peter
+ * @author 
  * @date 02.01.2025
  */
 
