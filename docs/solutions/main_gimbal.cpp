@@ -19,7 +19,7 @@ const int main_task_period_ms = 20; // define main task period time in ms e.g. 2
                                     // the main task will run 50 times per second
 
 // objects for user button (blue button) handling on nucleo board
-DebounceIn user_button(USER_BUTTON); // create DebounceIn object to evaluate the user button
+DebounceIn user_button(BUTTON1);     // create DebounceIn to evaluate the user button
                                      // falling and rising edge
 void toggle_do_execute_main_fcn();   // custom function which is getting executed when user
                                      // button gets pressed, definition below
@@ -35,7 +35,7 @@ int main()
     Timer timer;
 
     // led on nucleo board
-    DigitalOut user_led(USER_LED);
+    DigitalOut user_led(LED1);
 
     // servo
     Servo servo_roll(PB_D0);

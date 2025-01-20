@@ -12,7 +12,7 @@ bool do_reset_all_once = false;    // this variable is used to reset certain var
                                    // shows how you can run a code segment only once
 
 // objects for user button (blue button) handling on nucleo board
-DebounceIn user_button(USER_BUTTON); // create DebounceIn object to evaluate the user button
+DebounceIn user_button(BUTTON1);     // create DebounceIn to evaluate the user button
                                      // falling and rising edge
 void toggle_do_execute_main_fcn();   // custom function which is getting executed when user
                                      // button gets pressed, definition below
@@ -34,7 +34,7 @@ int main()
                                         // every main_task_period_ms
 
     // led on nucleo board
-    DigitalOut user_led(USER_LED);
+    DigitalOut user_led(LED1);
 
     // additional led
     // create DigitalOut object to command extra led, you need to add an aditional resistor, e.g. 220...500 Ohm

@@ -4,8 +4,6 @@
 // PES-Board Pin Names
 #define NEW_PES_BOARD_VERSION
 #ifdef NEW_PES_BOARD_VERSION
-    #define USER_BUTTON PC_13
-    #define USER_LED PA_5
 
     // Servos and Ultrasonic Sensor
     #define PB_D0 PB_2
@@ -38,8 +36,6 @@
     #define PB_SD_CS PD_2
 
 #else
-    #define USER_BUTTON PC_13
-    #define USER_LED PA_5
 
     #define PB_D0 PC_9  // ???
     #define PB_D1 PC_8  // ???

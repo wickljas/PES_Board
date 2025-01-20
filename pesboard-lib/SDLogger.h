@@ -68,7 +68,7 @@ public:
      * @param num_of_floats We'll write this once at file start 
      *                      to indicate how many floats are in each record.
      */
-    SDLogger(PinName mosi, PinName miso, PinName sck, PinName cs, u_int8_t num_of_floats);
+    SDLogger(PinName mosi, PinName miso, PinName sck, PinName cs, uint8_t num_of_floats);
     ~SDLogger();
 
     // start the internal thread at a desired priority

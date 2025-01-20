@@ -2,10 +2,8 @@ clc, clear all
 %%
 
 % openlager
-file_id = fopen('002.bin');
-file_id = fopen('004.bin'); % with median filter
-file_id = fopen('008.bin'); % with median filter
-file_id = fopen('014.bin'); % with median filter
+file_id = fopen('045.bin'); % with median filter
+file_id = fopen('049.bin'); % with avg filter
 
 num_of_floats = fread(file_id, 1, 'uint8')
 
@@ -28,6 +26,8 @@ data.values = data.values(:,2:end);
 
 
 %%
+
+% load data_00.mat % measured via serial stream
 
 Ts = mean(diff(data.time));
 
@@ -52,6 +52,9 @@ ax(3) = subplot(133);
 plot(data.time, data.values(:,3:3:end)), grid on
 linkaxes(ax, 'x'), clear ax
 xlim([0 data.time(end)])
+
+figure(3)
+pwelch(data.values(:,1:3), [], [], [], 1/Ts), grid on
 
 
 

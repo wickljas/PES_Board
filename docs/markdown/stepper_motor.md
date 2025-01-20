@@ -159,7 +159,7 @@ bool do_execute_main_task = false; // Flag to control the main task execution
 bool do_reset_all_once = false;    // Flag to reset variables and states once
 
 // Debounced user button handling
-DebounceIn user_button(USER_BUTTON); 
+DebounceIn user_button(BUTTON1); 
 
 void toggle_do_execute_main_fcn(); // Function to toggle task execution
 
@@ -172,7 +172,7 @@ int main()
     Timer main_task_timer;              // Timer for controlling the loop execution time
 
     // LED on Nucleo board
-    DigitalOut user_led(USER_LED);
+    DigitalOut user_led(LED1);
 
     // Initialize stepper motors
     Stepper stepper_M1(PB_9, PB_8);
