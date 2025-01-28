@@ -21,7 +21,7 @@ bool SDWriter::mount()
         printf("SDWriter: block device init failed\n");
         return false;
     }
-    if (m_SDBlockDevice.frequency(5000000) != 0) {
+    if (m_SDBlockDevice.frequency(10000000) != 0) {
         printf("SDWriter: set frequency failed (not fatal)\n");
     }
     if (m_FATFileSystem.mount(&m_SDBlockDevice) != 0) {

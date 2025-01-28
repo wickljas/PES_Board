@@ -159,4 +159,3 @@ Command to Create the Symbolic Link
 ```
 ln -s ~/Mbed\ Programs/mbed-os ~/Mbed\ Programs/PM2_PES_Board_Example/mbed-os
 ```
-

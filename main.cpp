@@ -65,7 +65,7 @@ int main()
                                  // 0...3.3V are mapped to 0...1
 
     // sd card logger
-    const uint8_t floats_per_sample = 3 + 1; // first sample is time in seconds    
+    const uint8_t floats_per_sample = 1 + 21; // first sample is time in seconds    
     SDLogger sd_logger(PB_SD_MOSI, PB_SD_MISO, PB_SD_SCK, PB_SD_CS, floats_per_sample);
     float data[floats_per_sample]; // data storage array
 

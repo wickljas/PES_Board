@@ -109,7 +109,7 @@ void SDLogger::threadTask()
         flushBuffer();
 
         // flush the file so data is physically on sd card
-        if (flush_timer.elapsed_time() >= 1s) {
+        if (flush_timer.elapsed_time() >= 2s) {
             flush_timer.reset();
 
             if (m_file_open) {
@@ -131,7 +131,7 @@ void SDLogger::flushBuffer()
     }
 
     // drain in chunks
-    static constexpr size_t CHUNK_SIZE = 64;
+    static constexpr size_t CHUNK_SIZE = 256;
     float tmp[CHUNK_SIZE];
 
     while (!m_CircularBuffer.empty()) {

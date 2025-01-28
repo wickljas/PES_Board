@@ -2,8 +2,10 @@ clc, clear all
 %%
 
 % openlager
-file_id = fopen('045.bin'); % with median filter
-file_id = fopen('049.bin'); % with avg filter
+% file_id = fopen('045.bin'); % with median filter
+% file_id = fopen('049.bin'); % with avg filter
+
+file_id = fopen('102.bin'); % with avg filter
 
 num_of_floats = fread(file_id, 1, 'uint8')
 
@@ -24,6 +26,7 @@ data.time = data.time - data.time(1);
 
 data.values = data.values(:,2:end);
 
+size(data.values)
 
 %%
 
@@ -44,19 +47,15 @@ xlim([0 data.time(end-1)])
 ylim([0 1.2*max(diff(data.time * 1e6))])
 
 figure(2)
-ax(1) = subplot(131);
-plot(data.time, data.values(:,1:3:end)), grid on
-ax(2) = subplot(132);
-plot(data.time, data.values(:,2:3:end)), grid on
-ax(3) = subplot(133);
-plot(data.time, data.values(:,3:3:end)), grid on
+ax(1) = subplot(121);
+plot(data.time, data.values(:,1)), grid on
+ax(2) = subplot(122);
+plot(data.time, [data.values(:,2), data.values(:,3)]), grid on
 linkaxes(ax, 'x'), clear ax
 xlim([0 data.time(end)])
 
 figure(3)
 pwelch(data.values(:,1:3), [], [], [], 1/Ts), grid on
-
-
 
 
 %%
