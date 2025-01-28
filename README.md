@@ -60,7 +60,8 @@ Big shoutout to the following contributors for their help and support:
     * [Workshop 2](docs/markdown/ws2.md)
     * [Workshop 3](docs/markdown/ws3.md)
 5. [Build Mbed OS project with VScode](#build-mbed-os-project-with-vscode)
-    * [Build on Linux/WSL](docs/markdown/build_mbed_linux.md) 
+    * [Build on Windows](docs/markdown/build_mbed_windows.md)
+    * [Build on Linux/WSL](docs/markdown/build_mbed_linux.md)
 6. [Links](#links)
 
 ## Course Setup
@@ -209,6 +210,7 @@ In the folder (docs/cad/WS2) and (docs/cad/WS3) you will find the printable file
 - Make a hole in the element for the motor shaft (details available: https://www.printables.com/de/model/516177-universal-spur-gears-collection-module-15)
 
 ### Additional Information
+
 - [Differential Drive Kinematics](docs/markdown/kinematics.md)
 
 ## Weblinks

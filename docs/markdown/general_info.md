@@ -20,7 +20,7 @@ It is recommended that you use a private E-mail address to set up accounts on Mb
 
 GitHub is a web-based platform from Microsoft for version control using Git, facilitating collaborative software development by providing tools for code hosting, tracking changes, and managing project workflows. It allows developers to work on projects simultaneously, merge their changes seamlessly, and track the project's history. GitHub is widely used in the software development community for code collaboration, issue tracking, and hosting open-source projects.
 
-* To create a fork of PM2 PES Board Example repository you need to go to the repository Github: https://github.com/pichim/PM2_PES_Board_Example
+* To create a fork of PM2 PES Board Example repository you need to go to the repository Github: https://github.com/pichim/PES_Board
 * On the top right corner click **Fork**:
 
 <p align="center">

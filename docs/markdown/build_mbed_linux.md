@@ -29,7 +29,7 @@ conda config --set auto_activate_base false
 
 To replicate the Conda environment, use the file `docs/conda_envs/mbed-env-linux.yml` in this repository.
 
-You can create the environment with the following command:
+You can create the environment with the following command
 
 ```
 conda env create -f mbed-env-linux.yml
@@ -79,7 +79,7 @@ sudo npm install -y mbed-vscode-generator -g
 Replace `pichim` with your GitHub username so that you clone your fork of the repository (if you intend to use version control).
 
 ```
-git clone https://github.com/pichim/PM2_PES_Board_Example.git
+git clone https://github.com/pichim/PES_Board.git
 ```
 
 ## Recommended Extensions in VSCode (might not all be necessary)
@@ -101,7 +101,7 @@ Press Cntrl+Shift+P and type `Python: Select Interpreter` and select the `mbed-e
 
 ## Set up the Mbed Tools
 
-Make sure you have a file '.mbed' in the root of your project with the following content:
+Make sure you have a file '.mbed' in the root of your project with the following content
 
 ```
 ROOT=.
@@ -127,7 +127,7 @@ sed -i 's/--profile=debug/--profile=develop/g' .vscode/tasks.json
 
 Press Cntrl+Shift+B and select `Build Mbed OS application`.
 
-The binary file will be in the `BUILD/NUCLEO_F446RE/GCC_ARM-DEVELOP/PM2_PES_Board_Example.bin` directory.
+The binary file will be in the `BUILD/NUCLEO_F446RE/GCC_ARM-DEVELOP/PES_Board.bin` directory.
 
 ## Flash the binary file to the board
 
@@ -153,9 +153,10 @@ activate it and open the folder in WSL.
 
 To save disk space, it is recommended to host only one physical copy of the Mbed OS on your computer. Instead of duplicating the Mbed OS directory for every project, you can create a symbolic link in each project folder that points to a shared mbed-os directory.
 
-For example, the following command will create a symbolic link in the Mbed Programs/PM2_PES_Board_Example directory that points to the shared Mbed Programs/mbed-os directory. This allows multiple Mbed projects to share the same copy of Mbed OS.
+For example, the following command will create a symbolic link in the Mbed Programs/PES_Board directory that points to the shared Mbed Programs/mbed-os directory. This allows multiple Mbed projects to share the same copy of Mbed OS.
+
 Command to Create the Symbolic Link
 
 ```
-ln -s ~/Mbed\ Programs/mbed-os ~/Mbed\ Programs/PM2_PES_Board_Example/mbed-os
+ln -s ~/Mbed\ Programs/mbed-os ~/Mbed\ Programs/PES_Board/mbed-os
 ```
