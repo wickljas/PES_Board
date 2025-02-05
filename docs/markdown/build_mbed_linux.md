@@ -149,7 +149,7 @@ You need to install the extension
 
 activate it and open the folder in WSL.
 
-## Using a Symbolic Link to `mbed-os` to save Space
+<!-- ## Using a Symbolic Link to `mbed-os` to save Space
 
 To save disk space, it is recommended to host only one physical copy of the Mbed OS on your computer. Instead of duplicating the Mbed OS directory for every project, you can create a symbolic link in each project folder that points to a shared mbed-os directory.
 
@@ -159,4 +159,4 @@ Command to Create the Symbolic Link
 
 ```
 ln -s ~/Mbed\ Programs/mbed-os ~/Mbed\ Programs/PES_Board/mbed-os
-```
+``` -->

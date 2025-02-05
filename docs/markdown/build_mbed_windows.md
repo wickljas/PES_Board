@@ -130,7 +130,7 @@ You can use the extension
 
 to monitor the serial output of the board in VSCode directly.
 
-## Using a Symbolic Link to `mbed-os` to save Space
+<!-- ## Using a Symbolic Link to `mbed-os` to save Space
 
 To save disk space, it is recommended to host only one physical copy of the Mbed OS on your computer. Instead of duplicating the Mbed OS directory for every project, you can create a symbolic link in each project folder that points to a shared mbed-os directory.
 
@@ -144,7 +144,7 @@ Command to Create the Symbolic Link
 New-Item -ItemType SymbolicLink `
     -Path ".\mbed-os" `
     -Value "..\mbed-os"
-```
+``` -->
 
 ## Building in WSL (Windows Subsystem for Linux, Recommended)
 
