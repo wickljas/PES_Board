@@ -17,6 +17,8 @@ UltrasonicSensor::UltrasonicSensor(PinName pin)
 UltrasonicSensor::~UltrasonicSensor()
 {
     m_Timeout.detach();
+    m_Ticker.detach();
+    m_Thread.terminate();
 }
 
 float UltrasonicSensor::read()

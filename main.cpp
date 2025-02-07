@@ -3,11 +3,15 @@
  * - Somehow i only read garbage when the PES Board is powered with 2 battery packs
  * - 
  * 
- * TODO:
+ * TODO SD-Card:
  * - Check what writing frequency is best to send data to the SD card
  * - Check what parameters for the SDWriter works best
  * - Adapt the writing functionallity according to SerialStream
  * - 
+ * 
+ * TODO General:
+ * - fix .gitignore
+ * - fid .mbed
  */
 
 #include <mbed.h>
@@ -21,7 +25,8 @@
 #include "pesboard-lib/SDWriter.h"
 #include "pesboard-lib/SDLogger.h"
 // #include "pesboard-lib/SerialStream.h"
-#include "pesboard-lib/AvgFilter.h"
+// #include "pesboard-lib/AvgFilter.h"
+#include "pesboard-lib/IRSensor.h"
 
 bool do_execute_main_task = false; // this variable will be toggled via the user button (blue button) and
                                    // decides whether to execute the main task or not
@@ -34,8 +39,8 @@ DebounceIn user_button(BUTTON1);     // create DebounceIn to evaluate the user b
 void toggle_do_execute_main_fcn();   // custom function which is getting executed when user
                                      // button gets pressed, definition below
 
-// function declarations, definitions at the end
-float ir_sensor_compensation(float ir_distance_mV);
+// // function declarations, definitions at the end
+// float ir_sensor_compensation(float ir_distance_mV);
 
 // main runs as an own thread
 int main()
@@ -58,11 +63,13 @@ int main()
     // a led has an anode (+) and a cathode (-), the cathode needs to be connected to ground via a resistor
     DigitalOut led1(PB_9);
 
-    // ir distance sensor
-    float ir_distance_mV = 0.0f; // define a variable to store measurement (in mV)
-    float ir_distance_cm = 0.0f;
-    AnalogIn ir_analog_in(PC_2); // create AnalogIn object to read in the infrared distance sensor
-                                 // 0...3.3V are mapped to 0...1
+    // // ir distance sensor
+    // float ir_distance_mV = 0.0f; // define a variable to store measurement (in mV)
+    // float ir_distance_cm = 0.0f;
+    // AnalogIn ir_analog_in(PC_2); // create AnalogIn object to read in the infrared distance sensor
+    //                              // 0...3.3V are mapped to 0...1
+    IRSensor ir_sensor(PC_2);
+    ir_sensor.setCalibration(2.574e+04f, -29.37f);
 
     // sd card logger
     const uint8_t floats_per_sample = 1 + 21; // first sample is time in seconds    
@@ -77,8 +84,8 @@ int main()
     // float ir_distance_cm_median = 0.0f;
     // MedianFilter3 ir_distance_cm_median_filter;
 
-    float ir_distance_cm_avg = 0.0f;
-    AvgFilter ir_distance_cm_avg_filter(33);
+    // float ir_distance_cm_avg = 0.0f;
+    // AvgFilter ir_distance_cm_avg_filter(31);
 
     // // serial stream either to matlab or to the openlager
     // SerialStream serialStream(15,
@@ -102,17 +109,17 @@ int main()
         const float dtime_us = duration_cast<microseconds>(time_us - time_previous_us).count();
         time_previous_us = time_us;
 
-        // read analog input
-        ir_distance_mV = 1.0e3f * ir_analog_in.read() * 3.3f;
-        ir_distance_cm = ir_sensor_compensation(ir_distance_mV);
+        // // read analog input
+        // ir_distance_mV = 1.0e3f * ir_analog_in.read() * 3.3f;
+        // ir_distance_cm = ir_sensor_compensation(ir_distance_mV);
 
-        // median filtered distance
-        static bool is_first_run = true;
-        if (is_first_run) {
-            ir_distance_cm_avg_filter.reset(ir_distance_cm);
-            is_first_run = false;
-        } else
-            ir_distance_cm_avg = ir_distance_cm_avg_filter.apply(ir_distance_cm);
+        // // median filtered distance
+        // static bool is_first_run = true;
+        // if (is_first_run) {
+        //     ir_distance_cm_avg_filter.reset(ir_distance_cm);
+        //     is_first_run = false;
+        // } else
+        //     ir_distance_cm_avg = ir_distance_cm_avg_filter.apply(ir_distance_cm);
 
         if (do_execute_main_task) {
 
@@ -124,9 +131,12 @@ int main()
 
             // store values in the array, we store the same values floats_per_sample/3 times as an example
             for (int i = 1; i < floats_per_sample; i += 3) {
-                data[i]     = ir_distance_mV;
-                data[i + 1] = ir_distance_cm;
-                data[i + 2] = ir_distance_cm_avg;
+                // data[i]     = ir_distance_mV;
+                // data[i + 1] = ir_distance_cm;
+                // data[i + 2] = ir_distance_cm_avg;
+                data[i]     = ir_sensor.readmV();
+                data[i + 1] = ir_sensor.readcm();
+                data[i + 2] = ir_sensor.read();
             }
 
             // log all floats in a single record
@@ -146,8 +156,8 @@ int main()
 
                 // reset variables and objects
                 led1 = 0;
-                ir_distance_mV = 0.0f;
-                ir_distance_cm = 0.0f;
+                // ir_distance_mV = 0.0f;
+                // ir_distance_cm = 0.0f;
             }
         }
 
@@ -175,15 +185,15 @@ void toggle_do_execute_main_fcn()
         do_reset_all_once = true;
 }
 
-float ir_sensor_compensation(float ir_distance_mV)
-{
-    // insert values that you got from the MATLAB file
-    static const float a = 2.574e+04f;
-    static const float b = -29.37f;
+// float ir_sensor_compensation(float ir_distance_mV)
+// {
+    // // insert values that you got from the MATLAB file
+    // static const float a = 2.574e+04f;
+    // static const float b = -29.37f;
 
-    // avoid division by zero by adding a small value to the denominator
-    if (ir_distance_mV + b == 0.0f)
-        ir_distance_mV -= 0.001f;
+    // // avoid division by zero by adding a small value to the denominator
+    // if (ir_distance_mV + b == 0.0f)
+    //     ir_distance_mV -= 0.001f;
 
-    return a / (ir_distance_mV + b);
-}
+    // return a / (ir_distance_mV + b);
+// }

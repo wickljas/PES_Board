@@ -17,16 +17,16 @@ public:
     void init();
 
     // resets the filter to 'val' (all 3 samples become 'val').
-    void reset(float val);
+    float reset(float val);
 
     // resets the filter to 0.0f.
-    void reset();
+    float reset();
 
     // feed one new sample 'inp'. Returns the median of the last 3 samples.
     float apply(float inp);
 
     // returns the current median from the last apply() call.
-    float getVal() const { return m_val; }
+    float read() const { return m_val; }
 
 private:
     float m_window[3]; // ring buffer storage

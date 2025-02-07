@@ -20,6 +20,7 @@ SDLogger::SDLogger(PinName mosi,
 SDLogger::~SDLogger()
 {
     closeFile();
+    m_Ticker.detach();
     m_Thread.terminate();
 }
 

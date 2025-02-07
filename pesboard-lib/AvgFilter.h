@@ -22,16 +22,16 @@ public:
     void init(uint8_t N);
 
     // resets the filter to 'val' (all samples become 'val/N')
-    void reset(float val);
+    float reset(float val);
 
     // resets the filter to 0.0f
-    void reset();
+    float reset();
 
     // applies the filter to a new input 'inp' and returns the updated average
     float apply(float inp);
 
     // returns the current average
-    float getVal() const { return m_val; }
+    float read() const { return m_val; }
 
 private:
     float   m_val;         // rolling average (actually the sum of scaled samples)

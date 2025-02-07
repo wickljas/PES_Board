@@ -40,10 +40,20 @@ Some useful programming tips can be found under [Programming Tips](#programming-
 
 Through (fast and early) prototyping, you not only validate the feasibility of your design but also uncover potential challenges early on. Identifying and addressing issues during the prototyping phase mitigates risks, streamlines the development process, and contributes to the overall success of the project. To achieve this goal, incorporating 3D printing in the preliminary stages of part design proves beneficial. It offers crucial insights, enables the testing of solutions challenging to assess without a physical model, and, importantly, avoids potential time-consuming adjustments to parameters that may not yield effective results in the end. Regularly test and iterate on your prototypes, leveraging the insights gained to ensure a robust and well-optimized final solution.
 
-<p align="center">
-    <img src="../images/3d_printing.png" alt="Fast Prototyping and 3D Printing" width="450"/> </br>
-    <center> <i>Fast Prototyping and 3D Printing</i> </center>
-</p>
+<div align="center">
+  <table>
+    <tr>
+      <td align="center">
+        <img src="../images/fast_prototyping.jpg" alt="Fast Prototyping" width="500"/>  
+        <br/><i>Fast Prototyping</i>
+      </td>
+      <td align="center">
+        <img src="../images/3d_printing.png" alt="3D Printing" width="430"/>  
+        <br/><i>3D Printing</i>
+      </td>
+    </tr>
+  </table>
+</div>
 
 ## Programming
 

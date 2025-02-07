@@ -5,7 +5,12 @@ AvgFilter::AvgFilter(uint8_t N)
     init(N);
 }
 
-AvgFilter::~AvgFilter() {}
+AvgFilter::~AvgFilter() {
+    if (m_ring_buffer) {
+        free(m_ring_buffer);
+        m_ring_buffer = nullptr;
+    }
+}
 
 void AvgFilter::init(uint8_t N)
 {
@@ -16,7 +21,7 @@ void AvgFilter::init(uint8_t N)
     reset();
 }
 
-void AvgFilter::reset(float val)
+float AvgFilter::reset(float val)
 {
     // set the filter's rolling sum to 'val'
     m_val = val;
@@ -30,11 +35,13 @@ void AvgFilter::reset(float val)
     // fill the ring buffer with scaled_val
     for (uint8_t i = 0; i < m_N; i++)
         m_ring_buffer[i] = scaled_val;
+
+    return m_val;
 }
 
-void AvgFilter::reset()
+float AvgFilter::reset()
 {
-    reset(0.0f);
+    return reset(0.0f);
 }
 
 float AvgFilter::apply(float inp)

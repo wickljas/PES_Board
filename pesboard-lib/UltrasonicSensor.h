@@ -61,16 +61,6 @@ public:
     virtual ~UltrasonicSensor();
 
     /**
-     * @brief Overloaded float operator to read distance.
-     *
-     * Enables reading the distance measurement directly from an UltrasonicSensor object.
-     * Equivalent to calling read().
-     *
-     * @return float The distance in centimeters.
-     */
-    operator float();
-
-    /**
      * @brief Read the measured distance in centimeters.
      *
      * Returns the measured distance in centimeters. If no new valid measurement is available, the function returns -1.0f.

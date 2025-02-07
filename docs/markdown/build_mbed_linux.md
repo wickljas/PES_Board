@@ -155,8 +155,8 @@ To save disk space, it is recommended to host only one physical copy of the Mbed
 
 For example, the following command will create a symbolic link in the Mbed Programs/PES_Board directory that points to the shared Mbed Programs/mbed-os directory. This allows multiple Mbed projects to share the same copy of Mbed OS.
 
-Command to Create the Symbolic Link
+Command to Create the Symbolic Link below. You have to substitute the paths with your own paths. Here `mbed-os` is the shared directory and `PES_Board` is the project directory.
 
 ```
-ln -s ~/Mbed\ Programs/mbed-os ~/Mbed\ Programs/PES_Board/mbed-os
-``` -->
+ln -s /home/pichim/Mbed\ Programs/mbed-os /home/pichim/Mbed\ Programs/PES_Board/mbed-os -->
+```

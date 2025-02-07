@@ -13,7 +13,7 @@ void MedianFilter3::init()
     reset(0.0f);
 }
 
-void MedianFilter3::reset(float val)
+float MedianFilter3::reset(float val)
 {
     // fill the ring buffer with 'val'
     for (int i = 0; i < 3; i++) {
@@ -22,11 +22,13 @@ void MedianFilter3::reset(float val)
     // the median is trivially 'val' at this point
     m_val = val;
     m_idx = 0;
+
+    return m_val;
 }
 
-void MedianFilter3::reset()
+float MedianFilter3::reset()
 {
-    reset(0.0f);
+    return reset(0.0f);
 }
 
 float MedianFilter3::apply(float inp)
