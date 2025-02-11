@@ -60,7 +60,7 @@ Below you can find a flow chart diagram showing the logic of the transitions for
 1. Connect the mechanical button to the **PC_5** pin on the Nucleo board (see [Nucleo Board Pinmap][0]). And add the ultrasonic distance sensor driver ``UltrasonicSensor.h`` to the top of the ***main.cpp*** file:
 
 ```
-#include "pesboard-lib/UltrasonicSensor.h"
+#include "UltrasonicSensor.h"
 ```
 
 2. In the scope of the ``main()`` function, you have to create a ``mechanical_button`` object and set the appropriate pullup mode:

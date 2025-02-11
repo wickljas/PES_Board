@@ -97,7 +97,7 @@ Direction PA_7
 Initially, it's essential to add the suitable drivers to the ***main.cpp*** file and then create a ``Stepper`` object inside ``main()`` function with the pin names passed as an argument.
 
 ```
-#include "pesboard-lib/Stepper.h"
+#include "Stepper.h"
 ```
 
 ```

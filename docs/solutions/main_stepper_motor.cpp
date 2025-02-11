@@ -17,14 +17,14 @@
 //  - SY35ST36-1004A, smaller motor, Vref : 8 * 1.00 * 0.068 = 0.5440 V
 //  - SY42STH38-1684A, bigger motor, Vref : 8 * 1.68 * 0.068 = 0.9139 V
 
-#include <mbed.h>
+#include "mbed.h"
 
 // pes board pin map
-#include "pesboard-lib/PESBoardPinMap.h"
+#include "PESBoardPinMap.h"
 
 // drivers
-#include "pesboard-lib/DebounceIn.h"
-#include "pesboard-lib/Stepper.h"
+#include "DebounceIn.h"
+#include "Stepper.h"
 
 bool do_execute_main_task = false; // this variable will be toggled via the user button (blue button) and
                                    // decides whether to execute the main task or not

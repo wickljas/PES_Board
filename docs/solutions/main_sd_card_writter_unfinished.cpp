@@ -14,19 +14,19 @@
  * - fid .mbed
  */
 
- #include <mbed.h>
+ #include "mbed.h"
 
  // pes board pin map
- #include "pesboard-lib/PESBoardPinMap.h"
+ #include "PESBoardPinMap.h"
  
  // drivers
- #include "pesboard-lib/DebounceIn.h"
- #include "pesboard-lib/MedianFilter3.h"
- #include "pesboard-lib/SDWriter.h"
- #include "pesboard-lib/SDLogger.h"
- // #include "pesboard-lib/SerialStream.h"
- // #include "pesboard-lib/AvgFilter.h"
- #include "pesboard-lib/IRSensor.h"
+ #include "DebounceIn.h"
+ #include "MedianFilter3.h"
+ #include "SDWriter.h"
+ #include "SDLogger.h"
+ // #include "SerialStream.h"
+ // #include "AvgFilter.h"
+ #include "IRSensor.h"
  
  bool do_execute_main_task = false; // this variable will be toggled via the user button (blue button) and
                                     // decides whether to execute the main task or not

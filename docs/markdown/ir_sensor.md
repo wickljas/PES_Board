@@ -85,7 +85,7 @@ To start working with the sensor, it is necessary to plug it correclty and creat
 To be able to use the tooling from the Mbed platform, it is necessary to include the library at the beginning of the ***main.cpp*** file:
 
 ```
-#include <mbed.h>
+#include "mbed.h"
 ```
 
 Create an object with the pin's name passed as an argument and define a variable to store the corresponding reading from the sensor in millivolts:

@@ -7,21 +7,21 @@ The main file is the file that contains the ``main()`` function, which is the fu
 At the very beginning of the file, the mbed library is included, which is a library that contains all the necessary functions and objects for the microcontroller to work properly with the mbed operating system.
 
 ```
-#include <mbed.h>
+#include "mbed.h"
 ```
 
 Next a map / dictionary of the PES board is included. In here we specify a naming conventaion to translate pin names from the PES board to the Nucleo board, see also [pes_board_peripherals.pdf](docs/datasheets/pes_board_peripherals.pdf).
 
 ```
 // pes board pin map
-#include "pesboard-lib/PESBoardPinMap.h"
+#include "PESBoardPinMap.h"
 ```
 
 Next we define additional drivers for hardware that we use in the project, for now we only include the ``DebounceIn.h`` driver, which is the driver we use to read in the blue **USER** button on the Nucleo board.
 
 ```
 // drivers
-#include "pesboard-lib/DebounceIn.h"
+#include "DebounceIn.h"
 ```
 
 Beginning now until the beginning of the ``main()`` function is space to define global variables and functions. These are placed outside of any scope, e.g. the scope of the ``main(){scope from main}`` function and are there for known by any scope within the ***main.cpp*** file (can be accessed from every scope).

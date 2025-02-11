@@ -65,7 +65,7 @@ mechanical_button.mode(PullUp);    // sets pullup between pin and 3.3 V, so that
 5. Include the necessary drivers at the top of the ***main.cpp*** file. For more details refer to [Ultrasonic Distance Sernsor](../markdown/ultrasonic_sensor.md)
 
 ```
-#include "pesboard-lib/UltrasonicSensor.h"
+#include "UltrasonicSensor.h"
 
 ...
 

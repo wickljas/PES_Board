@@ -1,12 +1,12 @@
-#include <mbed.h>
+#include "mbed.h"
 
 // pes board pin map
-#include "pesboard-lib/PESBoardPinMap.h"
+#include "PESBoardPinMap.h"
 
 // drivers
-#include "pesboard-lib/DebounceIn.h"
-#include "pesboard-lib/IMU.h"
-#include "pesboard-lib/Servo.h"
+#include "DebounceIn.h"
+#include "IMU.h"
+#include "Servo.h"
 #include <complex>
 
 bool do_execute_main_task = false; // this variable will be toggled via the user button (blue button) and
