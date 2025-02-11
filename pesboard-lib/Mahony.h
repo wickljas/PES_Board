@@ -9,7 +9,7 @@ class Mahony
 public:
     explicit Mahony();
     explicit Mahony(float kp, float ki, float Ts);
-    virtual ~Mahony();
+    ~Mahony() = default;
 
     void setup(float kp, float ki, float Ts);
     void setGains(float kp, float ki);

@@ -12,7 +12,7 @@
  * - EncoderCounter: For encoding the rotation counts.
  * - FastPWM: For generating high-frequency PWM signals.
  * - Motion: For handling motion control.
- * - PID_Cntrl: For implementing PID control.
+ * - PIDCntrl: For implementing PID control.
  * - IIR_Filter: For filtering the velocity signals.
  *
  * Usage:
@@ -43,8 +43,8 @@
 #include "FastPWM/FastPWM.h"
 #include "Motion.h"
 #include "ThreadFlag.h"
-#include "PID_Cntrl.h"
-#include "IIR_Filter.h"
+#include "PIDCntrl.h"
+#include "IIRFilter.h"
 
 #define M_PIf 3.14159265358979323846f /* pi */
 
@@ -87,7 +87,7 @@ public:
     /**
      * @brief Destroy the DCMotor object.
      */
-    virtual ~DCMotor();
+    ~DCMotor();
 
     /**
      * @brief Set the target velocity of the motor.
@@ -261,8 +261,8 @@ private:
     FastPWM m_FastPWM;
     EncoderCounter m_EncoderCounter;
     Motion m_Motion;
-    PID_Cntrl m_PID_Cntrl_velocity;
-    IIR_Filter m_IIR_Filter_velocity;
+    PIDCntrl m_PIDCntrl_velocity;
+    IIRFilter m_IIR_Filter_velocity;
 #if PERFORM_GPA_MEAS
     GPA m_GPA;
     bool m_start_gpa = false;

@@ -11,7 +11,7 @@ class Chirp
 public:
     Chirp() {};
     Chirp(const float f0, const float f1, const float t1, const float Ts);
-    virtual ~Chirp() = default;
+    ~Chirp() = default;
 
     void init(const float f0, const float f1, const float t1, const float Ts);
     void reset();

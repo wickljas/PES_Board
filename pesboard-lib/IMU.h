@@ -47,7 +47,7 @@ public:
     ImuData() {
         init();
     };
-    virtual ~ImuData(){};
+    ~ImuData() = default;
 
     Eigen::Vector3f gyro, acc, mag;
     Eigen::Quaternionf quat;

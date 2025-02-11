@@ -1,30 +1,21 @@
-/**
- * TODO:
- % - measure the actual current limit voltage for the 2 motors
- * - introduce enable ping
- * - test current fuctionality
- * - write Stepper md file with a smal example
- * - intruduce enable pin again (if there is enough DOs)
- * 
- * notes:
- * - 5V output from PES Board does not deliver enough current, so students need to use
- *   an additional battery pack
- * - enable pin is active when low
- * - potentiometer was adjusted so that when two motors are rotating with 0.1 rps and 4.0 rps for the bigger motor
- *   and 5.0 rps for the smaller motors, the motors are spinning without humming without microstepping
- * - min and max speed in rps (tested with one battery pack half charged):
- *     SY35ST36-1004A, smaller motor    |  SY42STH38-1684A, bigger motor
- *         min:   0.1 rps               |    0.1 rps
- *             full steps / micro steps res 16
- *         max:   5.0 / 6.0 rps         |    4.0 / 5.0 rps
- * - with a 200 step motor and using max res 16 micorstepping the max speed at 50 mus update frequency is 6.25 rps
- *   1.0e6 / (200.0 * 50 * 16) = 6.2500 which seems reasonable
- * - microstepping is way more smooth, only tested 16 times resolution by connecting ms1, ms2, ms3 to 5V
- * 
- * theoretical current limit:
- * - SY35ST36-1004A, smaller motor, Vref : 8 * 1.00 * 0.068 = 0.5440 V
- * - SY42STH38-1684A, bigger motor, Vref : 8 * 1.68 * 0.068 = 0.9139 V
- */
+//  Notes:
+//  - 5V output from PES Board does not deliver enough current, so the students need to use
+//    an additional battery pack
+//  - enable pin is active when low
+//  - potentiometer was adjusted so that when two motors are rotating with 0.1 rps and 4.0 rps for the bigger motor
+//    and 5.0 rps for the smaller motors, the motors are spinning without humming without microstepping
+//  - min and max speed in rps (tested with one battery pack half charged):
+//      SY35ST36-1004A, smaller motor    |  SY42STH38-1684A, bigger motor
+//          min:   0.1 rps               |    0.1 rps
+//              full steps / micro steps res 16
+//          max:   5.0 / 6.0 rps         |    4.0 / 5.0 rps
+//  - with a 200 step motor and using max res 16 micorstepping the max speed at 50 mus update frequency is 6.25 rps
+//    1.0e6 / (200.0 * 50 * 16) = 6.2500 which seems reasonable
+//  - microstepping is way more smooth, only tested 16 times resolution by connecting ms1, ms2, ms3 to 5V
+//  
+//  theoretical current limit:
+//  - SY35ST36-1004A, smaller motor, Vref : 8 * 1.00 * 0.068 = 0.5440 V
+//  - SY42STH38-1684A, bigger motor, Vref : 8 * 1.68 * 0.068 = 0.9139 V
 
 #include <mbed.h>
 
@@ -75,8 +66,11 @@ int main()
 
         if (do_execute_main_task) {
 
+            // set velocity in rps
             // stepper_M1.setVelocity(0.1f);
             // stepper_M2.setVelocity(-0.1f);
+
+            // set rotation absolute to initial position
             stepper_M1.setRotation(-1.0f, 1.0f);
             stepper_M2.setRotation(+2.0f, 1.0f);
 
@@ -84,10 +78,10 @@ int main()
             // the following code block gets executed only once
             if (do_reset_all_once) {
                 do_reset_all_once = false;
-
+                
+                // set rotation relative to current position
                 stepper_M1.setRotationRelative(-1.0f, 1.0f);
                 stepper_M2.setRotationRelative(+2.0f, 1.0f);
-                
             }
         }
 

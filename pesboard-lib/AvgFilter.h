@@ -15,8 +15,8 @@ public:
     // constructor that initializes the filter with N samples
     AvgFilter(uint8_t N);
 
-    // virtual destructor (in case of inheritance)
-    virtual ~AvgFilter();
+    // destructor
+    ~AvgFilter();
 
     // initializes/allocates the ring buffer for N samples
     void init(uint8_t N);

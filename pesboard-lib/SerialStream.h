@@ -5,7 +5,7 @@
 #if S_STREAM_DO_USE_SERIAL_PIPE
     #include "SerialPipe/serial_pipe.h"
 #else
-    #include "mbed.h"
+    #include <mbed.h>
 #endif
 
 #define S_STREAM_NUM_OF_FLOATS_MAX 30 // tested at 2 kHz 20 floats
@@ -18,7 +18,7 @@ public:
                           PinName tx,
                           PinName rx,
                           int baudrate = 2000000);
-    virtual ~SerialStream();
+    ~SerialStream() = default;
 
     void write(const float val);
     void send();

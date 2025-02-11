@@ -1,4 +1,4 @@
-<!-- 
+<!--
     Styling Rules:
     - When ever possible *.md [Links] should be used, and not just bold text
     - In a *.md [Link] all words start with a capital letter, e.g.: [Course setup]
@@ -13,9 +13,51 @@
       - ``enable_motors`` variable
       - ``DCMotor.h`` driver
     Authors:
+    - Michael Peter (pichim/pmic)
     - Maciej Szarek (szar)
-    - Peter Michael (pichim/pmic)
  -->
+
+ <!--
+    Info about the demonstrators for WS2 and WS3
+
+    In the folders [/docs/cad/WS2](/docs/cad/WS2) and [/docs/cad/WS3](/docs/cad/WS3) you will find the printable files needed to build the demonstration models for workshop 2 and workshop 3. For workshop 3, you need to edit the parts rack and gear wheel because they are only available in STL print-ready format. Editing can be done in Prusa Slicer, which offers the possibility of minor modification.
+
+    - Rack - one hole should be added, in order to screw the rack to the carriage on which the sensor is located, or possibly lengthen this element (details available: https://www.printables.com/de/model/522220-universal-gear-rack-collection-different-modules)
+    - Make a hole in the element for the motor shaft (details available: https://www.printables.com/de/model/516177-universal-spur-gears-collection-module-15)
+-->
+
+ <!--
+    TODO: General:
+    - in DCMotor.cpp PERFORM_GPA_MEAS and PERFORM_CHIRP_MEAS should be tested with the latest updates, here features like serial_pipe and serialStream could be introduced
+
+    TODO: General for FS25:
+
+        Markdown files read and checked:
+        - README.md (some TODO's left)
+        - build_mbed_linux.md   (ok)
+        - build_mbed_windows.md (ok)
+        - stepper_motor.md      (ok)
+        - course_setup.md
+        - dc_motor.md
+        - imu.md
+        - ir_sensor.md
+        - kinematics.md
+        - line_follower.md
+        - main_description.md
+        - servo.md
+        - tips.md
+        - ultrasonic_sensor.md
+        - ws1.md
+        - ws2.md
+        - ws3.md
+
+    TODO General PES-Board and MiniSegway:
+    - fix .gitignore
+    - fid .mbed
+
+    TODO: General for HS25:
+    - Port and Test the hole Project to/with PlatformIO
+  -->
 
 <!-- link list -->
 [0]: https://os.mbed.com/platforms/ST-Nucleo-F446RE/
@@ -35,14 +77,14 @@ Big shoutout to Maciej Szarek for his help and the support (https://github.com/s
     <center> <i>Fast Prototyping</i> </center>
 </p>
 
-Fast prototyping in robotics focuses on quickly building and testing a simple version of the system rather than aiming for perfection from the start. Through iterative development, each prototype helps identify and fix issues, leading to gradual improvements. This approach saves time and cost, encourages experimentation, and ensures that the final design is optimized based on real-world performance. Additionally, hardware and software evolve together, allowing adjustments to both as new challenges arise. Instead of spending too much time planning, build, test, and refine—learning from each iteration.
+Fast prototyping in robotics focuses on quickly building and testing a simple version of the system rather than aiming for perfection from the start. Through iterative development, each prototype helps identify and fix issues, leading to gradual improvements. This approach saves time and cost, encourages experimentation, and ensures that the final design is optimized based on real-world performance. Additionally, hardware and software evolve together, allowing adjustments to both as new challenges arise. Instead of spending too much time planning, build, test, and refine — learning from each iteration.
 
 # Table of Contents
 1. [Course Setup](#course-setup)
-    * [Accounts](docs/markdown/general_info.md#accounts)
-    * [Software](docs/markdown/general_info.md#software)
-    * [GitHub](docs/markdown/general_info.md#github)
-    * [Arm MBed](docs/markdown/general_info.md#arm-mbed)
+    * [Accounts](docs/markdown/course_setup.md#accounts)
+    * [Software](docs/markdown/course_setup.md#software)
+    * [GitHub](docs/markdown/course_setup.md#github)
+    * [Arm Mbed](docs/markdown/course_setup.md#arm-mbed)
 2. [Hardware](#hardware)
     * [Nucleo F446RE](#nucleo-f446re)
         * [Nucleo Pinmap][0]
@@ -64,25 +106,25 @@ Fast prototyping in robotics focuses on quickly building and testing a simple ve
     * [Workshop 1](docs/markdown/ws1.md)
     * [Workshop 2](docs/markdown/ws2.md)
     * [Workshop 3](docs/markdown/ws3.md)
-5. [Build Mbed OS project with VScode](#build-mbed-os-project-with-vscode)
-    * [Build on Windows](docs/markdown/build_mbed_windows.md)
-    * [Build on Linux/WSL](docs/markdown/build_mbed_linux.md)
-6. [Links](#links)
+5. [Build Mbed OS projects with VScode](#build-mbed-os-projects-with-vscode)
+    * [Build Mbed on Windows with VScode](docs/markdown/build_mbed_windows.md)
+    * [Build Mbed on Linux/WSL with VScode](docs/markdown/build_mbed_linux.md)
+6. [Weblinks](#weblinks)
 
 ## Course Setup
 
-In order to be able to complete the course, one must first register on the following platforms and obtain the appropriate tools. All the information needed to start the course can be found in [General Info](docs/markdown/general_info.md).
+In order to be able to complete the course, one must first register on the following platforms and obtain the appropriate tools. All the information needed to start the course can be found in [Course Setup](docs/markdown/course_setup.md).
 
 This document covers all the information about: 
 
-- [Accounts](docs/markdown/general_info.md#accounts)
-- [Software](docs/markdown/general_info.md#software)
-- [GitHub](docs/markdown/general_info.md#github)
-- [Arm MBed](docs/markdown/general_info.md#arm-mbed)
+- [Accounts](docs/markdown/course_setup.md#accounts)
+- [Software](docs/markdown/course_setup.md#software)
+- [GitHub](docs/markdown/course_setup.md#github)
+- [Arm Mbed](docs/markdown/course_setup.md#arm-mbed)
   
 ## Hardware
 
-During the course, we will use the Nucleo-F446RE board from ST in combination with the PES board designed and developed at ZHAW. The basic hardware kid that students receive includes a variety of sensors and actuators for practical applications.
+During the course, we will use the Nucleo-F446RE board from ST Microelectronics in combination with the PES board designed and developed at ZHAW. The basic hardware kid that students receive includes a variety of sensors and actuators for practical applications.
 
 >**IMPORTANT NOTE:**
 >
@@ -94,7 +136,7 @@ During the course, we will use the Nucleo-F446RE board from ST in combination wi
 
 ### Nucleo F446RE
 
-The Nucleo-F446RE is a microcontroller development board featuring the STM32F446RET6 microcontroller from STMicroelectronics. It provides a versatile platform for prototyping and developing embedded systems, offering a wide range of peripherals, connectivity options, and compatibility with the Arduino and ST Morpho ecosystems.
+The Nucleo-F446RE is a microcontroller development board featuring the STM32F446RET6 microcontroller from ST Microelectronics. It provides a versatile platform for prototyping and developing embedded systems, offering a wide range of peripherals, connectivity options, and compatibility with the Arduino and ST Morpho ecosystems.
 
 - [STM32F446RE Documentation][1] 
 
@@ -103,7 +145,7 @@ The Nucleo-F446RE is a microcontroller development board featuring the STM32F446
     <i>Nucleo F446RE Overview</i>
 </p>
 
-Arm MBed provides a dedicated platform with essential information about the development board. Here you can find technical specifications and the pinmap.
+Arm Mbed provides a dedicated platform with essential information about the development board. Here you can find technical specifications and the pinmap.
 
 - [Mbed ST-Nucleo-F446RE</font>][0]
 
@@ -117,42 +159,43 @@ The PES Board is a hardware board with additional sensors, devices and power ele
 - 4 AI/O, 3.3V (5V tolerant)
 - 3 Encoder-Counter
 - 9-axis IMU (accelerometer, gyroscope, magnetometer)
+- SD-Card slot
 
 >**IMPORTANT NOTE:**
->- <b>The voltage of the DO (servos) is set via the switch behind the charging socket: 3.3 V or 5 V</b>
->- <b>Motor encoder soldering can be wrong. Do not assume that if you plug in one motor and everything works you can then also use the same connections with different motor. You have to make sure that the physical rotation is according to your assumption and that a positive input leads to a positive change of increments.</b>
+>- <b>The voltage of the DO (servos) is set via the switch behind the charging socket: 3.3V or 5V. Generally this can be set to 5V.</b>
+>- <b>Motor encoder soldering can be wrong. Do not assume that if you plug in one motor and everything works you can then also use the same connections with a different motor. You have to make sure that the physical rotation is according to your needs and that a positive input leads to a positive change of increments.</b>
 >- <b>Depending on the PES Board version DCMotor M3 rotation direction might be inverted.</b>
->- <b>Depending on the PES Board version the Pin map might differ.</b>
+>- <b>Depending on the PES Board version the Pin map might differ. Feel free to ask if you are not sure.</b>
 
 #### Batteries
 
 The kit includes two sets of 6V battery packs, which can be connected in series to provide 12 volts. The battery packs need to be connected to the back of the PES Board. The picture below illustrates the proper battery connection required to get a total voltage of 12V.
 
 <p align="center">
-    <img src="docs/images/battery_packs.png" alt="Battery Packs" width="700"/> </br>
+    <img src="docs/images/battery_packs.png" alt="Battery Packs" width="600"/> </br>
     <i>Battery Packs</i>
 </p>
 
-The batteries enables the board to be powered independently of the connection to the computer/laptop, eliminating the need for a connection via the Mini USB cable. The board continues to receive a stable 5V supply while offering the option to use a 12V supply for the power electronics of the motors. To activate the external battery power, switch the slider on the PES Board to the ON position.
+The batteries enables the board itself to be powered independently of the connection to the computer/laptop, eliminating the need for a connection via the Mini USB cable. The board continues to receive a stable 5V supply while offering the option to use up to 12V supply for the power electronics of the motors. To activate the external battery power, switch the slider on the PES Board to the ON position.
 
-<b>Single battery pack</b> - if you are using a single battery pack, the remaining pins need to be bridged. If only 6 V is used, this must be parameterised accordingly in the firmware when parameterising motion controller class.
+<b>Single battery pack</b> - if you are using a single battery pack, the remaining pins need to be bridged. If only 6 V is used, this must be parameterised accordingly in the firmware when parameterising classes of hardware.
 
 #### Charging the Batteries
 
 <b>Using the Charger</b> - if you connect the charger to the PES Board, the battery packs need to be connected. If the battery packs (2 packs for 12 volts or one pack and a jumper for 6 volts) are not connected when you plug in the charger, the PES Board will be destroyed.
 
-<b>Charging batteries</b> - the battery packs are only charged when the PES Board circuit breaker is set to OFF.
+<b>Charging batteries</b> - the battery packs are only charged when the power switch is set to OFF.
 
 <b>Usage while charging</b> - don't use the PES Board while it is charging.
 
 #### Resources
 
-All additional technical information such as schematics and pin maps for the PES Board can be found in a folder <b>docs/datasheets/pes_board_data/</b>. Also included there are CAD files of the combined Nucleo F446RE and PES Board in .3dxml extensions (for 3Dexperience).
+All additional technical information such as schematics and pin maps for the PES Board can be found in a folder [/docs/datasheets/pes_board_data](/docs/datasheets/pes_board_data). Also included there are CAD files of the combined Nucleo F446RE and PES Board in `.3dxml` extensions (for 3Dexperience).
 
 #### Pheripherals
 
 <p align="center">
-    <img src="docs/images/pes_board_peripherals.png" alt="PES Board Pheripherals" width="900"/> </br>
+    <img src="docs/images/pes_board_peripherals_cropped.png" alt="PES Board Pheripherals" width="850"/> </br>
     <i>PES Board pheripherals</i>
 </p>
 
@@ -164,7 +207,7 @@ All additional technical information such as schematics and pin maps for the PES
 
 ### Hardware Kit
 
-- 2x Battery pack 6v / 2300mAh with charger
+- 2x Battery packs 6v / 2300mAh with charger
 - 1x Servo – REELY S-0090
 - 1x Servo – FUTABA S3001
 - 1x LED green with resistor 2200/600mW/1%
@@ -175,7 +218,9 @@ All additional technical information such as schematics and pin maps for the PES
 
 ### Hardware Tutorials
 
-The following links contain the hardware tutorials. The documents contain specifications and technical information about the hardware and information about how to use the hardware. The tutorials cover the software drivers, specific calibration procedures, controlling actuators and retrieving measurements from the sensors.
+The following links contain the hardware tutorials. The documents contain specifications and technical information about the hardware itself and how to use it. The tutorials cover the software drivers, specific calibration procedures, controlling actuators and retrieving measurements from the sensors and actuators.
+
+**Important Note: The PES Board currently does not support stepper motors. The following example uses an external hardware driver and an additional battery pack, which is directly wired to the Nucleo board.**
 
 - [IR Sensor](docs/markdown/ir_sensor.md)
 - [Ultrasonic Sensor](docs/markdown/ultrasonic_sensor.md)
@@ -183,22 +228,25 @@ The following links contain the hardware tutorials. The documents contain specif
 - [DC Motor](docs/markdown/dc_motor.md)
 - [Line Follower Array](docs/markdown/line_follower.md)
 - [IMU](docs/markdown/imu.md)
+- [Stepper Motor](docs/markdown/stepper_motor.md)
+- [SD-Card] <!-- TODO: Create and add document --> 
 
 ## Tips
 
-Tips that you might find useful can be found in the document [Tips](docs/markdown/tips.md). Here you can find information about: 
+Tips that you might find useful can be found in the document [Tips](docs/markdown/tips.md). Here you can find information about:
+
 - [Project Development](docs/markdown/tips.md#project-development)
 - [Programming](docs/markdown/tips.md#programming)
 - [Structuring a Robot Task](docs/markdown/tips.md#structuring-a-robot-task)
 
-## Workshops, Solutions and Examples
+## Workshops
 
 The following links contain the workshops instructions:
 - [Workshop 1](docs/markdown/ws1.md)
 - [Workshop 2](docs/markdown/ws2.md)
 - [Workshop 3](docs/markdown/ws3.md)
 
-And here you find all the solutions, as well as some additional examples:
+And below you find all the solutions, as well as some additional examples:
 - [Solution Workshop 1](docs/solutions/main_ws1.cpp)
 - [Solution Workshop 2, Part 1](docs/solutions/main_ws2_p1.cpp)
 - [Solution Workshop 2, Part 2](docs/solutions/main_ws2_p2.cpp)
@@ -208,19 +256,20 @@ And here you find all the solutions, as well as some additional examples:
 - [Example Gimbal](docs/solutions/main_gimbal.cpp)
 - [Example Line Follower Base Example](docs/solutions/main_line_follower_base_ss24.cpp)
 - [Example Differential Drive Robot Kinematics Calibration](docs/solutions/main_calib_kinematic_ss24.cpp)
-- TODO: Add stepper motor example here
-
-In the folder (docs/cad/WS2) and (docs/cad/WS3) you will find the printable files needed to build the demonstration model for workshop 2 and workshop 3. For workshop 3, you need to edit the parts: rack and gear wheel because they are only available in STL print-ready format. Editing can be done in Prusa Slicer, which offers the possibility of minor modification.
-- Rack - one hole should be added, in order to screw the rack to the carriage on which the sensor is located, or possibly lengthen this element (details available: https://www.printables.com/de/model/522220-universal-gear-rack-collection-different-modules)
-- Make a hole in the element for the motor shaft (details available: https://www.printables.com/de/model/516177-universal-spur-gears-collection-module-15)
+- [Example Stepper Motor](docs/solution/main_stepper_motor.cpp)
+- [Example SD-Card] <!-- TODO: Add SD-Card example here -->
 
 ### Additional Information
 
 - [Differential Drive Kinematics](docs/markdown/kinematics.md)
 
+## Build Mbed OS projects with VScode
+- [Build Mbed on Windows with VScode](docs/markdown/build_mbed_windows.md)
+- [Build Mbed on Linux/WSL with VScode](docs/markdown/build_mbed_linux.md)
+
 ## Weblinks
 
-### Some General Links
+### General Links
 
 - Git and GitHub Tutorial for Beginners from 32:40 about Github: https://www.youtube.com/watch?v=tRZGeaHPoaw
 - C++ step by step tutorials: https://www.w3schools.com/cpp/default.asp

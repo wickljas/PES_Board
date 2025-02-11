@@ -82,7 +82,7 @@ If you are not sure how to connect the sensor, click the following hint.
 
 To start working with the sensor, it is necessary to plug it correclty and create an ``AnalogIn`` object in the ***main.cpp*** file.
 
-To be able to use the tooling from the MBed platform, it is necessary to include the library at the beginning of the ***main.cpp*** file:
+To be able to use the tooling from the Mbed platform, it is necessary to include the library at the beginning of the ***main.cpp*** file:
 
 ```
 #include <mbed.h>

@@ -123,6 +123,14 @@ sed -i 's/"gcc-x64"/"gcc-arm"/g' .vscode/c_cpp_properties.json
 sed -i 's/--profile=debug/--profile=develop/g' .vscode/tasks.json
 ```
 
+## Install the Mbed OS
+
+If you only use VSCode, you can install Mbed OS using git with the following command
+
+```
+git clone --branch mbed-os-6.17.0 --depth 1 https://github.com/ARMmbed/mbed-os.git
+```
+
 ## Build the project
 
 Press Cntrl+Shift+B and select `Build Mbed OS application`.

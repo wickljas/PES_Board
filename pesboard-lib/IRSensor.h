@@ -10,7 +10,7 @@ class IRSensor
 {
 public:
     explicit IRSensor(PinName pin);
-    virtual ~IRSensor();
+    ~IRSensor();
 
     // resets the filter to the current readout
     float reset();

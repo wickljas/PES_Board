@@ -3,7 +3,7 @@
 class IIRFilter {
 public:
     IIRFilter() {};
-    virtual ~IIRFilter() = default;
+    ~IIRFilter() = default;
 
     void integratorInit(const float Ts);
     void integratorUpdate(const float Ts);

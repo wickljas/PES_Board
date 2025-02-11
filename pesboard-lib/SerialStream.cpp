@@ -15,10 +15,6 @@ SerialStream::SerialStream(uint8_t num_of_floats,
 #endif
 }
 
-SerialStream::~SerialStream()
-{
-}
-
 void SerialStream::write(const float val)
 {
     memcpy(&_buffer[_byte_cntr], &val, sizeof(float));

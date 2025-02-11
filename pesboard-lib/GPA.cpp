@@ -238,12 +238,6 @@ GPA::GPA(float fMin, float fMax, int NfexcDes, int NperMin, int NmeasMin, float 
     init(fMin, fMax, NfexcDes, NperMin, NmeasMin, Ts, Aexc0, Aexc1, Nstart, Nsweep, doPrint, doPrecalcParam);
 }
 
-// -----------------------------------------------------------------------------
-//      virtual, reset and set
-// -----------------------------------------------------------------------------
-
-GPA::~GPA() {}
-
 void GPA::init(float fMin, float fMax, int NfexcDes, int NperMin, int NmeasMin, float Ts, float Aexc0, float Aexc1, int Nstart, int Nsweep, bool doPrint, bool doPrecalcParam)
 {
     this->doPrint = doPrint;

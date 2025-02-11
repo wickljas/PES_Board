@@ -42,7 +42,7 @@ public:
         return update(inp, out);
     }
 
-    virtual ~GPA();
+    ~GPA() = default;
 
     void    init(float fMin, float fMax, int NfexcDes, int NperMin, int NmeasMin, float Ts, float Aexc0, float Aexc1, int Nstart, int Nsweep, bool doPrint, bool doPrecalcParam);
     void    reset();

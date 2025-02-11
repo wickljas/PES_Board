@@ -5,8 +5,6 @@ MedianFilter3::MedianFilter3()
     init();
 }
 
-MedianFilter3::~MedianFilter3() {}
-
 void MedianFilter3::init()
 {
     m_idx = 0;

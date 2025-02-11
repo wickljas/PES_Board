@@ -6,8 +6,6 @@ LinearCharacteristics3::LinearCharacteristics3()
     m_b.setZero();
 }
 
-LinearCharacteristics3::~LinearCharacteristics3() {}
-
 void LinearCharacteristics3::setCalibrationParameter(Eigen::Matrix3f A, Eigen::Vector3f b)
 {
     m_A = A;

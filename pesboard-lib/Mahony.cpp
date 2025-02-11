@@ -19,11 +19,6 @@ Mahony::Mahony(float kp, float ki, float Ts)
     setup(kp, ki, Ts);
 }
 
-Mahony::~Mahony()
-{
-    
-}
-
 void Mahony::update(Eigen::Vector3f gyro, Eigen::Vector3f acc)
 {
     Eigen::Vector3f g_n(                                          2.0f * ( m_quat.x()*m_quat.z() - m_quat.w()*m_quat.y() ),

@@ -46,14 +46,14 @@ Arm Mbed Studio is an integrated development environment (IDE) designed for embe
     <i>Mbed Studio</i>
 </p>
 
-### MBed OS Version
+### Mbed OS Version
 
-During the course we are working with MBed OS version 6. It is important to keep this in mind when you are looking for documentation or examples on the internet. There are many examples from older versions of MBed OS, especially MBed OS 2 but we need MBed OS 6.
+During the course we are working with Mbed OS version 6. It is important to keep this in mind when you are looking for documentation or examples on the internet. There are many examples from older versions of Mbed OS, especially Mbed OS 2 but we need Mbed OS 6.
 
 ### Importing Your First Project
 
 Importing a program from GitHub to Mbed Studio involves linking the local repository with Mbed Studio, enabling seamless collaboration and development on the chosen project:
-* Once MBed Studio is installed, the next step involves creating the program intended for use during the class. This program should be imported from the previously forked repository. Open the **File** menu and select **Import Program**
+* Once Mbed Studio is installed, the next step involves creating the program intended for use during the class. This program should be imported from the previously forked repository. Open the **File** menu and select **Import Program**
 
 <p align="center">
     <img src="../images/importing_mbed.png" alt="Importing the Program" width="420"/> </br>
@@ -75,7 +75,7 @@ Importing a program from GitHub to Mbed Studio involves linking the local reposi
     <i>Importing Program 1</i>
 </p>
 
-* Then click **Add program**, by default this will be the active program in MBed Studio.
+* Then click **Add program**, by default this will be the active program in Mbed Studio.
 * To complete the setup you need to choose the **Target** by typing the Nucleo Board type that will be used: In our case **NUCLEO-F446RE**.
 
 <p align="center">

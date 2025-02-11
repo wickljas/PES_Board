@@ -25,7 +25,7 @@ Participants will explore hardware utilization, specifically the IR Sensor and a
 
 ### Assignment
 
-We assume that you already have all necessary accounts set-up and software installed to conduct the workshop. If not, go to: [Course Setup](../markdown/general_info.md), and follow the instructions there.
+We assume that you already have all necessary accounts set-up and software installed to conduct the workshop. If not, go to: [Course Setup](../markdown/course_setup.md), and follow the instructions there.
 
 Furthermore, ensure that you are familiar with the general structure of the board. If not, refer to: [Nucleo F446RE](../../README.md#nucleo-f446re)
 

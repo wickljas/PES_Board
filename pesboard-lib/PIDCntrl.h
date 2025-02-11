@@ -5,18 +5,18 @@
 
 #define M_PI 3.141592653589793238462643383279502884
 
-class PID_Cntrl
+class PIDCntrl
 {
 public:
-    PID_Cntrl(float I, float Ts, float uMin, float uMax);
-    PID_Cntrl(float P, float I, float Ts, float uMin, float uMax);
-    PID_Cntrl(float P, float I, float D, float Ts, float uMin, float uMax);
-    PID_Cntrl(float P, float I, float D, float tau_f, float Ts, float uMin, float uMax);
-    PID_Cntrl(float P, float I, float D, float tau_f, float tau_ro, float Ts, float uMin, float uMax);
+    PIDCntrl(float I, float Ts, float uMin, float uMax);
+    PIDCntrl(float P, float I, float Ts, float uMin, float uMax);
+    PIDCntrl(float P, float I, float D, float Ts, float uMin, float uMax);
+    PIDCntrl(float P, float I, float D, float tau_f, float Ts, float uMin, float uMax);
+    PIDCntrl(float P, float I, float D, float tau_f, float tau_ro, float Ts, float uMin, float uMax);
 
-    PID_Cntrl(){};
+    PIDCntrl(){};
 
-    virtual ~PID_Cntrl();
+    ~PIDCntrl() = default;
 
     void reset(float initValue = 0.0f);
 
