@@ -17,21 +17,21 @@ A direct current (DC) motor is an electrical machine that converts electrical en
 
 ## Technical Specifications
 
-| | 31:1 Metal Gearmotor 20Dx41L mm 12V CB | 78:1 Metal Gearmotor 20Dx43L mm 12V CB |488:1 Metal Gearmotor 20Dx46L mm 12V CB|
-|-|-|-|-|
-|**Dimensions**|
-|Size                     | 20D x 43.2L mm | 20D x 44.7L mm |20D × 47.7L mm|
-|Weight                   | 44 g           | 45 g           | 47 g         |
-|Shaft diameter           | 4 mm           | 4 mm           | 4 mm         |
-|**General specifications**|
-|Gear ratio               | 31.25:1        | 78.125:1       | 488.28125:1  |
-|No-load speed @ 12V      | 450 rpm        | 180 rpm        | 28 rpm       |
-|Stall torque @ 12V       | 0.24 Nm        | 0.53 Nm        | 2.45 Nm      |
-|Max output power @ 12V   | 2.8 W          | 2.5 W          | 1.5 W        |
-|No-load speed @ 6V       | 225 rpm        | 90 rpm         | 14 rpm       |
-|Stall torque @ 6V        | 0.12 Nm        | 0.26 Nm        | 1.27 Nm      |
-|**Encoder**|
-|Resolution               | 20 (5)         | 20 (5)         | 20 (5)       |
+|                            | 31:1 Metal Gearmotor 20Dx41L mm 12V CB | 78:1 Metal Gearmotor 20Dx43L mm 12V CB | 488:1 Metal Gearmotor 20Dx46L mm 12V CB |
+| -------------------------- | -------------------------------------- | -------------------------------------- | --------------------------------------- |
+| **Dimensions**             |
+| Size                       | 20D x 43.2L mm                         | 20D x 44.7L mm                         | 20D × 47.7L mm                          |
+| Weight                     | 44 g                                   | 45 g                                   | 47 g                                    |
+| Shaft diameter             | 4 mm                                   | 4 mm                                   | 4 mm                                    |
+| **General specifications** |
+| Gear ratio                 | 31.25:1                                | 78.125:1                               | 488.28125:1                             |
+| No-load speed @ 12V        | 450 rpm                                | 180 rpm                                | 28 rpm                                  |
+| Stall torque @ 12V         | 0.24 Nm                                | 0.53 Nm                                | 2.45 Nm                                 |
+| Max output power @ 12V     | 2.8 W                                  | 2.5 W                                  | 1.5 W                                   |
+| No-load speed @ 6V         | 225 rpm                                | 90 rpm                                 | 14 rpm                                  |
+| Stall torque @ 6V          | 0.12 Nm                                | 0.26 Nm                                | 1.27 Nm                                 |
+| **Encoder**                |
+| Resolution                 | 20 (5)                                 | 20 (5)                                 | 20 (5)                                  |
 
 ## Links
 

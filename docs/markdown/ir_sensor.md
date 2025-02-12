@@ -13,7 +13,7 @@ The analog distance sensor is equipped with an IR diode and uses triangulation t
 ><b>How does it work?</b><br>
 >Very briefly infrared sensors work on the principle of reflected light waves. Infrared light reflected from objects or sent from an infrared remote or beacon. Infrared sensors can be used to measure distance or proximity. The reflected light is detected and then an estimate of the distance between the sensor and the object is calculated. The following is a simple representation of the principle of operation:
 ><p align="center">
->    <img src="../images/how-infrared-sensors-work.png" alt="how_IR_works" width="440"/> </br>
+>    <img src="../images/how-infrared-sensors-work.png" alt="how_IR_works" width="450"/> </br>
 >    <i> Working principle </i>
 ></p>
 >
@@ -26,29 +26,29 @@ The analog distance sensor is equipped with an IR diode and uses triangulation t
 
 ## Technical Specifications
 
-| | | | Sharp GP2D120 | Sharp GP2Y0A21YK0F | Sharp GP2Y0A41SK0F|
-|-|-|-|-|-|-|
-| |Symbol|Conditions| | | |
-|**Absolute Maximum Ratings**       |    |Ta=25 °C, Vcc = 5 VDC|                                    |                                    |                          |
-|Supply Voltage                     |Vcc |                     |-0.3 to +7 V                        |-0.3 to +7 V                        |-0.3 to +7 V              |
-|Output Terminal Voltage            |Vo  |                     |-0.3 to (Vcc +0.3) V                |-0.3 to (Vcc +0.3) V                |-0.3 to (Vcc +0.3) V      |
-|Operating Temperature              |Topr|                     |-10 to +60 °C                       |-10 to +60 °C                       |-10 to +60 °C             |
-|**Operating Supply Voltage**                                                                                                                                       |
-|Supply Voltage                     |Vcc |                     |4.5 to 5.5 V                        |4.5 to 5.5 V                        |4.5 to 5.5 V              |
-|**Electro-optical Characteristics**|    |Ta=25 °C, Vcc = 5 VDC|                                    |                                    |                          |
-|Measuring Distance Range           |ΔL  |                     |(MIN) 4.0 (TYP) ---- (MAX) 30.0 cm  |(MIN) 10.0 (TYP) ---- (MAX) 30.0 cm |(MIN) 4.0 (TYP) ---- (MAX) 30.0 cm |
+|                                     |        |                       | Sharp GP2D120                      | Sharp GP2Y0A21YK0F                  | Sharp GP2Y0A41SK0F                 |
+| ----------------------------------- | ------ | --------------------- | ---------------------------------- | ----------------------------------- | ---------------------------------- |
+|                                     | Symbol | Conditions            |                                    |                                     |                                    |
+| **Absolute Maximum Ratings**        |        | Ta=25 °C, Vcc = 5 VDC |                                    |                                     |                                    |
+| Supply Voltage                      | Vcc    |                       | -0.3 to +7 V                       | -0.3 to +7 V                        | -0.3 to +7 V                       |
+| Output Terminal Voltage             | Vo     |                       | -0.3 to (Vcc +0.3) V               | -0.3 to (Vcc +0.3) V                | -0.3 to (Vcc +0.3) V               |
+| Operating Temperature               | Topr   |                       | -10 to +60 °C                      | -10 to +60 °C                       | -10 to +60 °C                      |
+| **Operating Supply Voltage**        |
+| Supply Voltage                      | Vcc    |                       | 4.5 to 5.5 V                       | 4.5 to 5.5 V                        | 4.5 to 5.5 V                       |
+| **Electro-optical Characteristics** |        | Ta=25 °C, Vcc = 5 VDC |                                    |                                     |                                    |
+| Measuring Distance Range            | ΔL     |                       | (MIN) 4.0 (TYP) ---- (MAX) 30.0 cm | (MIN) 10.0 (TYP) ---- (MAX) 30.0 cm | (MIN) 4.0 (TYP) ---- (MAX) 30.0 cm |
 
 ## Links
 
-[Sharp GP2D120][0] <br>
-[Sharp GP2Y0A21YK0F][1] <br>
-[Sharp GP2Y0A41SK0F][2] <br>
+- [Sharp GP2D120][0] <br>
+- [Sharp GP2Y0A21YK0F][1] <br>
+- [Sharp GP2Y0A41SK0F][2] <br>
 
 ## Datasheets
 
-[Sharp GP2D120](../datasheets/GP2D120-DATA-SHEET.pdf) <br>
-[Sharp GP2Y0A21YK0F](../datasheets/gp2y0a21yk0f.pdf) <br>
-[Sharp GP2Y0A41SK0F](../datasheets/GP2Y0A41SK0F.pdf)
+- [Sharp GP2D120](../datasheets/GP2D120-DATA-SHEET.pdf) <br>
+- [Sharp GP2Y0A21YK0F](../datasheets/gp2y0a21yk0f.pdf) <br>
+- [Sharp GP2Y0A41SK0F](../datasheets/GP2Y0A41SK0F.pdf)
 
 ## Practical Tips
 
@@ -67,16 +67,14 @@ It is necessary to power the sensors with 5.0V. The sensor has 3 wires: one for 
 
 If you are not sure how to connect the sensor, click the following hint.
 
-<details Closed>
+<details>
 <summary>Parts of the Nucleo F446RE Pin Map</summary>
 <br>
 <p align="center">
-    <img src="../images/connection_pin_map.png" alt="Cennection pin map" width="700"/> </br>
-    <i>Connection Pin map with marked wire's colors </i>
+    <img src="../images/connection_pin_map.png" alt="Connection pin map" width="700"/> </br>
+    <i>Connection Pin map with marked wire's colors</i>
 </p>
 </details>
-
-<br>
 
 ### Create Analog Distance Sensor Object
 
@@ -106,25 +104,25 @@ The sensor returns distances in normalised volts, which we then scale to millivo
 >Calibrating the IR distance sensor is essential to establish a precise relationship between the sensor's analog voltage readings and actual distances. In the technical documentation it is possible to find a dependency between voltage readings and distance such as the following:
 >
 ><p align="center">
->   <img src="../images/dist_measure_char.PNG" alt="Distance measuring characteristics" width="450"/> </br>
+>   <img src="../images/dist_measure_char.PNG" alt="Distance measuring characteristics" width="550"/> </br>
 >   <i>Distance measuring characteristics</i>
 ></p>
 >The above figure shows expected values that can serve as a reference for the measurements to be made. However, all sensors, especially those of lower quality (hobby grade), may be characterized by a slightly altered curve, so a calibration process should be carried out before using such sensors for an application where the distance needs to measured acccurately.
 
 <br>
 
-The first step of the procedure is the simultaneous measurement of the actual distance and the corresponding voltage readings received from the sensor for several distances. Once the values have been measured, it is best to use a program like MATLAB/Python for data processing, where the measurements can be evaluated and further processed. The goal is to approximate the measured characteristics from millivolts to distance in [cm] as a non-linear function (a map) and determine the coefficients of the function that converts the signal from millivolts into a distance. The solution to this problem will be found via nummerical opitimazitaion. A list of hardware and a linke to a file that is needed to perform the calibration can be found below:
+The first step of the procedure is the simultaneous measurement of the actual distance and the corresponding voltage readings received from the sensor for several distances. Once the values have been measured, it is best to use a program like MATLAB/Python for data processing, where the measurements can be evaluated and further processed. The goal is to approximate the measured characteristics from millivolts to distance in [cm] as a non-linear function (a map) and determine the coefficients of the function that converts the signal from millivolts into a distance. The solution to this problem will be found via nummerical opitimazitaion. A list of hardware and a link to a file that is needed to perform the calibration can be found below:
 
 >Hardware:
 > - NUCLEO-F446RE board
-> - IR sensor (check which one you have, the model name is on the side, it will determine the range of measurement)
+> - IR sensor (check which one you have, the model name is on the side, it will determine the range of your measurement)
 > - Mini USB cable
 > - Additional wires to connect the sensor to the NUCLEO board
 > - Paper tape
 > - Length measure tape
 >
 > Software:
-> - Matlab file: [IR sensor evaluation](../matlab/ir_sensor_eval.m)
+> - MATLAB file: [IR sensor evaluation](../matlab/ir_sensor_eval.m)
 
 #### Procedure
 
@@ -135,7 +133,7 @@ The first step of the procedure is the simultaneous measurement of the actual di
     <i>Performing the exercise</i>
 </p>
 
-- To read the values measured by the sensor, it is essential to include a command that will be executed every iteration of the program. There for, this command is positioned within the ``while()`` loop but after ``if()`` statement which indicates that the command will start reading sensor values after starting the program execution with the **USER** button. 
+- To read the values measured by the sensor, it is essential to include a command that will be executed every iteration of the program. There for, this command is positioned within the ``while()`` loop but after the ``if()`` statement which indicates that the command will start reading sensor values after starting the program execution with the **USER** button. 
 
 ```
 // read analog input
@@ -162,7 +160,7 @@ ir_distance_mV = 0.0f;
 
 - Once the above commands are implemented, the next step is to compile and run the application.
 - During the calibration process, position the sensor's edge at the marked points on the tape. The sensor should face the wall to measure the distance from. It's important to align the sensor beam parallel to the ground. Simultaneously, note the distance and the corresponding readout values displayed on the serial monitor after applying it to each designated point.
-- After collecting the data points, input them into [ir_sensor_eval.m](../matlab/ir_sensor_eval.m) under the respective variables dist_cm and dist_mV. This file aids in determining the coefficients for the optimal-fit curve. <b>To achieve accurate results, it's crucial to define a suitable range of values for the curve fitting. Check the name of the sensor and look for its range, only within this range the fitting will be accurate</b>
+- After collecting the data points, input them into tha MATLAB file [IR sensor evaluation](../matlab/ir_sensor_eval.m) under the respective variables dist_cm and dist_mV. This file aids in determining the coefficients for the optimal-fit curve. <b>To achieve accurate results, it's crucial to define a suitable range of values for the curve fitting. Check the name of the sensor and look for its range, only within this range the fitting will be accurate</b>
 - Following this, proceed to create a function that converts the sensor readings into a physical length [cm]. While the function definition can be positioned at the end of the ***main.cpp*** file, it must be declared before the ``main()`` function to ensure successful compilation.
 
 Function definition (at the end of the ***main.cpp*** file)
@@ -182,7 +180,7 @@ float ir_sensor_compensation(float ir_distance_mV)
 }
 ```
 
-After writing the function, take a close look at how it is structured, are there mathematical operations in it, where exceptional values of variables, can cause the execution of forbidden mathematical operations?
+After inserting the function, take a close look at how it is structured, are there mathematical operations in it, where exceptional values of variables, can cause the execution of forbidden mathematical operations?
 
 Possible situation:
 
@@ -240,3 +238,43 @@ The first graph illustrates the non-linear relationship between the sensor's rec
 - Keep in mind that the signal is mapped to a range of 0.0f to 1.0f. Consequently, the reading needs to be multiplied by 3.3, representing the maximum range of the sensor, and then by 1000 to convert the signal from volts to millivolts.
 
 - After the calibration, using the sensor is straight forward however, the measured values need to be calibrated using the function acquired during the calibration process. This ensures the result is available as physical distance. Determining this function for each sensor individually is recommended.
+
+## Enhanced Signal Quality
+
+The sensor reading is relatively noisy, which can be improved by filtering the signal. The simplest way to filter the signal is to use a moving average filter. This is implifitly done in the class ``IRSensor``.
+With the constructor
+
+```
+IRSensor ir_sensor(PC_2);
+```
+
+you create an object that reads the sensor signal periodically at 200 Hz and you can obtain the filtered value by calling the method ``read()``. You can apply the calibration with the function
+
+```
+ir_sensor.setCalibration(2.574e+04f, -29.37f);
+```
+
+To obtain the averaged value you can use
+
+```
+float ir_distance_avg = ir_sensor.read();
+```
+
+It is important to note that before the ``setCalibration()`` the ``read()`` function returnes averaged values in millivolts. After the calibration is set, the ``read()`` function returns the distance in centimeters (if calibrated properly).
+
+An other option is to use the constructor
+
+```
+IRSensor ir_sensor(PC_2, 2.574e+04f, -29.37f);
+```
+
+where you create an object an calibrate it in one line.
+
+With the commands
+
+```
+float ir_distance_mV = ir_sensor.readmV(); // sensor value in millivolts
+float ir_distance_cm = ir_sensor.readcm(); // sensor value in centimeters (if calibrated)
+```
+
+you can read out the unfiltered values.

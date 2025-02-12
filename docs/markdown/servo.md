@@ -15,15 +15,15 @@ A servo is an electrical motor designed for precise control over angular or line
 
 ## Technical Specifications
 
-| | Futaba S3001 | Reely S-0090 | 
-|-|-|-|
-|Speed at 60°     | 0.17 / 0.21 s (6.0 / 4.8 V) | 0.14 / 0.12 s (6.0 / 7.0 V)
-|Torque           | 0.29 / 0.24 Nm (6.0 / 4.8 V)| 0.88 / 0.98 Nm (6.0 / 7.0 V)
-|Operating Voltage| 4.8 - 6.0 V                 | 6.0 - 7.0 V
-|Control Frequency| 50 - 70 Hz                  | 50 - 70 Hz
-|Weight           | 45.1 g                      | 56 g
-|Dimensions       | 40.4 x 19.8 x 36 mm         | 41.0 x 20.0 x 38.0 mm
-|Gear             | Plastic                     | Metall
+|                   | Futaba S3001                 | Reely S-0090                 |
+| ----------------- | ---------------------------- | ---------------------------- |
+| Speed at 60°      | 0.17 / 0.21 s (6.0 / 4.8 V)  | 0.14 / 0.12 s (6.0 / 7.0 V)  |
+| Torque            | 0.29 / 0.24 Nm (6.0 / 4.8 V) | 0.88 / 0.98 Nm (6.0 / 7.0 V) |
+| Operating Voltage | 4.8 - 6.0 V                  | 6.0 - 7.0 V                  |
+| Control Frequency | 50 - 70 Hz                   | 50 - 70 Hz                   |
+| Weight            | 45.1 g                       | 56 g                         |
+| Dimensions        | 40.4 x 19.8 x 36 mm          | 41.0 x 20.0 x 38.0 mm        |
+| Gear              | Plastic                      | Metall                       |
 
 ## Links
 
@@ -228,7 +228,7 @@ This function allows the adjustment of the maximum acceleration during the movem
     <center> <i>Servo movement with maximum Acceleration of 0.3f</i> </center>
 </p>
 
-|<center>Default settings</center>|<center>Acceleration limited</center>|
-|-|-|
-|<center><i> </i></center> |<center><i>``servo_D0.setMaxAcceleration(0.3f);``</i></center> |
-|Without setting the acceleration the servo will move to its commanded position as fast as possible, leading to fast but not very smooth movements.|With a maximum acceleration, the movement becomes smooth, and acceleration values are constrained by the driver. The velocity during the initial stage increases with a constant acceleration and then decreases, maintaining the same acceleration value but with negative sign. This results in a smooth movement. The velocity in- and decreases linearly, for the first increase of the velocity the derivative is approximately 0.1545/(0.95 - 0.435) = 0.3f as set via the class interface.|
+| <center>Default settings</center>                                                                                                                  | <center>Acceleration limited</center>                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| -------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| <center><i> </i></center>                                                                                                                          | <center><i>``servo_D0.setMaxAcceleration(0.3f);``</i></center>                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| Without setting the acceleration the servo will move to its commanded position as fast as possible, leading to fast but not very smooth movements. | With a maximum acceleration, the movement becomes smooth, and acceleration values are constrained by the driver. The velocity during the initial stage increases with a constant acceleration and then decreases, maintaining the same acceleration value but with negative sign. This results in a smooth movement. The velocity in- and decreases linearly, for the first increase of the velocity the derivative is approximately 0.1545/(0.95 - 0.435) = 0.3f as set via the class interface. |

@@ -129,7 +129,7 @@
         k+1. The FRF data are plotted to a terminal (Putty) over a serial
         connection and look as follows:
 
-    In Matlab you can use:
+    In MATLAB you can use:
         U = data(:,2) + 1i*data(:,3);
         Y = data(:,4) + 1i*data(:,5);
         R = data(:,6) + 1i*data(:,7);

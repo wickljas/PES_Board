@@ -166,5 +166,5 @@ For example, the following command will create a symbolic link in the Mbed Progr
 Command to Create the Symbolic Link below. You have to substitute the paths with your own paths. Here `mbed-os` is the shared directory and `PES_Board` is the project directory.
 
 ```
-ln -s /home/pichim/Mbed\ Programs/mbed-os /home/pichim/Mbed\ Programs/PES_Board/mbed-os -->
-```
+ln -s /home/pichim/Mbed\ Programs/mbed-os /home/pichim/Mbed\ Programs/PES_Board/mbed-os
+``` -->

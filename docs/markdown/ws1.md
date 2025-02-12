@@ -3,9 +3,9 @@
 
 # Workshop 1
 
-The first workshop aims to introduce the Nucleo-F446RE microcontroller. We will familiarize ourselfs with the Mbed Studio development environment, in IDE for coding and software/firmware development. The workshop will start by analysing a given ***main.cpp*** file, it's structure, and the implementation of basic commands.
+The first workshop aims to introduce the Nucleo-F446RE microcontroller. We will familiarize ourselfs with the Mbed Studio development environment, an IDE for coding and software/firmware development. The workshop will start by analysing a given ***main.cpp*** file, it's structure, and the implementation of basic commands.
 
-Participants will explore hardware utilization, specifically the IR Sensor and a calibration process. To optimize the calibration parameters we will use Matlab.
+Participants will explore hardware utilization, specifically the IR Sensor and a calibration process. To optimize the calibration parameters we will use MATLAB.
 
 ## Hardware
 
@@ -55,11 +55,12 @@ The second task will be carried out using an IR distance sensor. This task will 
 
 ## Summary
 
-In this workshop, participants were introduced to the Nucleo-F446RE board, acquiring familiarity with the Mbed Studio IDE and basic usage of objects in C++. The workshop included understanding of the ***main.cpp*** file, comprehension of its structure, defining and working with objects and the implementation of essential commands. Additionally, exploration of hardware utilization, particularly an IR sensor, and the corresponding calibration using Matlab were conducted. This first workshop aimed to put basic steps in using the system, laying the groundwork for further exploration for the development of robotics- and mechatronics-systems.
+In this workshop, participants were introduced to the Nucleo-F446RE board, acquiring familiarity with the Mbed Studio IDE and basic usage of objects in C++. The workshop included understanding of the ***main.cpp*** file, comprehension of its structure, defining and working with objects and the implementation of essential commands. Additionally, exploration of hardware utilization, particularly an IR sensor, and the corresponding calibration using MATLAB were conducted. This first workshop aimed to put basic steps in using the system, laying the groundwork for further exploration for the development of robotics- and mechatronics-systems.
 
 ## Solution
 
 - [Workshop 1](../solutions/main_ws1.cpp)
+- [Workshop 1 with filtered values (IRSensor class)](../solutions/main_ws1_ir_sensor_class.cpp)
 
 <p align="center">
     <img src="../images/ir_sensor_eval.png" alt="IR Sensor Evaluation" width="950"/> </br>

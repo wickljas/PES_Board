@@ -4,17 +4,17 @@ This site guides you through the essential steps to begin the course, starting f
 
 ## Accounts
 
-It is recommended that you use a private E-mail address to set up accounts on Mbed and on GitHub. To be able to use Matlab it is mandatory to use the account from your university because of the corresponding license.
+It is recommended that you use a private E-mail address to set up accounts on Mbed and on GitHub. To be able to use MATLAB it is mandatory to use the account from your university because of the corresponding license.
 
 - GitHub: https://github.com/ Private E-mail
 - Mbed: https://os.mbed.com/ Private E-mail
-- Matlab: https://matlab.mathworks.com/ University account
+- MATLAB: https://matlab.mathworks.com/ University account
 
 ## Software
 
 - Mbed Studio: https://os.mbed.com/studio/ Free IDE for the Mbed OS ecosystem
 - PuTTY: https://www.putty.org/ SSH and telnet client
-- Matlab: https://matlab.mathworks.com/  Programming and nummerical computing platform
+- MATLAB: https://matlab.mathworks.com/  Programming and nummerical computing platform
 
 ## GitHub
 

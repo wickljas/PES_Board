@@ -14,15 +14,15 @@ An IMU (Inertial Measurement Unit) sensor is a compact electronic device that me
 
 ## Technical Specifications
 
-| | LSM9DS1 IMU sensor|
-|-|-|
-|Channels           | 3 acceleration, 3 angular rate, 3 magnetic field|
-|Data output        | 16 bit                                          |
-|Interface          | SPI/I2C                                         |
-|Supply voltage     | 1.9 V to 3.6V                                   |
-|Linear acceleration| ±2/±4/±8/±16 g                                  |
-|Gauss magnetic     | ±4/±8/±12/±16                                   | 
-|Dps angular rate   | ±245/±500/±2000                                 |
+|                     | LSM9DS1 IMU sensor                               |
+| ------------------- | ------------------------------------------------ |
+| Channels            | 3 acceleration, 3 angular rate, 3 magnetic field |
+| Data output         | 16 bit                                           |
+| Interface           | SPI/I2C                                          |
+| Supply voltage      | 1.9 V to 3.6V                                    |
+| Linear acceleration | ±2/±4/±8/±16 g                                   |
+| Gauss magnetic      | ±4/±8/±12/±16                                    |
+| Dps angular rate    | ±245/±500/±2000                                  |
 
 ## Links
 
@@ -67,7 +67,7 @@ However, integrating magnetometer data into sensor fusion algorithms presents se
 ```
 #define IMU_THREAD_DO_USE_MAG_FOR_MAHONY_UPDATE true
 ```
-- Matlab file that is used to help with magnetometer calibration can be found [here](../dev/dev_imu/99_fcn_bib/MgnCalibration.m)
+- MATLAB file that is used to help with magnetometer calibration can be found [here](../dev/dev_imu/99_fcn_bib/MgnCalibration.m)
 
 ## Practical Tips
 - Typically, the IMU on the PES Board should be mounted in such a way that the coordinate system is arranged as shown in the following illustration. However, it should be remembered that it may be in a different position on the board, so you should be sure of the direction of the axes in the coordinate system before continuing to use the data, and the most convenient way to do this is to print the acceleration indications into the console and then set the board in three positions and think about the position of the coordinate system.

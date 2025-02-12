@@ -12,6 +12,20 @@ IRSensor::IRSensor(PinName pin) : m_AnalogIn(pin),
     m_Ticker.attach(callback(this, &IRSensor::sendThreadFlag), std::chrono::microseconds{PERIOD_MUS});
 }
 
+IRSensor::IRSensor(PinName pin, float a, float b) : m_AnalogIn(pin),
+                                                    m_AvgFilter(N),
+                                                    m_Thread(osPriorityNormal, 4096)
+{
+    // calibrate the sensor
+    setCalibration(a, b);
+
+    // start thread
+    m_Thread.start(callback(this, &IRSensor::threadTask));
+
+    // attach sendThreadFlag() to ticker so that sendThreadFlag() is called periodically, which signals the thread to execute
+    m_Ticker.attach(callback(this, &IRSensor::sendThreadFlag), std::chrono::microseconds{PERIOD_MUS});
+}
+
 IRSensor::~IRSensor()
 {
     m_Ticker.detach();

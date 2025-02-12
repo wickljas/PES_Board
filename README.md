@@ -17,8 +17,9 @@
     - Maciej Szarek (szar)
  -->
 
+
  <!--
-    Info about the demonstrators for WS2 and WS3
+    Info about the demonstrators for WS2 and WS3:
 
     In the folders [/docs/cad/WS2](/docs/cad/WS2) and [/docs/cad/WS3](/docs/cad/WS3) you will find the printable files needed to build the demonstration models for workshop 2 and workshop 3. For workshop 3, you need to edit the parts rack and gear wheel because they are only available in STL print-ready format. Editing can be done in Prusa Slicer, which offers the possibility of minor modification.
 
@@ -26,9 +27,13 @@
     - Make a hole in the element for the motor shaft (details available: https://www.printables.com/de/model/516177-universal-spur-gears-collection-module-15)
 -->
 
+
  <!--
     TODO: General:
+    - revert main.cpp to main_base.cpp
     - in DCMotor.cpp PERFORM_GPA_MEAS and PERFORM_CHIRP_MEAS should be tested with the latest updates, here features like serial_pipe and serialStream could be introduced
+    - add Python evaluation files for IR sensor calibration
+    - check thread priority of IRSensor
 
     TODO: General for FS25:
 
@@ -40,23 +45,41 @@
         - course_setup.md
         - dc_motor.md
         - imu.md
-        - ir_sensor.md
+        - ir_sensor.md          (ok)
         - kinematics.md
         - line_follower.md
         - main_description.md
         - servo.md
         - tips.md
         - ultrasonic_sensor.md
-        - ws1.md
+        - ws1.md                (ok)
         - ws2.md
         - ws3.md
 
+        Solutions:
+        - main_base.cpp                       (ok)
+        - main_calib_kinematic_ss24.cpp
+        - main_gimbal.cpp
+        - main_line_follower.cpp
+        - main_line_follower_base_ss24.cpp
+        - main_pes_monster_unfinished.cpp
+        - main_sd_card_writter_unfinished.cpp
+        - main_stepper_motor.cpp
+        - main_ws1.cpp                        (ok)
+        - main_ws1_ir_sensor_class.cpp        (ok)
+        - main_ws2_p1.cpp
+        - main_ws2_p2.cpp
+        - main_ws3_p1.cpp
+        - main_ws3_p2.cpp
+
     TODO General PES-Board and MiniSegway:
-    - fix .gitignore
-    - fid .mbed
+    - fix .gitignore (ok)
+    - fid .mbed      (ok)
 
     TODO: General for HS25:
-    - Port and Test the hole Project to/with PlatformIO
+    - port and Test the hole Project to/with PlatformIO (ok)
+    - document how to use PlatformIO
+    - document how to use Putty
   -->
 
 <!-- link list -->
@@ -74,7 +97,7 @@ Big shoutout to Maciej Szarek for his help and the support (https://github.com/s
 
 <p align="center">
     <img src="docs/images/fast_prototyping.jpg" alt="Fast Prototyping" width="650"/> </br>
-    <center> <i>Fast Prototyping</i> </center>
+    <i>Fast Prototyping</i>
 </p>
 
 Fast prototyping in robotics focuses on quickly building and testing a simple version of the system rather than aiming for perfection from the start. Through iterative development, each prototype helps identify and fix issues, leading to gradual improvements. This approach saves time and cost, encourages experimentation, and ensures that the final design is optimized based on real-world performance. Additionally, hardware and software evolve together, allowing adjustments to both as new challenges arise. Instead of spending too much time planning, build, test, and refine — learning from each iteration.

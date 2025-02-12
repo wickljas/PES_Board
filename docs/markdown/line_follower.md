@@ -16,13 +16,13 @@ The sensor incorporates eight diodes for line detection, with each diode's illum
 
 ## Technical Specifications
 
-| Sparkfun Line follower sensor array | |
-|-|-|
-|Sensor eyes number    | 8           |
-|Interface             | I2C         |
-|Supply Voltage        | 5 V         |
-|Supply Current        | 25 - 185 mA |
-|Read Cycle TIme       | 3.2 ms      |
+| Sparkfun Line follower sensor array |             |
+| ----------------------------------- | ----------- |
+| Sensor eyes number                  | 8           |
+| Interface                           | I2C         |
+| Supply Voltage                      | 5 V         |
+| Supply Current                      | 25 - 185 mA |
+| Read Cycle TIme                     | 3.2 ms      |
 
 ## Links
 
