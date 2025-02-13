@@ -8,7 +8,7 @@
 
 ## Line Follower Array
 
-The sensor incorporates eight diodes for line detection, with each diode's illumination indicating the presence of a line beneath it. The IR brightness control and indicator can be adjusted with the on-board potentiometer. The sensor's I2C interface allows for easy integration with the PES Board, and the sensor's low power consumption makes it suitable for battery-powered applications. The sensor's compact size and low weight make it an ideal choice for small robots.
+The sensor incorporates eight diodes for line detection, with each diode's illumination indicating the presence of a line beneath it. The IR brightness control and indicator can be adjusted with the on-board potentiometer. The sensor's I2C interface allows for easy integration with the PES board, and the sensor's low power consumption makes it suitable for battery-powered applications. The sensor's compact size and low weight make it an ideal choice for small robots.
 
 <p align="center">
     <img src="../images/line_follower_sensor.png" alt="Line follower sensor" width="450"/>
@@ -119,9 +119,9 @@ You can use the Eigen library for linear algebra operations. The library is used
 As usual include the library in the ***main.cpp*** file.
 
 ```
-#include "eigen/Dense.h"
+#include <Eigen/Dense>
 
-#define M_PIf 3.14159265358979323846f /* pi */
+#define M_PIf 3.14159265358979323846f // pi
 ```
 
 Now you're able to define the mapping from wheel velocity to the robot velocities as a 2x2 matrix using the following code snippet, check out [Kinematics](../markdown/kinematics.md) for more information.

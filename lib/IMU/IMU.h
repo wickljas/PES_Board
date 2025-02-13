@@ -2,10 +2,9 @@
 #define IMU_H_
 
 #include "mbed.h"
-// #include "eigen/Dense.h"
 #include <Eigen/Dense>
 
-#include "LSM9DS1/LSM9DS1.h"
+#include "LSM9DS1.h"
 #include "LinearCharacteristics3.h"
 #include "Mahony.h"
 #include "ThreadFlag.h"

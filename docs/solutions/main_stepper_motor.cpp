@@ -1,5 +1,5 @@
 //  Notes:
-//  - 5V output from PES Board does not deliver enough current, so the students need to use
+//  - 5V output from PES board does not deliver enough current, so the students need to use
 //    an additional battery pack
 //  - enable pin is active when low
 //  - potentiometer was adjusted so that when two motors are rotating with 0.1 rps and 4.0 rps for the bigger motor

@@ -26,20 +26,21 @@ An IMU (Inertial Measurement Unit) sensor is a compact electronic device that me
 
 ## Links
 
-[SparkFun 9DoF IMU Breakout - LSM9DS1][0] <br>
+- [SparkFun 9DoF IMU Breakout - LSM9DS1][0] <br>
 
 ## Datasheets 
 
-[LSM9DS1](../datasheets/lsm9ds1.pdf)
+- [LSM9DS1](../datasheets/lsm9ds1.pdf)
 
 ## Principle of Operation
+
 IMU with 9 degrees of freedom is a device that electronically measures and provides information about a body's specific force, how fast it's rotating, and sometimes its orientation. It does this by using a mix of accelerometers, gyroscopes, and magnetometers.
 - Accelerometer - it detects acceleration or changes in velocity along the three axes of 3D space. Sensor operates by employing a small mass connected to fixed capacitors arranged using MEMS technology. When the sensor experiences acceleration or velocity changes in a specific direction, the mass inside the accelerometer moves relative to the fixed capacitors. This alters the distance between the mass and capacitors, thereby changing the capacitance of the system. An electronic circuit detects this capacitance change and converts it into a digital signal. </br>
 - Gyrometer - is a sensor designed to gauge the rate of rotation or angular velocity of an object across the three axes of 3D space.Functioning through a minute vibrating component, often a MEMS resonator, it oscillates within a specific frequency range. As the gyro undergoes angular motion, the Coriolis force impacts the resonator, a process detected by sensors positioned around it. These sensors ascertain the rate and direction of angular motion, which is then translated into a digital signal by an electronic circuit. </br>
 - Magnetometer - is a sensor crafted to gauge the intensity of the magnetic field surrounding it across the three axes of 3D space. Its mechanism involves a MEMS (Micro-Electro-Mechanical Systems) device housing a minuscule silicon structure designed to respond to magnetic fields.When the sensor encounters a magnetic field, the silicon structure undergoes movement, detected by capacitive or resistive elements within the MEMS device. This alteration in capacitance/resistance is then detected by an electronic circuit, which transforms it into a digital signal. </br>
 
 ### Sensors Fusion
--------------------
+
 To achieve optimal data accuracy, sensor fusion employs specialized algorithms to integrate measurements from multiple sensors of varying types. By merging the strengths of different sensors, this process capitalizes on their respective favorable characteristics, culminating in the attainment of the most precise measurements possible.
 
 A good example to understand the idea of sensor fusion is the measurement of roll angle using an accelerometer and a gyrometer. As written above, the accelerometer measures the acceleration in each of the three axes and the gyrometer determines the rotational speed around the three axes.
@@ -57,7 +58,7 @@ The link to the video, which explains the principle of fusion of these two senso
 The ``IMU`` class is using Mahony filter, which is an improved variant of Madgwick filter to accurately estimate orientation in space by combining data from accelerometer and gyroscope sensors. The Mahony filter can also integrate magnetometer data to further refine orientation estimation by providing a reference to the Earth's magnetic field. This allows for absolute orientation determination relative to magnetic north, enhancing the overall accuracy of the orientation estimation process.
 
 ### Magnetometer
-------------------------
+
 In order to improve the accuracy of position determination and to enable determination of yaw, a magnetometer is used. This sensor measures the strength and direction of a magnetic field and in the context of sensor fusion plays a crucial role in providing a reference to the Earth's magnetic field, aiding in orientation estimation alongside accelerometers and gyroscopes.
 
 However, integrating magnetometer data into sensor fusion algorithms presents several challenges, primarily stemming from the need for accurate calibration. Magnetometers are highly sensitive instruments that can be influenced by various sources of magnetic interference, including nearby metallic objects, electrical equipment, and even the Earth's own magnetic anomalies. These external factors can distort the measured magnetic field, leading to inaccuracies in orientation estimation.
@@ -70,13 +71,16 @@ However, integrating magnetometer data into sensor fusion algorithms presents se
 - MATLAB file that is used to help with magnetometer calibration can be found [here](../dev/dev_imu/99_fcn_bib/MgnCalibration.m)
 
 ## Practical Tips
-- Typically, the IMU on the PES Board should be mounted in such a way that the coordinate system is arranged as shown in the following illustration. However, it should be remembered that it may be in a different position on the board, so you should be sure of the direction of the axes in the coordinate system before continuing to use the data, and the most convenient way to do this is to print the acceleration indications into the console and then set the board in three positions and think about the position of the coordinate system.
+
+- Typically, the IMU on the PES board should be mounted in such a way that the coordinate system is arranged as shown in the following illustration. However, it should be remembered that it may be in a different position on the board, so you should be sure of the direction of the axes in the coordinate system before continuing to use the data, and the most convenient way to do this is to print the acceleration indications into the console and then set the board in three positions and think about the position of the coordinate system.
+
 <p align="center">
     <img src="../images/imu_axis_pes.PNG" alt="IMU coordinate system" width="340"/> </br>
     <i>IMU coordinate system</i>
 </p>
 
 ## IMU Driver
+
 The ``IMU`` class is a tool used to process the results through the fusion of three sensors included in the IMU and calculations used to obtain information about the position of the board in space, as well as about the movement of the board.
 The following data can be obtained directly from the driver:
 - gyroscope - values in three XYZ axes;
@@ -87,7 +91,9 @@ The following data can be obtained directly from the driver:
 - tilt angle;
 
 To start working with the IMU, it is necessary to create an object in the ***main.cpp*** file and assign the correct pins. </br>
-There is no need to plug anything as IMU is an integral part of the PES Board. Pins that are used to communicate with the IMU:
+
+There is no need to plug anything as IMU is an integral part of the PES board. Pins that are used to communicate with the IMU:
+
 ```
 // IMU
 #define PB_IMU_SDA PC_9
@@ -95,7 +101,7 @@ There is no need to plug anything as IMU is an integral part of the PES Board. P
 ```
 
 ### Create IMU Object
---------------------------------------
+
 Add the IMU driver ``IMU.h`` to the top of the ***main.cpp*** file:
 
 ```
@@ -112,10 +118,11 @@ IMU imu(PB_IMU_SDA, PB_IMU_SCL);
 ```
 
 ### Read measurments
---------------------------------------
+
 Once the objects have been declared, it is possible to read data from the sensor. As mentioned, this data is processed inside the class with the appropriate filters and, in addition to reading the sensor readings themselves, the position of the tile in space is calculated and expressed in quaternions and Euler angles. As mentioned, the data is collected in a created object which is used to sort the data accordingly.
 
 The `ImuData` object is a data structure that is updated as the `IMU` class thread runs, so an object has been created above to collect and access this data. Use the following commands to access the data, bearing in mind that axis-dependent data should be indexed as follows:
+
 - X -> 0
 - Y -> 1
 - Z -> 2
@@ -126,7 +133,9 @@ float acc_X_axis = imu_data.acc(0);
 float acc_Y_axis = imu_data.acc(1); 
 float acc_Z_axis = imu_data.acc(2);
 ```
+
 When reading data from quaternion coefficients, commands are used:
+
 ```
 // quaterions coefficients
 float quatW = imu_data.quat.w();
@@ -136,6 +145,7 @@ float quatZ = imu_data.quat.z();
 ```
 
 When reading the angles in the Eulerian convention, one assumes:
+
 - roll -> 0
 - pitch -> 1
 - yaw -> 2
@@ -148,7 +158,9 @@ float yaw = imu_data.rpy(2);
 ```
 
 ## Gimbal example
+
 In order to demonstrate how the IMU works, a demonstration example has been prepared in the form of a self-assembly gimbal requiring printing a few parts and assembling the appropriate servos. <br>
+
 <p align="center">
     <img src="../images/gimbal.PNG" alt="gimbal" width="340"/> </br>
     <i>Gimbal</i>
@@ -162,13 +174,17 @@ Prepared parts in .stl extension for printing can be found in the folder (docs/c
 The gimbal allows image stabilization in two axes. Assuming that the horizontal flat surface is defined by the two axes X and Y, in the event of a deflection of the microcontroller in both of these axes, the servos are to compensate for these deflections and cause the mount to which the camera can be attached to be in a perpendicular position with respect to the plane.
 
 ### Software
-- The ***main.cpp*** file has the standard form known from the base file. Add the IMU ``IMU.h`` and  servo ``Servo.h`` driver to the top of the ***main.cpp*** file, as well as ``complex`` for mathematical operations:
+
+The ***main.cpp*** file has the standard form known from the base file. Add the IMU ``IMU.h`` and  servo ``Servo.h`` driver to the top of the ***main.cpp*** file, as well as ``complex`` for mathematical operations:
+
 ```
 #include "IMU.h"
 #include "Servo.h"
 #include <complex>
 ```
-- In order to properly program the gimbal, it is necessary to define few objects - the servo responsible for roll and the servo responsible for pitch but also IMU along with the object for collecting data.
+
+In order to properly program the gimbal, it is necessary to define few objects the servo responsible for roll and the servo responsible for pitch but also IMU along with the object for collecting data.
+
 ```
 // servo
 Servo servo_roll(PB_D0);
@@ -179,7 +195,9 @@ ImuData imu_data;
 IMU imu(PB_IMU_SDA, PB_IMU_SCL);    
 Eigen::Vector2f rp;
 ```
-- The servos must also be calibrated before use and the appropriate values must be entered into the calibration functions. In addition, angle limits of the servos and the values of the coefficients of the linear functions that allow the signal to be mapped as an angle to the PWM pulse width are also defined.
+
+The servos must also be calibrated before use and the appropriate values must be entered into the calibration functions. In addition, angle limits of the servos and the values of the coefficients of the linear functions that allow the signal to be mapped as an angle to the PWM pulse width are also defined.
+
 ```
 // minimal pulse width and maximal pulse width obtained from the servo calibration process
 // nodelcraft RS2 MG/BB
@@ -199,7 +217,9 @@ const float angle_range_max = M_PI/2.0f;
 const float normalised_angle_gain = 1.0f / M_PI;
 const float normalised_angle_offset = 0.5f;
 ```
-- Next, the variables that will feed the function are defined along with base position of servos:
+
+Next, the variables that will feed the function are defined along with base position of servos:
+
 ```
 // pulse width
 static float roll_servo_width = 0.5f;
@@ -208,7 +228,8 @@ static float pitch_servo_width = 0.5f;
 servo_roll.setNormalisedPulseWidth(roll_servo_width);
 servo_pitch.setNormalisedPulseWidth(pitch_servo_width);
 ```
-- To activate the servo, use the following command. Place this command to enable the servo after the initiating the program execution with the **USER** button:
+
+To activate the servo, use the following command. Place this command to enable the servo after the initiating the program execution with the **USER** button:
 
 ```
 // enable the servos
@@ -217,7 +238,9 @@ if (!servo_roll.isEnabled())
 if (!servo_pitch.isEnabled())
     servo_pitch.enable();
 ```
-- The next step is to place functions that read data from the IMU, perform the appropriate transformation, and map the yaw angles to a PWM signal contained in the range from 0 to 1.
+
+The next step is to place functions that read data from the IMU, perform the appropriate transformation, and map the yaw angles to a PWM signal contained in the range from 0 to 1.
+
 ```
 imu_data = imu.getImuData();
 
@@ -229,7 +252,8 @@ rp(1) = acosf((imu_data.quat.w() - imu_data.quat.y()) * (imu_data.quat.w() - imu
 roll_servo_width = -normalised_angle_gain * rp(0) + normalised_angle_offset;
 pitch_servo_width = normalised_angle_gain * rp(1) + normalised_angle_offset;
 ```
-- The next key element is a command that allows you to control the servo according to the angle of tilt, which is important this command is only enforced if the angle is within a predefined range
+
+The next key element is a command that allows you to control the servo according to the angle of tilt, which is important this command is only enforced if the angle is within a predefined range
 
 ```
 if (rp(0) < angle_range_max && rp(0) > angle_range_min) {
@@ -239,7 +263,8 @@ if (rp(0) < angle_range_max && rp(0) > angle_range_min) {
     servo_pitch.setNormalisedPulseWidth(pitch_servo_width);    
 }
 ```
-- Lastly add the following command to the ``else()`` statement, it is to set servos in initial position. This is triggered by pressing the **USER** button while the main task is running (second time you press the button).
+
+Lastly add the following command to the ``else()`` statement, it is to set servos in initial position. This is triggered by pressing the **USER** button while the main task is running (second time you press the button).
 
 ```
 // reset variables and objects
@@ -248,10 +273,11 @@ pitch_servo_width = 0.5f;
 servo_roll.setNormalisedPulseWidth(roll_servo_width);
 servo_pitch.setNormalisedPulseWidth(pitch_servo_width);
 ```
-- The last thing is the command that allows you to read the width of the roll and pitch pulse.
+
+The last thing is the command that allows you to read the width of the roll and pitch pulse.
 
 ```
 printf("Roll: %f, Pitch: %f \n", roll_servo_width, pitch_servo_width);
 ```
-------------------------------------
+
 The full working solution can be found in [Gimbal](../solutions/main_gimbal.cpp)

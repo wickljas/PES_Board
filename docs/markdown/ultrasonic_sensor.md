@@ -27,12 +27,12 @@ An ultrasonic sensor (range finder / detector) is a type of sensor designed to m
 
 ## Links
 
-[DigiKey][0] </br>
-[Seeed Studio][1]
+- [DigiKey][0] </br>
+- [Seeed Studio][1]
 
 ## Datasheets
 
-[Grove-Ultrasonic Ranger V2.0](../datasheets/Grove-Ultrasonic_Ranger_WiKi.pdf)
+- [Grove-Ultrasonic Ranger V2.0](../datasheets/Grove-Ultrasonic_Ranger_WiKi.pdf)
 
 ## Practical Tips
 
@@ -51,7 +51,7 @@ To start working with the sensor, it is necessary to plug it correclty and creat
 
 ### Connection to the PES Board
 
-The ultrasonic sensor was tested with a 5V power supply and a single pin that transmits the signal. There for, it can use the same ports as the servos. You can use the the following pins:
+The ultrasonic sensor was tested with a 5V power supply and a single pin that transmits the signal. There for, it can use the same ports as the servos. You can use the the following pins on the PES board:
 
 ```
 PB_D0
@@ -60,18 +60,18 @@ PB_D2
 PB_D3
 ```
 
-[PES Board pinmap](../datasheets/pes_board_peripherals.pdf)
+[PES Board Pinmap](../datasheets/pes_board_peripherals.pdf)
 
-To establish the connection, utilize the cable displayed in the following image, as it is compatible with the plug and socket on the sensor, and with pins on the PES Board. When connecting the sensor to the PES Board, remember that the yellow wire carries the bidirectional signal. So, make sure to align the blue plug with the PES Board accordingly to ensure a proper connection.
+To establish the connection, utilize the cable displayed in the following image, as it is compatible with the plug and socket on the sensor, and with pins on the PES board. When connecting the sensor to the PES board, remember that the yellow wire carries the bidirectional signal. So, make sure to align the blue plug with the PES board accordingly to ensure a proper connection.
 
 <p align="center">
-    <img src="../images/groove_cable_reworked.png" alt="Cables used to connect to the sensor" width="400"/> </br>
+    <img src="../images/groove_cable_reworked.png" alt="Cables used to connect to the sensor" width="600"/> </br>
     <i>Cable used to connect to the sensor</i>
 </p>
 
-### Create UltrasonicSensor Object
+### Create Ultrasonic Sensor Object
 
-In the given example, the sensor is plugged into pin **D3** on the PES Board. Initially, it's essential to add the suitable driver to the ***main.cpp*** file and then create an `` UltrasonicSensor`` object inside ``main()`` function with the pin's name passed as an argument along with the variable definition that will handle the reading from sensor.
+In the given example, the sensor is plugged into pin **D3 (PB_D3)** on the PES board. Initially, it's essential to add the suitable driver to the ***main.cpp*** file and then create an ``UltrasonicSensor`` object inside ``main()`` function with the pin name passed as an argument along with the variable definition that will handle the reading from sensor.
 
 ```
 #include "UltrasonicSensor.h"
@@ -97,7 +97,9 @@ The operation is straightforward since all processes are encapsulated within the
 us_distance_cm = us_sensor.read();
 ```
 
-If no new valid measurement is available, the ``read()`` function returns -1.0f. This needs to be handeled appropriately in the application, as an example:
+If no new valid measurement is available, the ``read()`` function returns -1.0f. This needs to be handeled appropriately in the application.
+
+As an example you can do someting like
 
 ```
 // read us sensor distance, only valid measurements will update us_distance_cm
@@ -107,7 +109,8 @@ if (us_distance_cm_candidate > 0.0f) {
 }
 ```
 
+where you only execute the code within the ``if()`` statement if a valid measurement is available.
+
 **NOTE:**
 - Do not readout the sensor faster than every 12000 microseconds, otherwise the sensor will report -1.0f frequently.
-- For highly accurate measurements, every sensor unit should be calibrated individually. This depends on the specifications of the task you use the sensor for.
-
+- For highly accurate measurements, every sensor unit should be calibrated individually. This depends on your specifications and should be tested.

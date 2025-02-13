@@ -3,7 +3,9 @@
 
 #include <math.h>
 
-#define M_PI 3.141592653589793238462643383279502884
+#ifndef M_PI
+    #define M_PI 3.141592653589793238462643383279502884 // pi
+#endif
 
 class PIDCntrl
 {

@@ -50,7 +50,7 @@ The ``servo`` driver is designed for controlling servos, commanding the angle wi
 
 ### Connection to the PES Board
 
-For the PES Board, analog servos are associated with specific ports, outlined as follows:
+For the PES board, analog servos are associated with specific ports, outlined as follows:
 
 ```
 // pes board pin names
@@ -60,7 +60,7 @@ PB_D2
 PB_D3
 ```
 
-[PES Board pinmap](../datasheets/pes_board_peripherals.pdf)
+[PES Board Pinmap](../datasheets/pes_board_peripherals.pdf)
 
 ### Create Servo Objects
 
@@ -72,7 +72,7 @@ Add the servo driver ``Servo.h`` to the top of the ***main.cpp*** file:
 
 To be able to start to use the ``servo`` driver, the initial step is to create the servo objects and specify the pins to which the hardware will be connected in the ``main()`` scope.
 
-In the following step, two servos are plugged into pins **D0 - D1** on the PES Board. Then create an object with the associated pins passed as an argument:
+In the following step, two servos are plugged into pins **D0 - D1** on the PES board. Then create an object with the associated pins passed as an argument:
 
 ```
 Servo servo_D0(PB_D0);

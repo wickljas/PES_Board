@@ -1,7 +1,6 @@
 #ifndef LINEAR_CHARACTERISTICS3_H_
 #define LINEAR_CHARACTERISTICS3_H_
 
-// #include "eigen/Dense.h"
 #include <Eigen/Dense>
 
 #include <stdint.h>

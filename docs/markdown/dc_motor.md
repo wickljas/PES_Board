@@ -112,7 +112,7 @@ To start working with the DC motor, it is necessary to plug it correctly and cre
 
 ### Connection to the PES Board
 
-DC motors have assigned pins on the PES Board. Seen from the motor, **PWM** is the input and **ENC** (Encoder) is the output of the system:
+DC motors have assigned pins on the PES board. Seen from the motor, **PWM** is the input and **ENC** (Encoder) is the output of the system:
 
 ```
 // PES-Board Pin Names
@@ -130,7 +130,7 @@ PB_M3_ENC_B
 PB_ENABLE_DCMOTORS
 ```
 
-[PES Board pinmap](../datasheets/pes_board_peripherals.pdf)
+[PES Board Pinmap](../datasheets/pes_board_peripherals.pdf)
 
 ### Hardware Pins on the Motor
 
@@ -138,7 +138,7 @@ Pins M1 and M2 represent the output of the H-Bridge, so voltage plus (+) and min
 
 ### Enabling the Power Electronics
 
-The PES Board can control up to 3 DC motors. Configuring the driver involves setting up the PWM pins, essential for adjusting the voltage that gets applied.
+The PES board can control up to 3 DC motors. Configuring the driver involves setting up the PWM pins, essential for adjusting the voltage that gets applied.
 
 ><b>H-bridge and PWM</b><br>
 ><p align="center">
@@ -177,7 +177,7 @@ The PES Board can control up to 3 DC motors. Configuring the driver involves set
 
 <br>
 
-To power the DC motors, connect the two battery packs to the back of the PES Board. Each battery back delivers approx. 6V, resulting in 12V total (series). If your are using only one battery pack you have to bridge the remaining pins on the back of the PES Board. Turn on the PES Board by using the ON/OFF switch. After turning on the power, enable the external power electronics (H-bridge) by creating a ``DigitalOut`` object and set the digital out to 1 (or true). This object needs to be created alongside other necessary variables and objects.
+To power the DC motors, connect the two battery packs to the back of the PES board. Each battery back delivers approx. 6V, resulting in 12V total (series). If your are using only one battery pack you have to bridge the remaining pins on the back of the PES board. Turn on the PES board by using the ON/OFF switch. After turning on the power, enable the external power electronics (H-bridge) by creating a ``DigitalOut`` object and set the digital out to 1 (or true). This object needs to be created alongside other necessary variables and objects.
 
 <br>
 
@@ -271,7 +271,7 @@ printf("Motor velocity: %f \n", motor_M2.getVelocity());
 ```
 
 **NOTE:**
-- If the motor start spinning immediatly after enabling the hardware with maximum speed, the motor is connected incorrectly and the cables for M1 and M2 from the PES Board to the motor or the cables from the encoder A and B need to be swapped.
+- If the motor start spinning immediatly after enabling the hardware with maximum speed, the motor is connected incorrectly and the cables for M1 and M2 from the PES board to the motor or the cables from the encoder A and B need to be swapped.
 - The maximum physically possible velocity is calculated and set in the driver based on the input arguments.
   
 The default motor driver does not activate the motion planner, meaning the speed setpoint will be reached as quickly as possible. To test this, you can place the following command inside the ``while()`` loop.

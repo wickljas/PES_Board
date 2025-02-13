@@ -31,9 +31,13 @@
  <!--
     TODO: General:
     - revert main.cpp to main_base.cpp
+    - fix all warnings for clean build in platformio
     - in DCMotor.cpp PERFORM_GPA_MEAS and PERFORM_CHIRP_MEAS should be tested with the latest updates, here features like serial_pipe and serialStream could be introduced
     - add Python evaluation files for IR sensor calibration
     - check thread priority of IRSensor
+    - create sd card example
+    - create serial stream example
+    - include serial stream python version (in addition to matlab version)
 
     TODO: General for FS25:
 
@@ -151,10 +155,10 @@ During the course, we will use the Nucleo-F446RE board from ST Microelectronics 
 
 >**IMPORTANT NOTE:**
 >
->- <b>When working with hardware (connecting, reconnecting etc.), it is recommended that all power sources are disconnected. This is a general safety measurement! So for us, the Nucleo is disconnected and the PES Board **Power Switch** is **OFF** when ever we change someting at the hardware setup.</b>
+>- <b>When working with hardware (connecting, reconnecting etc.), it is recommended that all power sources are disconnected. This is a general safety measurement! So for us, the Nucleo is disconnected and the PES board **Power Switch** is **OFF** when ever we change someting at the hardware setup.</b>
 >- <b>The USB cable should only be connected to the computer after the power switch has been switched on.</b>
->- <b>To not connect the charger when the battery packs are not connected, otherwise the PES Board will be damaged.</b>
->- <b>Using the PES Board with power ON and hardware running while connected to your computer/laptop happens at your own risk. There was a case where the students laptop was damaged in the past.</b>
+>- <b>To not connect the charger when the battery packs are not connected, otherwise the PES board will be damaged.</b>
+>- <b>Using the PES board with power ON and hardware running while connected to your computer/laptop happens at your own risk. There was a case where the students laptop was damaged in the past.</b>
 >- <b>Various Nucleo boards, PES Borads and even laptops have been damaged in the past, so make sure to stick to the rules above.</b>
 
 ### Nucleo F446RE
@@ -174,7 +178,7 @@ Arm Mbed provides a dedicated platform with essential information about the deve
 
 ### PES Board
 
-The PES Board is a hardware board with additional sensors, devices and power electronics to work in combination with the Nucleo F446RE. It provides multiple pinouts for:
+The PES board is a hardware board with additional sensors, devices and power electronics to work in combination with the Nucleo F446RE. It provides multiple pinouts for:
 
 - 3 DC-Motor (brushed)
 - 4 Servos (these occupy the 4 DI/O if used)
@@ -187,8 +191,8 @@ The PES Board is a hardware board with additional sensors, devices and power ele
 >**IMPORTANT NOTE:**
 >- <b>The voltage of the DO (servos) is set via the switch behind the charging socket: 3.3V or 5V. Generally this can be set to 5V.</b>
 >- <b>Motor encoder soldering can be wrong. Do not assume that if you plug in one motor and everything works you can then also use the same connections with a different motor. You have to make sure that the physical rotation is according to your needs and that a positive input leads to a positive change of increments.</b>
->- <b>Depending on the PES Board version DCMotor M3 rotation direction might be inverted.</b>
->- <b>Depending on the PES Board version the Pin map might differ. Feel free to ask if you are not sure.</b>
+>- <b>Depending on the PES board version DCMotor M3 rotation direction might be inverted.</b>
+>- <b>Depending on the PES board version the Pin map might differ. Feel free to ask if you are not sure.</b>
 
 #### Batteries
 
@@ -199,27 +203,27 @@ The kit includes two sets of 6V battery packs, which can be connected in series 
     <i>Battery Packs</i>
 </p>
 
-The batteries enables the board itself to be powered independently of the connection to the computer/laptop, eliminating the need for a connection via the Mini USB cable. The board continues to receive a stable 5V supply while offering the option to use up to 12V supply for the power electronics of the motors. To activate the external battery power, switch the slider on the PES Board to the ON position.
+The batteries enables the board itself to be powered independently of the connection to the computer/laptop, eliminating the need for a connection via the Mini USB cable. The board continues to receive a stable 5V supply while offering the option to use up to 12V supply for the power electronics of the motors. To activate the external battery power, switch the slider on the PES board to the ON position.
 
 <b>Single battery pack</b> - if you are using a single battery pack, the remaining pins need to be bridged. If only 6 V is used, this must be parameterised accordingly in the firmware when parameterising classes of hardware.
 
 #### Charging the Batteries
 
-<b>Using the Charger</b> - if you connect the charger to the PES Board, the battery packs need to be connected. If the battery packs (2 packs for 12 volts or one pack and a jumper for 6 volts) are not connected when you plug in the charger, the PES Board will be destroyed.
+<b>Using the Charger</b> - if you connect the charger to the PES board, the battery packs need to be connected. If the battery packs (2 packs for 12 volts or one pack and a jumper for 6 volts) are not connected when you plug in the charger, the PES board will be destroyed.
 
 <b>Charging batteries</b> - the battery packs are only charged when the power switch is set to OFF.
 
-<b>Usage while charging</b> - don't use the PES Board while it is charging.
+<b>Usage while charging</b> - don't use the PES board while it is charging.
 
 #### Resources
 
-All additional technical information such as schematics and pin maps for the PES Board can be found in a folder [/docs/datasheets/pes_board_data](/docs/datasheets/pes_board_data). Also included there are CAD files of the combined Nucleo F446RE and PES Board in `.3dxml` extensions (for 3Dexperience).
+All additional technical information such as schematics and pin maps for the PES board can be found in a folder [/docs/datasheets/pes_board_data](/docs/datasheets/pes_board_data). Also included there are CAD files of the combined Nucleo F446RE and PES board in `.3dxml` extensions (for 3Dexperience).
 
 #### Pheripherals
 
 <p align="center">
     <img src="docs/images/pes_board_peripherals_cropped.png" alt="PES Board Pheripherals" width="850"/> </br>
-    <i>PES Board pheripherals</i>
+    <i>PES Board Pheripherals</i>
 </p>
 
 - [pes_board_peripherals.pdf](docs/datasheets/pes_board_peripherals.pdf)
@@ -243,7 +247,7 @@ All additional technical information such as schematics and pin maps for the PES
 
 The following links contain the hardware tutorials. The documents contain specifications and technical information about the hardware itself and how to use it. The tutorials cover the software drivers, specific calibration procedures, controlling actuators and retrieving measurements from the sensors and actuators.
 
-**Important Note: The PES Board currently does not support stepper motors. The following example uses an external hardware driver and an additional battery pack, which is directly wired to the Nucleo board.**
+**Important Note: The PES board currently does not support stepper motors. The following example uses an external hardware driver and an additional battery pack, which is directly wired to the Nucleo board.**
 
 - [IR Sensor](docs/markdown/ir_sensor.md)
 - [Ultrasonic Sensor](docs/markdown/ultrasonic_sensor.md)

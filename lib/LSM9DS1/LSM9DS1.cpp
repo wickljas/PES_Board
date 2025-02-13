@@ -1,39 +1,4 @@
-/******************************************************************************
-SFE_LSM9DS1.cpp
-SFE_LSM9DS1 Library Source File
-Jim Lindblom @ SparkFun Electronics
-Original Creation Date: February 27, 2015
-https://github.com/sparkfun/LSM9DS1_Breakout
-
-This file implements all functions of the LSM9DS1 class. Functions here range
-from higher level stuff, like reading/writing LSM9DS1 registers to low-level,
-hardware reads and writes. Both SPI and I2C handler functions can be found
-towards the bottom of this file.
-
-Development environment specifics:
-    IDE: Arduino 1.6
-    Hardware Platform: Arduino Uno
-    LSM9DS1 Breakout Version: 1.0
-
-This code is beerware; if you see me (or any other SparkFun employee) at the
-local, and you've found our code helpful, please buy us a round!
-
-Distributed as-is; no warranty is given.
-
-Modified: Nicolas Borla, 20.01.2019
-******************************************************************************/
-
 #include "LSM9DS1.h"
-#include "LSM9DS1_Registers.h"
-#include "LSM9DS1_Types.h"
-//#include <Wire.h> // Wire library is used for I2C
-//#include <SPI.h>  // SPI library is used for...SPI.
-
-//#if defined(ARDUINO) && ARDUINO >= 100
-//  #include "Arduino.h"
-//#else
-//  #include "WProgram.h"
-//#endif
 
 #define LSM9DS1_COMMUNICATION_TIMEOUT 1000
 
@@ -1229,7 +1194,7 @@ uint8_t LSM9DS1::I2CreadBytes(uint8_t address, uint8_t subAddress, uint8_t * des
     return count;
     */
     int i;
-    char temp_dest[count];
+    char temp_dest[10]; // char temp_dest[count];
     char temp[1] = {subAddress};
     i2c.write(address, temp, 1);
     i2c.read(address, temp_dest, count);
@@ -1240,5 +1205,3 @@ uint8_t LSM9DS1::I2CreadBytes(uint8_t address, uint8_t subAddress, uint8_t * des
     }
     return count;
 }
-
-

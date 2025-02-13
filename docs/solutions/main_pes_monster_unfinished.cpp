@@ -7,14 +7,14 @@
  * - implement rotation logik for different mounted board in IMU
 */
 
-#include "pm2_drivers/DebounceIn.h"
-#include "pm2_drivers/Servo.h"
-#include "pm2_drivers/EncoderCounter.h"
-#include "pm2_drivers/DCMotor.h"
-#include "pm2_drivers/UltrasonicSensor.h"
-#include "pm2_drivers/IMU.h"
+#include "DebounceIn.h"
+#include "Servo.h"
+#include "EncoderCounter.h"
+#include "DCMotor.h"
+#include "UltrasonicSensor.h"
+#include "IMU.h"
 
-#include "pm2_drivers/PESBoardPinMap.h"
+#include "PESBoardPinMap.h"
 
 bool do_execute_main_task = false; // this variable will be toggled via the user button (blue button) and
                                    // decides whether to execute the main task or not
@@ -154,7 +154,7 @@ int main()
 
     // IMU
     ImuData imu_data;
-    IMU imu(PB_IMU_SDA, PB_IMU_SCL);    
+    IMU imu(PB_IMU_SDA, PB_IMU_SCL);
 
     // start timer
     main_task_timer.start();

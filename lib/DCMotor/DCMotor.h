@@ -40,13 +40,15 @@
 #include <math.h>
 
 #include "EncoderCounter.h"
-#include "FastPWM/FastPWM.h"
+#include "FastPWM.h"
 #include "Motion.h"
 #include "ThreadFlag.h"
 #include "PIDCntrl.h"
 #include "IIRFilter.h"
 
-#define M_PIf 3.14159265358979323846f /* pi */
+#ifndef M_PIf
+    #define M_PIf 3.14159265358979323846f // pi
+#endif
 
 // IMPORTANT: only use GPA or Chirp, not both at the same time
 #define PERFORM_GPA_MEAS false

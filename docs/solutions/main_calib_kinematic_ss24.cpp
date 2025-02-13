@@ -6,9 +6,9 @@
 // drivers
 #include "DebounceIn.h"
 #include "DCMotor.h"
-#include "eigen/Dense.h"
+#include <Eigen/Dense>
 
-#define M_PIf 3.14159265358979323846f /* pi */
+#define M_PIf 3.14159265358979323846f // pi
 
 bool do_execute_main_task = false; // this variable will be toggled via the user button (blue button) and
                                    // decides whether to execute the main task or not

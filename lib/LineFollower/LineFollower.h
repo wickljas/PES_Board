@@ -6,10 +6,12 @@
 #include <math.h>
 
 #include "SensorBar.h"
-// #include "eigen/Dense.h"
+
 #include <Eigen/Dense>
 
-#define M_PIf 3.14159265358979323846f /* pi */
+#ifndef M_PIf
+    #define M_PIf 3.14159265358979323846f // pi
+#endif
 
 class LineFollower
 {

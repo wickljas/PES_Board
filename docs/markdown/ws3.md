@@ -10,13 +10,13 @@ We will discuss different control strategies for motor control, e.g. speed contr
 ## Hardware
 
 >Part 1:
-> - PES Board with NUCLEO-F446RE board
+> - PES board with NUCLEO-F446RE board
 > - Mini USB cable
 > - DC motor
 > - Jumper wires
 
 >Part 2:
-> - PES Board with NUCLEO-F446RE board
+> - PES board with NUCLEO-F446RE board
 > - Mini USB cable
 > - Ultrasonic sensor 
 > - Mechanical button
@@ -30,7 +30,7 @@ We will discuss different control strategies for motor control, e.g. speed contr
 
 In the first task, we will focus just on understanding the motor functionality and control mechanisms. To achieve this, we'll rely on the information provided in the hardware tutorial: [DC Motor Tutorial](../markdown/dc_motor.md)
 
-**Important Note: In this tutorial, the motors are consistently connected to the same pin. However, it's worth noting that there is an option to connect them to different pins: M2 and M3. You can run up to 3 DC motors with one PES Board.**
+**Important Note: In this tutorial, the motors are consistently connected to the same pin. However, it's worth noting that there is an option to connect them to different pins: M2 and M3. You can run up to 3 DC motors with one PES board.**
 
 ## Part 2
 
@@ -60,7 +60,7 @@ mechanical_button.mode(PullUp);    // sets pullup between pin and 3.3 V, so that
                                    // is a defined potential
 ```
 
-4. Connect the ultrasonic sensor to pin **D3** on the PES Board (see [PES Board Pinmap](../datasheets/pes_board_peripherals.pdf))
+4. Connect the ultrasonic sensor to pin **D3** on the PES board (see [PES Board Pinmap](../datasheets/pes_board_peripherals.pdf))
 
 5. Include the necessary drivers at the top of the ***main.cpp*** file. For more details refer to [Ultrasonic Distance Sernsor](../markdown/ultrasonic_sensor.md)
 

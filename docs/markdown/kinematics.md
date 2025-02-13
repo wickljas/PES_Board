@@ -139,9 +139,9 @@ $$
 As mentioned previously when writing code with the above transformations, the eigen library is used to define vectors and matrices and perform linear algebra. First, define the geometric values of the vehicle, such as wheel radius and wheelbase. In addition, you can write the corresponding matrix and define vectors that will contain the wheel speeds and robot's velocities.
 
 ```
-#include "eigen/Dense.h"
+#include <Eigen/Dense>
 
-#define M_PIf 3.14159265358979323846f /* pi */
+#define M_PIf 3.14159265358979323846f // pi
 ```
 
 ```

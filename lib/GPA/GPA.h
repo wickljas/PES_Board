@@ -5,8 +5,13 @@
 
 #include "math.h"
 
-#define M_PIf 3.14159265358979323846f /* pi */
-#define M_PI 3.141592653589793238462643383279502884
+#ifndef M_PIf
+    #define M_PIf 3.14159265358979323846f // pi
+#endif
+
+#ifndef M_PI
+    #define M_PI 3.141592653589793238462643383279502884 // pi
+#endif
 
 #define GPA_EXC_VIA_FILTER false
 #define BUFFER_LENGTH 120

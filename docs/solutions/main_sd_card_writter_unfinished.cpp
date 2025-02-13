@@ -1,6 +1,6 @@
 /**
  * NOTE:
- * - Somehow i only read garbage when the PES Board is powered with 2 battery packs
+ * - Somehow i only read garbage when the PES board is powered with 2 battery packs
  * - 
  * 
  * TODO SD-Card:

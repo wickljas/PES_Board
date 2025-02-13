@@ -3,7 +3,7 @@
 #define S_STREAM_DO_USE_SERIAL_PIPE true
 
 #if S_STREAM_DO_USE_SERIAL_PIPE
-    #include "SerialPipe/serial_pipe.h"
+    #include "serial_pipe.h"
 #else
     #include "mbed.h"
 #endif
