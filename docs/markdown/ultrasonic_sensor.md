@@ -62,7 +62,7 @@ PB_D3
 
 [PES Board Pinmap](../datasheets/pes_board_peripherals.pdf)
 
-To establish the connection, utilize the cable displayed in the following image, as it is compatible with the plug and socket on the sensor, and with pins on the PES board. When connecting the sensor to the PES board, remember that the yellow wire carries the bidirectional signal. So, make sure to align the blue plug with the PES board accordingly to ensure a proper connection.
+To establish the connection, use the cable displayed in the following image. It is compatible with the plug and socket on the sensor and with pins on the PES board. When connecting the sensor to the PES board, remember that the yellow wire transmites the bidirectional signal. So, make sure to align the blue plug with the PES board accordingly to ensure a proper connection.
 
 <p align="center">
     <img src="../images/groove_cable_reworked.png" alt="Cables used to connect to the sensor" width="600"/> </br>
@@ -71,7 +71,7 @@ To establish the connection, utilize the cable displayed in the following image,
 
 ### Create Ultrasonic Sensor Object
 
-In the given example, the sensor is plugged into pin **D3 (PB_D3)** on the PES board. Initially, it's essential to add the suitable driver to the ***main.cpp*** file and then create an ``UltrasonicSensor`` object inside ``main()`` function with the pin name passed as an argument along with the variable definition that will handle the reading from sensor.
+In the given example, the sensor is plugged into pin **D3 (PB_D3)** on the PES board. Initially, it's essential to add the suitable driver to the ***main.cpp*** file and then create an ``UltrasonicSensor`` object inside ``main()`` function with the pin name passed as an argument along with the variable definition that will be used to store the sensor value.
 
 ```
 #include "UltrasonicSensor.h"
@@ -90,10 +90,10 @@ float us_distance_cm = 0.0f;
 
 ### Read the Distance
 
-The operation is straightforward since all processes are encapsulated within the class, yielding a completed function that returns the distance in centimeters. This functionality is accessed through the following command:
+The operation is straightforward since all processes are encapsulated within the class including a function that returns the distance in centimeters. This functionality is accessed through the following command:
 
 ```
-// read us sensor distance, only valid measurements will update us_distance_cm
+// read us sensor distance, non valid measurements will return -1.0f
 us_distance_cm = us_sensor.read();
 ```
 

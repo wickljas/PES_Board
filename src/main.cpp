@@ -68,41 +68,49 @@ int main()
     // a led has an anode (+) and a cathode (-), the cathode needs to be connected to ground via a resistor
     DigitalOut led1(PB_9);
 
+    // mechanical button
+    DigitalIn mechanical_button(PC_5); // create DigitalIn object to evaluate mechanical button, you
+                                       // need to specify the mode for proper usage, see below
+    mechanical_button.mode(PullUp);    // sets pullup between pin and 3.3 V, so that there
+                                       // is a defined potential
+
     // ir distance sensor with average filter and implicit calibration
     float ir_distance_avg = 0.0f;
     IRSensor ir_sensor(PC_2);                      // before the calibration the read function will return the averaged mV value
     ir_sensor.setCalibration(2.574e+04f, -29.37f); // after the calibration the read function will return the calibrated value
 
-    // create servo objects to command servos
+    // servo
     Servo servo_D0(PB_D0);
     Servo servo_D1(PB_D1);
     Servo servo_D2(PB_D2);
 
-    // calibration values
-    // - Futuba S3001
+    // minimal pulse width and maximal pulse width obtained from the servo calibration process
+    // futuba S3001
     float servo_D0_ang_min = 0.0150f;
     float servo_D0_ang_max = 0.1150f;
-    // - Modelcraft RS2 MG/BB
+    // modelcraft RS2 MG/BB
     float servo_D1_ang_min = 0.0325f;
     float servo_D1_ang_max = 0.1250f;
-    // - REELY S0090
+    // reely S0090
     float servo_D2_ang_min = 0.0325f;
     float servo_D2_ang_max = 0.1175f;
 
-    // setNormalisedPulseWidth: before calibration (0,1) -> (min pwm, max pwm)
+    // servo.setNormalisedPulseWidth: before calibration (0,1) -> (min pwm, max pwm)
+    // servo.setNormalisedPulseWidth: after calibration (0,1) -> (servo_D0_ang_min, servo_D0_ang_max)
     servo_D0.calibratePulseMinMax(servo_D0_ang_min, servo_D0_ang_max);
     servo_D1.calibratePulseMinMax(servo_D1_ang_min, servo_D1_ang_max);
     servo_D2.calibratePulseMinMax(servo_D2_ang_min, servo_D2_ang_max);
-    // setNormalisedPulseWidth: after calibration (0,1) -> (servo_D0_ang_min, servo_D0_ang_max)
 
-    // default acceleration for the motion profile would be 1.0e6f
-    servo_D0.setMaxAcceleration(3.0f);
-    servo_D1.setMaxAcceleration(3.0f);
-    servo_D2.setMaxAcceleration(3.0f);
+    // default acceleration of the servo motion profile is 1.0e6f
+    servo_D0.setMaxAcceleration(0.3f);
+    servo_D1.setMaxAcceleration(0.3f);
+    servo_D2.setMaxAcceleration(0.3f);
 
-    servo_D0.enable();
-    servo_D1.enable();
-    servo_D2.enable();
+    // variables to move the servo, this is just an example
+    float servo_input = 0.0f;
+    int servo_counter = 0; // define servo counter, this is an additional variable
+                            // used to command the servo
+    const int loops_per_seconds = static_cast<int>(ceilf(1.0f / (0.001f * static_cast<float>(main_task_period_ms))));
 
     // ultra sonic sensor
     UltrasonicSensor us_sensor(PB_D3);
@@ -160,10 +168,28 @@ int main()
             // read analog input
             ir_distance_avg = ir_sensor.read();  // after the calibration you actually only need this function call
 
+            // enable the servos
+            if (!servo_D0.isEnabled())
+                servo_D0.enable();
+            if (!servo_D1.isEnabled())
+                servo_D1.enable();
+            if (!servo_D2.isEnabled())
+                servo_D2.enable();
+
             // commanding the servos
             servo_D0.setNormalisedPulseWidth(1.0f);
             servo_D1.setNormalisedPulseWidth(1.0f);
             servo_D2.setNormalisedPulseWidth(1.0f);
+            // servo_D0.setNormalisedPulseWidth(servo_input);
+            // servo_D1.setNormalisedPulseWidth(servo_input);
+            // servo_D2.setNormalisedPulseWidth(servo_input);
+
+            // calculate inputs for the servos for the next cycle
+            if ((servo_input < 1.0f) &&                     // constrain servo_input to be < 1.0f
+                (servo_counter % loops_per_seconds == 0) && // true if servo_counter is a multiple of loops_per_second
+                (servo_counter != 0))                       // avoid servo_counter = 0
+                servo_input += 0.005f;
+            servo_counter++;
 
             // read us sensor distance, only valid measurements will update us_distance_cm
             const float us_distance_cm_candidate = us_sensor.read();
@@ -173,6 +199,12 @@ int main()
 
             // read imu data
             imu_data = imu.getImuData();
+
+            if (mechanical_button.read())
+                printf("Mechanical button pressed\n");
+            else
+                printf("Mechanical button not pressed\n");
+
 
         } else {
             // the following code block gets executed only once
@@ -185,8 +217,12 @@ int main()
                 servo_D0.setNormalisedPulseWidth(0.0f);
                 servo_D1.setNormalisedPulseWidth(0.0f);
                 servo_D2.setNormalisedPulseWidth(0.0f);
+                // servo_D0.disable();
+                // servo_D1.disable();
+                // servo_D2.disable();
+                // servo_input = 0.0f;
                 us_distance_cm = 0.0f;
-                // imu_data.init();
+                imu_data.init();
             }
         }
 
@@ -194,17 +230,13 @@ int main()
         user_led = !user_led;
 
         // // print to the serial terminal
-        // printf("IR cm: %.2f, US cm: %.2f \n",
+        // printf("IR cm: %6.2f, US cm: %6.2f, Servo Input: %6.2f, R deg: %6.2f, P deg: %6.2f, Y deg: %6.2f \n",
         //     ir_distance_avg,
-        //     us_distance_cm);
-
-        // print to the serial terminal
-        printf("IR cm: %6.2f, US cm: %6.2f, R deg: %6.2f, P deg: %6.2f, Y deg: %6.2f \n",
-            ir_distance_avg,
-            us_distance_cm,
-            imu_data.rpy(0) * (180.0f / M_PIf),
-            imu_data.rpy(1) * (180.0f / M_PIf),
-            imu_data.rpy(2) * (180.0f / M_PIf));
+        //     us_distance_cm,
+        //     servo_input,
+        //     imu_data.rpy(0) * (180.0f / M_PIf),
+        //     imu_data.rpy(1) * (180.0f / M_PIf),
+        //     imu_data.rpy(2) * (180.0f / M_PIf));
 
         // read timer and make the main thread sleep for the remaining time span (non blocking)
         int main_task_elapsed_time_ms = std::chrono::duration_cast<std::chrono::milliseconds>(main_task_timer.elapsed_time()).count();

@@ -53,9 +53,9 @@
         - kinematics.md
         - line_follower.md
         - main_description.md
-        - servo.md
+        - servo.md              (ok)
         - tips.md
-        - ultrasonic_sensor.md
+        - ultrasonic_sensor.md  (ok)
         - ws1.md                (ok)
         - ws2.md
         - ws3.md
@@ -71,7 +71,7 @@
         - main_stepper_motor.cpp
         - main_ws1.cpp                        (ok)
         - main_ws1_ir_sensor_class.cpp        (ok)
-        - main_ws2_p1.cpp
+        - main_ws2_p1.cpp                     (ok)
         - main_ws2_p2.cpp
         - main_ws3_p1.cpp
         - main_ws3_p2.cpp

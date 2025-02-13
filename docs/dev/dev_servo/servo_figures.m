@@ -29,11 +29,17 @@ pwm_act_range(ind_ang_act+1:end) = 0;
 
 fontsize = 13;
 
+temp_x = x*servo_period_ms;
+temp_y = ones(size(temp_x));
+temp_y(temp_x < 1.8) = 0;
+temp_y(temp_x > 10) = 0;
+
 figure(1)
 subplot(121)
 stairs(x*servo_period_ms, pwm_full_range, 'linewidth', 3), grid on, hold on
 stairs(x*servo_period_ms, pwm_max_range , 'linewidth', 3)
-stairs(x*servo_period_ms, pwm_act_range, 'linewidth', 3), hold off
+stairs(temp_x, temp_y , 'linewidth', 3, 'Color', [0 0.5 0])
+stairs(x*servo_period_ms, pwm_act_range, 'linewidth', 3, 'Color', [1 0 0]), hold off
 xlabel('Servo Period (ms)', 'Fontsize', fontsize), ylabel('PWM Output', 'Fontsize', fontsize)
 subplot(122)
 plot(x*servo_period_ms, ang_full_range, 'linewidth', 3), grid on, hold on
