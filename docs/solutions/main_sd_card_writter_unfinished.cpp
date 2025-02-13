@@ -72,9 +72,9 @@
      ir_sensor.setCalibration(2.574e+04f, -29.37f);
  
      // sd card logger
-     const uint8_t floats_per_sample = 1 + 21; // first sample is time in seconds    
-     SDLogger sd_logger(PB_SD_MOSI, PB_SD_MISO, PB_SD_SCK, PB_SD_CS, floats_per_sample);
-     float data[floats_per_sample]; // data storage array
+     const uint8_t num_of_floats = 1 + 21; // first sample is time in seconds    
+     SDLogger sd_logger(PB_SD_MOSI, PB_SD_MISO, PB_SD_SCK, PB_SD_CS, num_of_floats);
+     float data[num_of_floats]; // data storage array
  
      // additional timer to measure time
      Timer logging_timer;
@@ -129,8 +129,8 @@
              // store detla time in microseconds
              data[0] = dtime_us;
  
-             // store values in the array, we store the same values floats_per_sample/3 times as an example
-             for (int i = 1; i < floats_per_sample; i += 3) {
+             // store values in the array, we store the same values num_of_floats/3 times as an example
+             for (int i = 1; i < num_of_floats; i += 3) {
                  // data[i]     = ir_distance_mV;
                  // data[i + 1] = ir_distance_cm;
                  // data[i + 2] = ir_distance_cm_avg;
@@ -140,7 +140,7 @@
              }
  
              // log all floats in a single record
-             sd_logger.logFloats(data, floats_per_sample);
+             sd_logger.logFloats(data, num_of_floats);
  
              // // serial stream to matlab
              // serialStream.write(dtime_us);

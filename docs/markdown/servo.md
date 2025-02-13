@@ -146,8 +146,8 @@ Next, use the following function and statements. These will enable the increment
 
 ```
 // command the servos
-servo_D0.setNormalisedPulseWidth(servo_input);
-servo_D1.setNormalisedPulseWidth(servo_input);
+servo_D0.setPulseWidth(servo_input);
+servo_D1.setPulseWidth(servo_input);
 
 // calculate inputs for the servos for the next cycle
 if ((servo_input < 1.0f) &&                     // constrain servo_input to be < 1.0f
@@ -182,8 +182,8 @@ float servo_D0_ang_max = 0.1150f;
 float servo_D1_ang_min = 0.0325f;
 float servo_D1_ang_max = 0.1175f;
 
-// servo.setNormalisedPulseWidth: before calibration (0,1) -> (min pwm, max pwm)
-// servo.setNormalisedPulseWidth: after calibration (0,1) -> (servo_D0_ang_min, servo_D0_ang_max)
+// servo.setPulseWidth: before calibration (0,1) -> (min pwm, max pwm)
+// servo.setPulseWidth: after calibration (0,1) -> (servo_D0_ang_min, servo_D0_ang_max)
 servo_D0.calibratePulseMinMax(servo_D0_ang_min, servo_D0_ang_max);
 servo_D1.calibratePulseMinMax(servo_D1_ang_min, servo_D1_ang_max);
 ```

@@ -78,6 +78,8 @@ public:
     // closes the file
     void closeFile();
     // log some float data (appends to ring buffer)
+    void logFloats(const float* data);
+    // log some float data (appends to ring buffer)
     void logFloats(const float* data, size_t count);
 
 private:

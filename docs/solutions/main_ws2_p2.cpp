@@ -74,8 +74,8 @@ int main()
     float servo_D1_ang_min = 0.0325f;
     float servo_D1_ang_max = 0.1175f;
 
-    // servo.setNormalisedPulseWidth: before calibration (0,1) -> (min pwm, max pwm)
-    // servo.setNormalisedPulseWidth: after calibration (0,1) -> (servo_D0_ang_min, servo_D0_ang_max)
+    // servo.setPulseWidth: before calibration (0,1) -> (min pwm, max pwm)
+    // servo.setPulseWidth: after calibration (0,1) -> (servo_D0_ang_min, servo_D0_ang_max)
     servo_D0.calibratePulseMinMax(servo_D0_ang_min, servo_D0_ang_max);
     servo_D1.calibratePulseMinMax(servo_D1_ang_min, servo_D1_ang_max);
 
@@ -102,7 +102,7 @@ int main()
 
             // state machine
             switch (robot_state) {
-                case RobotState::INITIAL:
+                case RobotState::INITIAL: {
                     printf("INITIAL\n");
                     // enable the servo
                     if (!servo_D0.isEnabled())
@@ -110,51 +110,48 @@ int main()
                     robot_state = RobotState::EXECUTION;
 
                     break;
-
-                case RobotState::EXECUTION:
+                }
+                case RobotState::EXECUTION: {
                     printf("EXECUTION\n");
                     // function to map the distance to the servo movement (us_distance_min, us_distance_max) -> (0.0f, 1.0f)
                     servo_input = (us_distance_cm - us_distance_min) / (us_distance_max - us_distance_min);
-                    // values smaller than 0.0f or bigger than 1.0f ar constrained to the range (0.0f, 1.0f) in setNormalisedPulseWidth
-                    servo_D0.setNormalisedPulseWidth(servo_input);
+                    // values smaller than 0.0f or bigger than 1.0f ar constrained to the range (0.0f, 1.0f) in setPulseWidth
+                    servo_D0.setPulseWidth(servo_input);
 
                     // if the measurement is outside the min or max limit go to SLEEP
-                    if ((us_distance_cm < us_distance_min) || (us_distance_cm > us_distance_max)) {
+                    if ((us_distance_cm < us_distance_min) || (us_distance_cm > us_distance_max))
                         robot_state = RobotState::SLEEP;
-                    }
 
                     // if the mechanical button is pressed go to EMERGENCY
-                    if (mechanical_button.read()) {
+                    if (mechanical_button.read())
                         robot_state = RobotState::EMERGENCY;
-                    }
 
                     break;
-
-                case RobotState::SLEEP:
+                }
+                case RobotState::SLEEP: {
                     printf("SLEEP\n");
                     // if the measurement is within the min and max limits go to EXECUTION
-                    if ((us_distance_cm > us_distance_min) && (us_distance_cm < us_distance_max)) {
+                    if ((us_distance_cm > us_distance_min) && (us_distance_cm < us_distance_max))
                         robot_state = RobotState::EXECUTION;
-                    }
 
                     // if the mechanical button is pressed go to EMERGENCY
-                    if (mechanical_button.read()) {
+                    if (mechanical_button.read())
                         robot_state = RobotState::EMERGENCY;
-                    }
 
                     break;
-
-                case RobotState::EMERGENCY:
+                }
+                case RobotState::EMERGENCY: {
                     printf("EMERGENCY\n");
                     // the transition to the emergency state causes the execution of the commands contained
                     // in the outer else statement scope, and since do_reset_all_once is true the system undergoes a reset
                     toggle_do_execute_main_fcn();
 
                     break;
-
-                default:
+                }
+                default: {
 
                     break; // do nothing
+                }
             }
         } else {
             // the following code block gets executed only once

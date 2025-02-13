@@ -96,65 +96,61 @@ int main()
 
             // state machine
             switch (robot_state) {
-                case RobotState::INITIAL:
+                case RobotState::INITIAL: {
                     // enable hardwaredriver dc motors: 0 -> disabled, 1 -> enabled
                     enable_motors = 1; // setting this once would actually be enough
                     robot_state = RobotState::SLEEP;
 
                     break;
-
+                }
                 case RobotState::SLEEP:
                     // wait for the signal from the user, so to run the process 
                     // that is triggered by clicking mechanical button
                     // then go the the FORWARD state
-                    if (mechanical_button.read()) {
+                    if (mechanical_button.read())
                         robot_state = RobotState::FORWARD;
-                    }
 
                     break;
 
-                case RobotState::FORWARD:
+                case RobotState::FORWARD: {
                     // press is moving forward until it reaches 2.9f rotations, 
                     // when reaching the value go to BACKWARD
                     motor_M3.setRotation(2.9f); // setting this once would actually be enough
                     // if the distance from the sensor is less than 4.5f cm,
                     // we transition to the EMERGENCY state
-                    if (us_distance_cm < 4.5f) {
+                    if (us_distance_cm < 4.5f)
                         robot_state = RobotState::EMERGENCY;
-                    }
                     // switching condition is sligthly smaller for robustness
-                    if (motor_M3.getRotation() > 2.89f) {
+                    if (motor_M3.getRotation() > 2.89f)
                         robot_state = RobotState::BACKWARD;
-                    }
 
                     break;
-
-                case RobotState::BACKWARD:
+                }
+                case RobotState::BACKWARD: {
                     // move backwards to the initial position
                     // and go to the SLEEP state if reached
                     motor_M3.setRotation(0.0f);
                     // switching condition is sligthly bigger for robustness
-                    if (motor_M3.getRotation() < 0.01f) {
+                    if (motor_M3.getRotation() < 0.01f)
                         robot_state = RobotState::SLEEP;
-                    }
 
                     break;
-
-                case RobotState::EMERGENCY:
+                }
+                case RobotState::EMERGENCY: {
                     // disable the motion planer and
                     // move to the initial position asap
                     // then reset the system
                     motor_M3.enableMotionPlanner(false);
                     motor_M3.setRotation(0.0f);
-                    if (motor_M3.getRotation() < 0.01f) {
+                    if (motor_M3.getRotation() < 0.01f)
                         toggle_do_execute_main_fcn();
-                    }
 
                     break;
+                }
+                default: {
 
-                default:
-
-                    break;
+                    break; // do nothing
+                }
             }
         } else {
             // the following code block gets executed only once
@@ -166,7 +162,7 @@ int main()
                 enable_motors = 0;
                 us_distance_cm = 0.0f;
                 motor_M3.enableMotionPlanner(true);
-		robot_state = RobotState::INITIAL;
+                robot_state = RobotState::INITIAL;
             }
         }
 

@@ -204,8 +204,8 @@ The servos must also be calibrated before use and the appropriate values must be
 const float servo_ang_min = 0.03f; // carefull, these values might differ from servo to servo
 const float servo_ang_max = 0.13f;
 
-// servo.setNormalisedPulseWidth: before calibration (0,1) -> (min pwm, max pwm)
-// servo.setNormalisedPulseWidth: after calibration (0,1) -> (servo_D0_ang_min, servo_D0_ang_max)
+// servo.setPulseWidth: before calibration (0,1) -> (min pwm, max pwm)
+// servo.setPulseWidth: after calibration (0,1) -> (servo_D0_ang_min, servo_D0_ang_max)
 servo_roll.calibratePulseMinMax(servo_ang_min, servo_ang_max);
 servo_pitch.calibratePulseMinMax(servo_ang_min, servo_ang_max);
 
@@ -225,8 +225,8 @@ Next, the variables that will feed the function are defined along with base posi
 static float roll_servo_width = 0.5f;
 static float pitch_servo_width = 0.5f;
 
-servo_roll.setNormalisedPulseWidth(roll_servo_width);
-servo_pitch.setNormalisedPulseWidth(pitch_servo_width);
+servo_roll.setPulseWidth(roll_servo_width);
+servo_pitch.setPulseWidth(pitch_servo_width);
 ```
 
 To activate the servo, use the following command. Place this command to enable the servo after the initiating the program execution with the **USER** button:
@@ -257,10 +257,10 @@ The next key element is a command that allows you to control the servo according
 
 ```
 if (rp(0) < angle_range_max && rp(0) > angle_range_min) {
-    servo_roll.setNormalisedPulseWidth(roll_servo_width);
+    servo_roll.setPulseWidth(roll_servo_width);
 }
 if (rp(0) < angle_range_max && rp(0) > angle_range_min) {
-    servo_pitch.setNormalisedPulseWidth(pitch_servo_width);    
+    servo_pitch.setPulseWidth(pitch_servo_width);    
 }
 ```
 
@@ -270,8 +270,8 @@ Lastly add the following command to the ``else()`` statement, it is to set servo
 // reset variables and objects
 roll_servo_width = 0.5f;
 pitch_servo_width = 0.5f;
-servo_roll.setNormalisedPulseWidth(roll_servo_width);
-servo_pitch.setNormalisedPulseWidth(pitch_servo_width);
+servo_roll.setPulseWidth(roll_servo_width);
+servo_pitch.setPulseWidth(pitch_servo_width);
 ```
 
 The last thing is the command that allows you to read the width of the roll and pitch pulse.

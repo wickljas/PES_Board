@@ -51,8 +51,8 @@ int main()
     const float servo_ang_min = 0.03f; // carefull, these values might differ from servo to servo
     const float servo_ang_max = 0.13f;
 
-    // servo.setNormalisedPulseWidth: before calibration (0,1) -> (min pwm, max pwm)
-    // servo.setNormalisedPulseWidth: after calibration (0,1) -> (servo_D0_ang_min, servo_D0_ang_max)
+    // servo.setPulseWidth: before calibration (0,1) -> (min pwm, max pwm)
+    // servo.setPulseWidth: after calibration (0,1) -> (servo_D0_ang_min, servo_D0_ang_max)
     servo_roll.calibratePulseMinMax(servo_ang_min, servo_ang_max);
     servo_pitch.calibratePulseMinMax(servo_ang_min, servo_ang_max);
 
@@ -68,8 +68,8 @@ int main()
     static float roll_servo_width = 0.5f;
     static float pitch_servo_width = 0.5f;
 
-    servo_roll.setNormalisedPulseWidth(roll_servo_width);
-    servo_pitch.setNormalisedPulseWidth(pitch_servo_width);
+    servo_roll.setPulseWidth(roll_servo_width);
+    servo_pitch.setPulseWidth(pitch_servo_width);
 
     // start timer
     main_task_timer.start();
@@ -96,12 +96,11 @@ int main()
             roll_servo_width = -normalised_angle_gain * rp(0) + normalised_angle_offset;
             pitch_servo_width = normalised_angle_gain * rp(1) + normalised_angle_offset;
 
-            if (rp(0) < angle_range_max && rp(0) > angle_range_min) {
-                servo_roll.setNormalisedPulseWidth(roll_servo_width);
-            }
-            if (rp(0) < angle_range_max && rp(0) > angle_range_min) {
-                servo_pitch.setNormalisedPulseWidth(pitch_servo_width);    
-            }
+            if (rp(0) < angle_range_max && rp(0) > angle_range_min)
+                servo_roll.setPulseWidth(roll_servo_width);
+
+            if (rp(0) < angle_range_max && rp(0) > angle_range_min)
+                servo_pitch.setPulseWidth(pitch_servo_width);    
 
         } else {
             // the following code block gets executed only once
@@ -109,8 +108,8 @@ int main()
                 do_reset_all_once = false;
                 roll_servo_width = 0.5f;
                 pitch_servo_width = 0.5f;
-                servo_roll.setNormalisedPulseWidth(roll_servo_width);
-                servo_pitch.setNormalisedPulseWidth(pitch_servo_width);
+                servo_roll.setPulseWidth(roll_servo_width);
+                servo_pitch.setPulseWidth(pitch_servo_width);
             }
         }
 

@@ -5,7 +5,7 @@
 
 // drivers
 #include "DebounceIn.h"
-#include "FastPWM/FastPWM.h"
+#include "FastPWM.h"
 #include "DCMotor.h"
 
 bool do_execute_main_task = false; // this variable will be toggled via the user button (blue button) and

@@ -112,20 +112,24 @@ int main()
 
             // state machine
             switch (robot_state) {
-                case RobotState::FORWARD:
+                case RobotState::FORWARD: {
                     motor_M1.setRotationRelative(wheel_angle_forward(0) / (2.0f * M_PIf));
                     motor_M2.setRotationRelative(wheel_angle_forward(1) / (2.0f * M_PIf));
                     robot_state = RobotState::TURN;
+
                     break;
-                case RobotState::TURN:
+                }
+                case RobotState::TURN: {
                     if ((fabs(motor_M1.getRotationTarget() - motor_M1.getRotation()) < angle_threshold) &&
                         (fabs(motor_M2.getRotationTarget() - motor_M2.getRotation()) < angle_threshold)) {
                         motor_M1.setRotationRelative(wheel_angle_turn(0) / (2.0f * M_PIf));
                         motor_M2.setRotationRelative(wheel_angle_turn(1) / (2.0f * M_PIf));
                         robot_state = RobotState::FORWARD_OR_RESET;
                     }
+
                     break;
-                case RobotState::FORWARD_OR_RESET:
+                }
+                case RobotState::FORWARD_OR_RESET: {
                     if ((fabs(motor_M1.getRotationTarget() - motor_M1.getRotation()) < angle_threshold) &&
                         (fabs(motor_M2.getRotationTarget() - motor_M2.getRotation()) < angle_threshold)) {
                         turn_cntr++;
@@ -135,14 +139,20 @@ int main()
                             robot_state = RobotState::FORWARD;
                         }
                     }
+
                     break;
-                case RobotState::RESET:
+                }
+                case RobotState::RESET: {
                     toggle_do_execute_main_fcn();
                     turn_cntr = 0;
                     robot_state = RobotState::FORWARD;
+
                     break;
-                default:
-                    break;
+                }
+                default: {
+
+                    break; // do nothing
+                }
             }
 
             // debugging

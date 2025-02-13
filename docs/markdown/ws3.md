@@ -120,29 +120,30 @@ enum RobotState {
 ```
 // state machine
 switch (robot_state) {
-    case RobotState::INITIAL:
+    case RobotState::INITIAL: {
 
         break;
-
-    case RobotState::SLEEP:
-
-        break;
-
-    case RobotState::FORWARD:
+    }
+    case RobotState::SLEEP: {
 
         break;
-
-    case RobotState::BACKWARD:
-
-        break;
-
-    case RobotState::EMERGENCY:
+    }
+    case RobotState::FORWARD: {
 
         break;
-
-    default:
+    }
+    case RobotState::BACKWARD: {
 
         break;
+    }
+    case RobotState::EMERGENCY: {
+
+        break;
+    }
+    default: {
+
+        break; // do nothing
+    }
 }
 ```
 

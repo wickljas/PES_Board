@@ -39,9 +39,9 @@ void Servo::setMaxAcceleration(float acceleration)
     m_Motion.setProfileDeceleration(acceleration);
 }
 
-void Servo::setNormalisedPulseWidth(float pulse)
+void Servo::setPulseWidth(float pulse)
 {
-    // after calibrating the mapping from setNormalisedPulseWidth() is (0, 1) -> (pulse_min, pulse_max)
+    // after calibrating the mapping from setPulseWidth() is (0, 1) -> (pulse_min, pulse_max)
     m_pulse = calculateNormalisedPulseWidth(pulse);
 }
 

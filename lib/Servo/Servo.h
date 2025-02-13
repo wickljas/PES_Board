@@ -15,7 +15,7 @@
  * Usage:
  * To use the Servo class, create an instance with the pin connected to the servo motor.
  * Calibrate the servo using calibratePulseMinMax(), set motion profiles using setMaxAcceleration(),
- * and control the servo using enable(), disable(), and setNormalisedPulseWidth() methods.
+ * and control the servo using enable(), disable(), and setPulseWidth() methods.
  * The state of the servo can be checked with isEnabled().
  *
  * Example:
@@ -24,7 +24,7 @@
  * servo.calibratePulseMinMax(0.0150f, 0.1150f)
  * servo.setMaxAcceleration(3.0f);
  * servo.enable();
- * servo.setNormalisedPulseWidth(0.5f); // set servo to mid position
+ * servo.setPulseWidth(0.5f); // set servo to mid position
  * ```
  *
  * @author M. E. Peter
@@ -85,7 +85,7 @@ public:
      *
      * @param pulse The pulse width to be set, normalised.
      */
-    void setNormalisedPulseWidth(float pulse = 0.0f);
+    void setPulseWidth(float pulse = 0.0f);
 
     /**
      * @brief Enable the servo with a specific pulse width.

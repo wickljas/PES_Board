@@ -102,24 +102,30 @@ enum RobotState {
 ```
 // state machine
 switch (robot_state) {
-    case RobotState::INITIAL:
+    case RobotState::INITIAL: {
         printf("INITIAL\n");
 
         break;
-    case RobotState::EXECUTION:
+    }
+    case RobotState::EXECUTION: {
         printf("EXECUTION\n");
 
         break;
-    case RobotState::SLEEP:
+    }
+    case RobotState::SLEEP: {
         printf("SLEEP\n");
 
         break;
-    case RobotState::EMERGENCY:
+    }
+    case RobotState::EMERGENCY: {
         printf("EMERGENCY\n");
 
         break;
-    default:
-        break;
+    }
+    default: {
+
+        break; // do nothing
+    }
 }
 ```
 
@@ -151,8 +157,8 @@ float us_distance_max = 40.0f;
         printf("EXECUTION\n");
         // function to map the distance to the servo movement (us_distance_min, us_distance_max) -> (0.0f, 1.0f)
         servo_input = (us_distance_cm - us_distance_min) / (us_distance_max - us_distance_min);
-        // values smaller than 0.0f or bigger than 1.0f ar constrained to the range (0.0f, 1.0f) in setNormalisedPulseWidth
-        servo_D0.setNormalisedPulseWidth(servo_input);
+        // values smaller than 0.0f or bigger than 1.0f ar constrained to the range (0.0f, 1.0f) in setPulseWidth
+        servo_D0.setPulseWidth(servo_input);
 
         break;
 ```
@@ -164,8 +170,8 @@ float us_distance_max = 40.0f;
         printf("EXECUTION\n");
         // function to map the distance to the servo movement (us_distance_min, us_distance_max) -> (0.0f, 1.0f)
         servo_input = (us_distance_cm - us_distance_min) / (us_distance_max - us_distance_min);
-        // values smaller than 0.0f or bigger than 1.0f ar constrained to the range (0.0f, 1.0f) in setNormalisedPulseWidth
-        servo_D0.setNormalisedPulseWidth(servo_input);
+        // values smaller than 0.0f or bigger than 1.0f ar constrained to the range (0.0f, 1.0f) in setPulseWidth
+        servo_D0.setPulseWidth(servo_input);
 
         // if the measurement is outside the min or max limit go to SLEEP
         if ((us_distance_cm < us_distance_min) || (us_distance_cm > us_distance_max)) {

@@ -66,6 +66,11 @@ void SDLogger::closeFile()
     }
 }
 
+void SDLogger::logFloats(const float* data)
+{
+    logFloats(data, m_num_of_floats);
+}
+
 void SDLogger::logFloats(const float* data, size_t count)
 {
     if (!m_file_open) {
