@@ -48,7 +48,7 @@
         - stepper_motor.md      (ok)
         - course_setup.md       (ok)
         - dc_motor.md
-        - imu.md
+        - imu.md                (ok)
         - ir_sensor.md          (ok)
         - kinematics.md         (ok)
         - line_follower.md
