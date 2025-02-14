@@ -48,7 +48,7 @@ The second task will be to design and implement a state machine (this is nothing
 
 The overall goal is to build a mechatronic system capable of adjusting the deflection of the servo based on the distance measured by the ultrasonic sensor. The system will enter a sleep state if readings are not within a specified range, and pressing the mechanical button will trigger an emergency state/stop which will reset the system.
 
-Before beginning the task you should make yourself familiar with [Structuring a Robot Task Tutorial](../markdown/tips.md#structuring-a-robot-task)
+Before beginning the task you should make yourself familiar with the part [Structuring a Robot Task Tutorial](../markdown/tips.md#structuring-a-robot-task).
 
 Below you can find a flow chart diagram showing the logic of the transitions for each state.
 
@@ -80,9 +80,8 @@ mechanical_button.mode(PullUp);    // sets pullup between pin and 3.3 V, so that
 ```
 // read us sensor distance, only valid measurements will update us_distance_cm
 const float us_distance_cm_candidate = us_sensor.read();
-if (us_distance_cm_candidate > 0.0f) {
+if (us_distance_cm_candidate > 0.0f)
     us_distance_cm = us_distance_cm_candidate;
-}
 ```
 
 5. At the top of ``main()`` function create the ``robot_state`` enum object:
@@ -132,7 +131,7 @@ switch (robot_state) {
 7. Enable the servo in the **INITIAL** state and transition to the **EXECUTION** state:
 
 ```
-    case RobotState::INITIAL:
+    case RobotState::INITIAL: {
         printf("INITIAL\n");
         // enable the servo
         if (!servo_D0.isEnabled())
@@ -140,6 +139,7 @@ switch (robot_state) {
         robot_state = RobotState::EXECUTION;
 
         break;
+    }
 ```
 
 8. In the following step, you will map the measured distance to the deflection of the servo. Since the servos are calibrated, the objective is to map the servo in a way that associates variable ot the minimum sensor range ``us_distance_min`` with zero servo deflection and the maximum range ``us_distance_max`` with the maximum servo deflection. Define the following variables along with the variable ``us_distance_cm``:
@@ -153,7 +153,7 @@ float us_distance_max = 40.0f;
 9. Implement the following code snippet and discuss it:
 
 ```
-    case RobotState::EXECUTION:
+    case RobotState::EXECUTION: {
         printf("EXECUTION\n");
         // function to map the distance to the servo movement (us_distance_min, us_distance_max) -> (0.0f, 1.0f)
         servo_input = (us_distance_cm - us_distance_min) / (us_distance_max - us_distance_min);
@@ -161,12 +161,13 @@ float us_distance_max = 40.0f;
         servo_D0.setPulseWidth(servo_input);
 
         break;
+    }
 ```
 
 10. Now, let's establish the conditions that prompt transitions to other states. As previously mentioned, pressing the mechanical button will trigger the initiation of the **SLEEP** state, while the **EMERGENCY** state will be initialized when the sensor reading is outside the above defined min and max range. Use the following code snippet:
 
 ```
-    case RobotState::EXECUTION:
+    case RobotState::EXECUTION: {
         printf("EXECUTION\n");
         // function to map the distance to the servo movement (us_distance_min, us_distance_max) -> (0.0f, 1.0f)
         servo_input = (us_distance_cm - us_distance_min) / (us_distance_max - us_distance_min);
@@ -174,46 +175,45 @@ float us_distance_max = 40.0f;
         servo_D0.setPulseWidth(servo_input);
 
         // if the measurement is outside the min or max limit go to SLEEP
-        if ((us_distance_cm < us_distance_min) || (us_distance_cm > us_distance_max)) {
+        if ((us_distance_cm < us_distance_min) || (us_distance_cm > us_distance_max))
             robot_state = RobotState::SLEEP;
-        }
 
         // if the mechanical button is pressed go to EMERGENCY
-        if (mechanical_button.read()) {
+        if (mechanical_button.read())
             robot_state = RobotState::EMERGENCY;
-        }
 
         break;
+    }
 ```
 
 11. To transition back from the **SLEEP** state to the **EXECUTION** state, the sensor readings must fall within the specified range. And important to note, the **EMERGENCY** state needs also to be triggerable when the system is in the **SLEEP** state. Add the following code snippet to the **SLEEP** state case condition:
 
 ```
-    case RobotState::SLEEP:
+    case RobotState::SLEEP: {
         printf("SLEEP\n");
         // if the measurement is within the min and max limits go to EXECUTION
-        if ((us_distance_cm > us_distance_min) && (us_distance_cm < us_distance_max)) {
+        if ((us_distance_cm > us_distance_min) && (us_distance_cm < us_distance_max))
             robot_state = RobotState::EXECUTION;
-        }
 
         // if the mechanical button is pressed go to EMERGENCY
-        if (mechanical_button.read()) {
+        if (mechanical_button.read())
             robot_state = RobotState::EMERGENCY;
-        }
 
         break;
+    }
 ```
 
 12. The **EMERGENCY** state resets all output variables to zero and disables the hardware that requires activation (for now only the servo), simulating an emergency stop of the system. To reactivate the system, press the **USER** button. At the **EMERGENCY** condition insert:
 
 ```
-    case RobotState::EMERGENCY:
+    case RobotState::EMERGENCY: {
         printf("EMERGENCY\n");
         // the transition to the emergency state causes the execution of the commands contained
         // in the outer else statement scope, and since do_reset_all_once is true the system undergoes a reset
         toggle_do_execute_main_fcn();
 
         break;
+    }
 ```
 
 And add the following command to the ``else()`` statement at the end of the ``while()`` loop:
@@ -234,7 +234,8 @@ if (do_reset_all_once) {
 13. You can print the measured distance with the following command:
 
 ```
-printf("US sensor distance %f \n", us_distance_cm);
+// print to the serial terminal
+printf("US distance cm: %f \n", us_distance_cm);
 ```
 
 14. Compile and flash the program to the microcontroller using the **PLAY** button in Mbed studio and then point the sensor at an object that is at a distance that is within the range specified in the code and click the **USER** button.
@@ -247,7 +248,7 @@ In the second workshop, the integration of a servo along with the PES board, ser
 
 ## Important Notes
 
-- Identing matters! It is important to keep the code clean and readable. This will help you and others to understand the code better.
+- Identing matters! It is important to keep the code clean and readable. This will help you and others to read and understand the code better.
 - Printing to the serial terminal is a useful tool for debugging. It is important to understand the state of the system and the values of the variables at different points in the code. This will help you to identify errors and to understand the system better. But you have to be carefull with the amount of printed data, as it can slow down the system. So after debugging, it is important to remove or comment out the print statements.
 
 ## Solutions

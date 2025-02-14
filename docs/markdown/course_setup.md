@@ -28,7 +28,6 @@ GitHub is a web-based platform from Microsoft for version control using Git, fac
     <i>Forking the Repository</i>
 </p>
 
-* By default, forks are named the same as their upstream repositories. Optionally, to further distinguish your fork, in the "Repository name" field, type a different name.
 * Click **Create fork**.
 
 By forking the repository, you can freely experiment with changes without affecting the original project. This fork is now your own version of the repository. You can make changes to files and push commits to your fork's branch.
@@ -68,7 +67,7 @@ Importing a program from GitHub to Mbed Studio involves linking the local reposi
 </p>
 
 * Paste the full **HTTPS** URL of the relevant web page and (optionally) edit the program name.
-* If you are changing the **Project name**, it is a good a practice to name projects with capital letters, so they can be distinguished from libaries (lowercase letters).
+* If you are changing the **Project name**, it is a good a practice to name projects with capital letters, so they can be distinguished from libaries (often lowercase letters).
 
 <p align="center">
     <img src="../images/importing_mbed_1.png" alt="Importing Program 1" width="320"/> </br>

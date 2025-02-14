@@ -1,16 +1,26 @@
 # Main File Description
 
-In general a file is executed starting from top to buttom and the main file is the first file that is executed when the microcontroller is powered on.
+Lets start with an empty main file and add some code to it. The main file is the file that is executed by the microcontroller when it is powered on. The main file whitch contains the ``main()`` function is the entry point of our program.
 
-The main file is the file that contains the ``main()`` function, which is the function that is executed by the microcontroller.
+```
+#include "mbed.h"
 
-At the very beginning of the file, the mbed library is included, which is a library that contains all the necessary functions and objects for the microcontroller to work properly with the mbed operating system.
+// main() runs in its own thread in the OS
+int main()
+{
+    while (true) {
+
+    }
+}
+```
+
+In general a file is executed starting from top to buttom. At the very beginning of the file, the Mbed library is included, which is a library that contains all the necessary functions and objects for the microcontroller to work properly with the Mbed operating system.
 
 ```
 #include "mbed.h"
 ```
 
-Next a map / dictionary of the PES board is included. In here we specify a naming conventaion to translate pin names from the PES board to the Nucleo board, see also [pes_board_peripherals.pdf](docs/datasheets/pes_board_peripherals.pdf).
+Next a header file with some custom pin names of the PES board is included. In here we specify a naming conventaion to translate pin names from the Nucleo board to the PES board, see also [pes_board_peripherals.pdf](docs/datasheets/pes_board_peripherals.pdf).
 
 ```
 // pes board pin map
@@ -24,9 +34,11 @@ Next we define additional drivers for hardware that we use in the project, for n
 #include "DebounceIn.h"
 ```
 
-Beginning now until the beginning of the ``main()`` function is space to define global variables and functions. These are placed outside of any scope, e.g. the scope of the ``main(){scope from main}`` function and are there for known by any scope within the ***main.cpp*** file (can be accessed from every scope).
+Beginning now until the beginning of the ``main()`` function is space to define global variables and functions. Global meaning they are known within all scopes of the main file (a scope mean curly brackets).
 
-Be aware that it is not possible to execute any function globally. Functions can only be executed from within a scope, e.g. the scope of the ``main(){scope of main}`` function.
+These are placed outside of any scope, e.g. the scope of the ``main(){scope from main}`` function and are there for known by any scope within the ***main.cpp*** file (can be accessed from every scope).
+
+Be aware that it is not possible to execute any function globally. Functions can only be executed from within a scope, e.g. the scope of the ``main(){scope of main}`` function but are generally declared and defined globally.
 
 ```
 bool do_execute_main_task = false; // this variable will be toggled via the user button (blue button) and
@@ -71,9 +83,11 @@ int main()
 
     // start timer
     main_task_timer.start();
+    .
+    .
 ```
 
-Above the place in the ``main()`` function where you should define additional objects and variables. Here you can also execute functions, because now we are operating within a scope, e.g. ``user_button.fall(&toggle_do_execute_main_fcn)``.
+Above the place in the ``main()`` function where you can define additional objects and variables that you intend to use. Here you can also execute functions, because now we are operating within a scope, e.g. ``user_button.fall(&toggle_do_execute_main_fcn)``.
 
 Below starts the ``while()`` loop, since the argument is ``while(true)`` and we don't have a break condition the program will repeat everything in the scope of ``while(){scope of while}`` until the end of time (or reset, or reflash... :-)).
 
@@ -81,27 +95,37 @@ If we want to command an actuator, read in a sensor or print output to the conso
 
 
 ```
+    .
+    .
     // this loop will run forever
     while (true) {
         main_task_timer.reset();
 
         if (do_execute_main_task) {
+            .
+            .
 ```
 
 Everything in the ``if()`` statement will be executed if the blue **USER** button is pressed, which is toggling the state of ``do_execute_main_task`` via the ``toggle_do_execute_main_fcn()`` function. Here you can insert commands that you want to execute only after pressing the button.
 
 ```
+            .
+            .
             // visual feedback that the main task is executed, setting this once would actually be enough
             led1 = 1;
         } else {
             // the following code block gets executed only once
             if (do_reset_all_once) {
                 do_reset_all_once = false;
+                .
+                .
 ```
 
 Here we can insert commands that we want to execute only after pressing the blue **USER** button for the second time and this code is only executed once. For now, we reset the state of the ``led1`` object to 0, which turns off the LED.
 
 ```
+                .
+                .
                 // reset variables and objects
                 led1 = 0;
             }
@@ -109,10 +133,15 @@ Here we can insert commands that we want to execute only after pressing the blue
 
         // toggling the user led
         user_led = !user_led;
+        .
+        .
 ```
-Here we perform a time measurement and make the main thread sleep for the remaining time span (non blocking). This is a simple approach to repeatedly execute the main task every ``main_task_period_ms`` milliseconds. The ``main_task_period_ms`` is defined at the beginning of the ``main()`` function and is set to 20 ms. This means that the main task will run 50 times per second.
+
+At the end of the ``main(){scope of while}`` we perform a time measurement and make the main thread sleep for the remaining time span (non blocking). This is a simple approach to repeatedly execute the main task every ``main_task_period_ms`` milliseconds. The ``main_task_period_ms`` is defined at the beginning of the ``main()`` function and is set to 20 ms. This means that the main task will run 50 times per second resp. the ``main()`` function runs at 50 Hz.
 
 ```
+        .
+        .
         // read timer and make the main thread sleep for the remaining time span (non blocking)
         int main_task_elapsed_time_ms = std::chrono::duration_cast<std::chrono::milliseconds>(main_task_timer.elapsed_time()).count();
         if (main_task_period_ms - main_task_elapsed_time_ms < 0)
@@ -123,9 +152,7 @@ Here we perform a time measurement and make the main thread sleep for the remain
 }
 ```
 
-At the end of the file, the ``toggle_do_execute_main_fcn()`` function is defined. We declared it at the top of the file but define it here.
-
-This function is executed when the blue **USER** button is pressed. It toggles the state of the ``do_execute_main_task`` variable and sets the ``do_reset_all_once`` variable to true if the ``do_execute_main_task`` variable changed from false to true.
+At the end of the file, the ``toggle_do_execute_main_fcn()`` function is defined. We declared it at the top of the file but define it here (better readability). This function is executed when the blue **USER** button is pressed. It toggles the state of the ``do_execute_main_task`` variable and sets the ``do_reset_all_once`` variable to true if the ``do_execute_main_task`` variable changed from false to true.
 
 ```
 void toggle_do_execute_main_fcn()

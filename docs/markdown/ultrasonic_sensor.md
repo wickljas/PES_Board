@@ -104,9 +104,8 @@ As an example you can do someting like
 ```
 // read us sensor distance, only valid measurements will update us_distance_cm
 const float us_distance_cm_candidate = us_sensor.read();
-if (us_distance_cm_candidate > 0.0f) {
+if (us_distance_cm_candidate > 0.0f)
     us_distance_cm = us_distance_cm_candidate;
-}
 ```
 
 where you only execute the code within the ``if()`` statement if a valid measurement is available.

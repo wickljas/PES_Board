@@ -64,20 +64,21 @@ int main()
 
     // servo
     Servo servo_D0(PB_D0);
-    Servo servo_D1(PB_D1);
 
     // minimal pulse width and maximal pulse width obtained from the servo calibration process
-    // futuba S3001
-    float servo_D0_ang_min = 0.0150f;
-    float servo_D0_ang_max = 0.1150f;
-    // reely S0090
-    float servo_D1_ang_min = 0.0325f;
-    float servo_D1_ang_max = 0.1175f;
+    // // futuba S3001
+    // float servo_D0_ang_min = 0.0150f;
+    // float servo_D0_ang_max = 0.1150f;
+    // // reely S0090
+    // float servo_D0_ang_min = 0.0325f;
+    // float servo_D0_ang_max = 0.1175f;
+    // modelcraft RS2 MG/BB
+    float servo_D0_ang_min = 0.0325f;
+    float servo_D0_ang_max = 0.1250f;
 
     // servo.setPulseWidth: before calibration (0,1) -> (min pwm, max pwm)
     // servo.setPulseWidth: after calibration (0,1) -> (servo_D0_ang_min, servo_D0_ang_max)
     servo_D0.calibratePulseMinMax(servo_D0_ang_min, servo_D0_ang_max);
-    servo_D1.calibratePulseMinMax(servo_D1_ang_min, servo_D1_ang_max);
 
     // variables to move the servo, this is just an example
     float servo_input = 0.0f;
@@ -96,9 +97,8 @@ int main()
 
             // read us sensor distance, only valid measurements will update us_distance_cm
             const float us_distance_cm_candidate = us_sensor.read();
-            if (us_distance_cm_candidate > 0.0f) {
+            if (us_distance_cm_candidate > 0.0f)
                 us_distance_cm = us_distance_cm_candidate;
-            }
 
             // state machine
             switch (robot_state) {

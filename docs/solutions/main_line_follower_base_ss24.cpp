@@ -88,9 +88,8 @@ int main()
             enable_motors = 1;
 
             // only update sensor bar angle if a led is triggered
-            if (sensorBar.isAnyLedActive()) {
+            if (sensorBar.isAnyLedActive())
                 angle = sensorBar.getAvgAngleRad();
-            }
 
             // control algorithm in robot velocities
             Eigen::Vector2f robot_coord = {0.5f * wheel_vel_max * r1_wheel, // half of the max. forward velocity

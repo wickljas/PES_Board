@@ -30,60 +30,51 @@
 
  <!--
     TODO: General:
-    - revert main.cpp to main_base.cpp
-    - fix all warnings for clean build in platformio
-    - in DCMotor.cpp PERFORM_GPA_MEAS and PERFORM_CHIRP_MEAS should be tested with the latest updates, here features like serial_pipe and serialStream could be introduced
+    - document how to use PlatformIO
+    - document how to use Putty
     - add Python evaluation files for IR sensor calibration
-    - check thread priority of IRSensor
+    - revisit and clean up sd card writer stuff
     - create sd card example
     - create serial stream example
     - include serial stream python version (in addition to matlab version)
+    - in DCMotor.cpp PERFORM_GPA_MEAS and PERFORM_CHIRP_MEAS should be tested with the latest updates, here features like serial_pipe and serialStream could be introduced
 
-    TODO: General for FS25:
+    Files checked before FS25:
 
         Markdown files read and checked:
         - README.md (some TODO's left)
         - build_mbed_linux.md   (ok)
         - build_mbed_windows.md (ok)
         - stepper_motor.md      (ok)
-        - course_setup.md
+        - course_setup.md       (ok)
         - dc_motor.md
         - imu.md
         - ir_sensor.md          (ok)
-        - kinematics.md
+        - kinematics.md         (ok)
         - line_follower.md
-        - main_description.md
+        - main_description.md   (ok)
         - servo.md              (ok)
-        - tips.md
+        - tips.md               (ok)
         - ultrasonic_sensor.md  (ok)
         - ws1.md                (ok)
-        - ws2.md
+        - ws2.md                (ok)
         - ws3.md
 
         Solutions:
         - main_base.cpp                       (ok)
-        - main_calib_kinematic_ss24.cpp
-        - main_gimbal.cpp
-        - main_line_follower.cpp
-        - main_line_follower_base_ss24.cpp
-        - main_pes_monster_unfinished.cpp
+        - main_calib_kinematic_ss24.cpp       (ok)
+        - main_gimbal.cpp                     (ok)
+        - main_line_follower.cpp              (ok)
+        - main_line_follower_base_ss24.cpp    (ok)
+        - main_pes_monster.cpp                (ok)
         - main_sd_card_writter_unfinished.cpp
-        - main_stepper_motor.cpp
+        - main_stepper_motor.cpp              (ok)
         - main_ws1.cpp                        (ok)
         - main_ws1_ir_sensor_class.cpp        (ok)
         - main_ws2_p1.cpp                     (ok)
-        - main_ws2_p2.cpp
+        - main_ws2_p2.cpp                     (ok)
         - main_ws3_p1.cpp
         - main_ws3_p2.cpp
-
-    TODO General PES-Board and MiniSegway:
-    - fix .gitignore (ok)
-    - fid .mbed      (ok)
-
-    TODO: General for HS25:
-    - port and Test the hole Project to/with PlatformIO (ok)
-    - document how to use PlatformIO
-    - document how to use Putty
   -->
 
 <!-- link list -->
@@ -100,8 +91,8 @@
 Big shoutout to Maciej Szarek for his help and the support (https://github.com/szar99).
 
 <p align="center">
-    <img src="docs/images/fast_prototyping.jpg" alt="Fast Prototyping" width="650"/> </br>
-    <i>Fast Prototyping</i>
+    <img src="docs/images/fast_prototyping.jpg" alt="Fast Prototyping does not to be perfect" width="650"/> </br>
+    <i>Fast Prototyping does not to be perfect</i>
 </p>
 
 Fast prototyping in robotics focuses on quickly building and testing a simple version of the system rather than aiming for perfection from the start. Through iterative development, each prototype helps identify and fix issues, leading to gradual improvements. This approach saves time and cost, encourages experimentation, and ensures that the final design is optimized based on real-world performance. Additionally, hardware and software evolve together, allowing adjustments to both as new challenges arise. Instead of spending too much time planning, build, test, and refine — learning from each iteration.
@@ -222,7 +213,7 @@ All additional technical information such as schematics and pin maps for the PES
 #### Pheripherals
 
 <p align="center">
-    <img src="docs/images/pes_board_peripherals_cropped.png" alt="PES Board Pheripherals" width="850"/> </br>
+    <img src="docs/images/pes_board_peripherals_cropped.png" alt="PES Board Pheripherals" width="950"/> </br>
     <i>PES Board Pheripherals</i>
 </p>
 

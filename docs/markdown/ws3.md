@@ -79,9 +79,8 @@ float us_distance_cm = 0.0f;
 ```
 // read us sensor distance, only valid measurements will update us_distance_cm
 const float us_distance_cm_candidate = us_sensor.read();
-if (us_distance_cm_candidate > 0.0f) {
+if (us_distance_cm_candidate > 0.0f)
     us_distance_cm = us_distance_cm_candidate;
-}
 ```
 
 7. Create an object for [Motor M3](../markdown/dc_motor.md#motor-m3), which will be controlled by setting the setpoint position. Activate the motion planner and configure the maximum acceleration to half of the default value.
