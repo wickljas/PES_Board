@@ -72,7 +72,7 @@ int main()
     // we use the pins from M1, so you can leave it connected to M1
     DCMotor motor_M3(PB_PWM_M1, PB_ENC_A_M1, PB_ENC_B_M1, gear_ratio_M3, kn_M3, voltage_max);
     // enable the motion planner for smooth movement
-    motor_M3.enableMotionPlanner(true);
+    motor_M3.enableMotionPlanner();
     // limit max. acceleration to half of the default acceleration
     motor_M3.setMaxAcceleration(motor_M3.getMaxAcceleration() * 0.5f);
 
@@ -97,12 +97,12 @@ int main()
             switch (robot_state) {
                 case RobotState::INITIAL: {
                     // enable hardwaredriver dc motors: 0 -> disabled, 1 -> enabled
-                    enable_motors = 1; // setting this once would actually be enough
+                    enable_motors = 1;
                     robot_state = RobotState::SLEEP;
 
                     break;
                 }
-                case RobotState::SLEEP:
+                case RobotState::SLEEP: {
                     // wait for the signal from the user, so to run the process 
                     // that is triggered by clicking mechanical button
                     // then go the the FORWARD state
@@ -110,7 +110,7 @@ int main()
                         robot_state = RobotState::FORWARD;
 
                     break;
-
+                }
                 case RobotState::FORWARD: {
                     // press is moving forward until it reaches 2.9f rotations, 
                     // when reaching the value go to BACKWARD
@@ -139,7 +139,7 @@ int main()
                     // disable the motion planer and
                     // move to the initial position asap
                     // then reset the system
-                    motor_M3.enableMotionPlanner(false);
+                    motor_M3.disableMotionPlanner();
                     motor_M3.setRotation(0.0f);
                     if (motor_M3.getRotation() < 0.01f)
                         toggle_do_execute_main_fcn();
@@ -160,7 +160,9 @@ int main()
                 led1 = 0;
                 enable_motors = 0;
                 us_distance_cm = 0.0f;
-                motor_M3.enableMotionPlanner(true);
+                motor_M3.setMotionPlanerPosition(0.0f);
+                motor_M3.setMotionPlanerVelocity(0.0f);
+                motor_M3.enableMotionPlanner();
                 robot_state = RobotState::INITIAL;
             }
         }

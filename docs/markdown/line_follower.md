@@ -26,12 +26,12 @@ The sensor incorporates eight diodes for line detection, with each diode's illum
 
 ## Links
 
-[Sparkfun Line Follower Sensor Array][0] <br>
-[Sparkfun Line Follower Hookup Guide][1]
+- [Sparkfun Line Follower Sensor Array][0] <br>
+- [Sparkfun Line Follower Hookup Guide][1]
 
 ## Datasheets
 
-[Sparkfun Line Follower Sensor Array](../datasheets/line_follower_array.pdf)
+- [Sparkfun Line Follower Sensor Array](../datasheets/line_follower_array.pdf)
 
 ## **WARNING 1**
 
@@ -105,9 +105,8 @@ The sensor bar driver provides functionality to read the sensor values and calcu
 
 ```
 // only update sensor bar angle if a led is triggered
-if (sensorBar.isAnyLedActive()) {
+if (sensorBar.isAnyLedActive())
     angle = sensorBar.getAvgAngleRad();
-}
 ```
 
 You can now use this angle to control the robot's movement based on the line detection. If you want to use the line follower driver, please refer to the next section.

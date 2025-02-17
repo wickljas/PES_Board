@@ -227,11 +227,14 @@ public:
     float getMaxAcceleration() const;
 
     /**
-     * @brief Enable or disable the motion planner. Module is disabled by default.
-     *
-     * @param enable True to enable the motion planner, false to disable.
+     * @brief Enable the motion planner. Module is disabled by default.
      */
-    void enableMotionPlanner(bool enable = true);
+    void enableMotionPlanner();
+
+    /**
+     * @brief Disable the motion planner. Module is disabled by default.
+     */
+    void disableMotionPlanner();
 
     /**
      * @brief Get the current encoder count.
@@ -239,6 +242,20 @@ public:
      * @return long The current encoder count.
      */
     long getEncoderCount() const;
+
+    /**
+     * @brief Set the motion planner internal velocity.
+     *
+     * @param velocity The velocity in rotations per second.
+     */
+    void setMotionPlanerVelocity(float velocity = 0.0f);
+
+    /**
+     * @brief Set the motion planner internal position.
+     *
+     * @param position The position in rotations.
+     */
+    void setMotionPlanerPosition(float position = 0.0f);
 
 #if PERFORM_GPA_MEAS
     void startGPA();

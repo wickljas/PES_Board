@@ -47,18 +47,18 @@
         - build_mbed_windows.md (ok)
         - stepper_motor.md      (ok)
         - course_setup.md       (ok)
-        - dc_motor.md
+        - dc_motor.md           (ok)
         - imu.md                (ok)
         - ir_sensor.md          (ok)
         - kinematics.md         (ok)
-        - line_follower.md
+        - line_follower.md      (ok)
         - main_description.md   (ok)
         - servo.md              (ok)
         - tips.md               (ok)
         - ultrasonic_sensor.md  (ok)
         - ws1.md                (ok)
         - ws2.md                (ok)
-        - ws3.md
+        - ws3.md                (ok)
 
         Solutions:
         - main_base.cpp                       (ok)
@@ -73,8 +73,8 @@
         - main_ws1_ir_sensor_class.cpp        (ok)
         - main_ws2_p1.cpp                     (ok)
         - main_ws2_p2.cpp                     (ok)
-        - main_ws3_p1.cpp
-        - main_ws3_p2.cpp
+        - main_ws3_p1.cpp                     (ok)
+        - main_ws3_p2.cpp                     (ok)
   -->
 
 <!-- link list -->

@@ -58,7 +58,7 @@ int main()
     // // limit max. velocity to half physical possible velocity
     // motor_M2.setMaxVelocity(motor_M2.getMaxPhysicalVelocity() * 0.5f);
     // // enable the motion planner for smooth movements
-    // motor_M2.enableMotionPlanner(true);
+    // motor_M2.enableMotionPlanner();
     // // limit max. acceleration to half of the default acceleration
     // motor_M2.setMaxAcceleration(motor_M2.getMaxAcceleration() * 0.5f);
 
@@ -69,7 +69,7 @@ int main()
     // we use the pins from M1, so you can leave it connected to M1
     DCMotor motor_M3(PB_PWM_M1, PB_ENC_A_M1, PB_ENC_B_M1, gear_ratio_M3, kn_M3, voltage_max);
     // enable the motion planner for smooth movement
-    motor_M3.enableMotionPlanner(true);
+    motor_M3.enableMotionPlanner();
     // limit max. velocity to half physical possible velocity
     motor_M3.setMaxVelocity(motor_M3.getMaxPhysicalVelocity() * 0.5f);
 
@@ -86,7 +86,7 @@ int main()
             led1 = 1;
 
             // enable hardwaredriver dc motors: 0 -> disabled, 1 -> enabled
-            enable_motors = 1; // setting this once would actually be enough
+            enable_motors = 1;
 
             // pwm_M1.write(0.75f); // apply 6V to the motor
             // motor_M2.setVelocity(motor_M2.getMaxVelocity());
@@ -98,8 +98,12 @@ int main()
 
                 // reset variables and objects
                 led1 = 0;
+                enable_motors = 0;
             }
         }
+
+        // print to the serial terminal
+        printf("Motor position: %f \n", motor_M3.getRotation());
 
         // toggling the user led
         user_led = !user_led;

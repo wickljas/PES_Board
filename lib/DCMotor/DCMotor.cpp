@@ -201,14 +201,27 @@ float DCMotor::getMaxAcceleration() const
     return m_acceleration_max;
 }
 
-void DCMotor::enableMotionPlanner(bool enable)
+void DCMotor::enableMotionPlanner()
 {
-    m_enable_motion_planner = enable;
+    m_enable_motion_planner = true;
+}
+
+void DCMotor::disableMotionPlanner()
+{
+    m_enable_motion_planner = false;
 }
 
 long DCMotor::getEncoderCount() const
 {
     return m_count;
+}
+
+void DCMotor::setMotionPlanerVelocity(float velocity) {
+    m_Motion.setVelocity(velocity);
+}
+
+void DCMotor::setMotionPlanerPosition(float position) {
+    m_Motion.setPosition(position);
 }
 
 #if PERFORM_GPA_MEAS

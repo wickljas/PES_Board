@@ -53,7 +53,7 @@ Therefore, the two sensors are fused, which combines the precise operation of th
     <i>Complementary filter</i>
 </p>
 
-The link to the video, which explains the principle of fusion of these two sensors in a very accurate and accessible way, can be found [HERE][2]
+The link to the video, which explains the principle of fusion of these two sensors in a very accurate and accessible way, can be found [here][2]
 
 The ``IMU`` class is using a Mahony filter which is used to accurately estimate the orientation in space by combining data from accelerometer and gyroscope sensors. The Mahony filter can also integrate magnetometer data to further refine orientation estimation by providing a reference to the Earth's magnetic field. This allows for absolute orientation determination relative to magnetic north, enhancing the overall accuracy of the orientation estimation process.
 
@@ -89,7 +89,7 @@ The following data can be obtained directly from the driver:
 - Accelerometer - values in three XYZ axes
 - Magnetometer - values in three XYZ axes
 - Board orientation expressed in quaterions obtained by means of the fusion of sesors with the use of a Mahony filter
-- Board orientation expressed in Euler angles in the Roll Pitch Yaw convention, seet the visualization [HERE][1]
+- Board orientation expressed in Euler angles in the Roll Pitch Yaw convention, seet the visualization [here][1]
 - Tilt angle
 
 To start working with the IMU, it is necessary to create an object in the ***main.cpp*** file and assign the correct pins. </br>
