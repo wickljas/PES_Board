@@ -1,35 +1,43 @@
-
 /**
  * @file SDLogger.h
- * @brief This file defines the SDLogger class, used for logging float data to an SD card.
+ * @brief Defines the SDLogger class for logging floating-point data to an SD card.
  *
- * The SDLogger class provides functionality to queue floating-point samples using a ring buffer
- * and write them to an SD card at low priority in bursts. It encapsulates the details of thread creation,
- * periodic flushing, and synchronization, offering a simple interface for robust logging.
+ * The SDLogger class buffers floating-point samples using a ring buffer and writes them 
+ * to an SD card in bursts from a low-priority thread. It manages thread creation, 
+ * periodic flushing, and synchronization, providing a simple and efficient logging interface.
  *
- * Maximum throughput depends on SD card speed and buffer size. When the buffer fills up, additional data
- * is discarded. By default, data is flushed to disk every second to minimize data loss on power failure.
+ * Maximum throughput depends on SD card speed and buffer size. If the buffer fills up, 
+ * additional data is discarded. By default, data is flushed to disk every 5 seconds 
+ * to reduce data loss in case of power failure.
  *
  * @dependencies
- * This class relies on the following components:
- * - SDWriter: A minimal class for handling mount/unmount, file creation, and binary writes on the SD card.
- * - CircularBuffer<float>: For buffering incoming float data.
- * - ThreadFlag and Ticker: For scheduling periodic tasks to pull data from the buffer and write to the SD card.
- * - Mutex: For thread-safe access to the buffer.
+ * This class relies on:
+ * - **SDWriter**: Handles SD card mounting, file creation, and binary writes.
+ * - **CircularBuffer<float>**: Buffers incoming float data.
+ * - **ThreadFlag** and **Ticker**: Schedule periodic buffer flushing.
+ * - **Mutex**: Ensures thread-safe access to the buffer.
  *
- * Usage:
- * To use the SDLogger class, create an instance by specifying the SPI pins for the SD card and the number of floats per record.
- * Then call logFloats(...) to queue up data, and the logger thread writes it to the SD in the background.
+ * @usage
+ * 1. Create an `SDLogger` instance by specifying SPI pins and the number of floats per record.
+ * 2. Use `write(float val)` to queue individual float values.
+ * 3. When the required number of floats per record is reached, the data is automatically sent.
+ * 4. The `send()` method can also be called manually to force immediate writing.
  *
- * Example:
+ * @example
  * ```
- * SDLogger logger(MOSI_PIN, MISO_PIN, SCK_PIN, CS_PIN, 50);
- * float myData[50];
- * // fill myData...
- * logger.logFloats(myData, 50);
+ * SDLogger sd_logger(MOSI_PIN, MISO_PIN, SCK_PIN, CS_PIN);
+ *
+ * // write data to sd card
+ * for (int i = 0; i < 50; i++) {
+ *     float value = static_cast<float>(i);
+ *     sd_logger.write(value);
+ * }
+ *
+ * // send data to sd card
+ * sd_logger.send();
  * ```
  *
- * @author 
+ * @author M. E. Peter
  * @date 02.01.2025
  */
 
@@ -41,7 +49,7 @@
 #include "SDWriter.h"
 #include "ThreadFlag.h"
 
-#define DEFAULT_PRIORITY osPriorityLow
+#define SD_LOGGER_NUM_OF_FLOATS_MAX 100 // tested 22 floats at 500 Hz
 
 /**
  * A minimal thread-based SD logger that:
@@ -68,19 +76,13 @@ public:
      * @param num_of_floats We'll write this once at file start 
      *                      to indicate how many floats are in each record.
      */
-    SDLogger(PinName mosi, PinName miso, PinName sck, PinName cs, uint8_t num_of_floats);
+    SDLogger(PinName mosi, PinName miso, PinName sck, PinName cs, uint8_t num_of_floats = SD_LOGGER_NUM_OF_FLOATS_MAX);
     ~SDLogger();
 
-    // start the internal thread at a desired priority
-    void start(osPriority priority = DEFAULT_PRIORITY);
-    // opens a new file on the SD card, writes the "m_num_of_floats" as a header byte
-    bool openFile();
-    // closes the file
-    void closeFile();
-    // log some float data (appends to ring buffer)
-    void logFloats(const float* data);
-    // log some float data (appends to ring buffer)
-    void logFloats(const float* data, size_t count);
+    // write float values one by one (appends to the ring buffer automatically, but you need to write m_num_of_floats floats)
+    void write(const float val);
+    // send the data immediately, this will be triggered automatically if you hav writte num_of_floats floats already
+    void send();
 
 private:
     static constexpr int64_t PERIOD_MUS = 20000;
@@ -94,8 +96,18 @@ private:
     ThreadFlag m_ThreadFlag;
 
     uint8_t m_num_of_floats;
+    uint8_t m_float_cntr{0};
     bool m_file_open{false};
+    float m_data[SD_LOGGER_NUM_OF_FLOATS_MAX];
 
+    // log some float data (appends to ring buffer)
+    void logFloats(const float* data);
+    // log some float data (appends to ring buffer)
+    void logFloats(const float* data, size_t count);
+    // opens a new file on the SD card, writes the "m_num_of_floats" as a header byte
+    bool openFile();
+    // closes the file
+    void closeFile();
     // helper to drain the buffer in chunks
     void flushBuffer();
     // helper to push floats into the ring buffer

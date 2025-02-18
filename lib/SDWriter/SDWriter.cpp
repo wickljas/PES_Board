@@ -78,20 +78,20 @@ bool SDWriter::writeByte(uint8_t b)
     return true;
 }
 
-bool SDWriter::writeFloat(float value)
-{
-    if (!m_FilePtr) {
-        return false;
-    }
-    // fwrite 1 float
-    size_t written = fwrite(&value, sizeof(float), 1, m_FilePtr);
-    if (written != 1) {
-        printf("SDWriter: writeFloat failed (wrote %u of 1)\n",
-               (unsigned)written);
-        return false;
-    }
-    return true;
-}
+// bool SDWriter::writeFloat(float value)
+// {
+//     if (!m_FilePtr) {
+//         return false;
+//     }
+//     // fwrite 1 float
+//     size_t written = fwrite(&value, sizeof(float), 1, m_FilePtr);
+//     if (written != 1) {
+//         printf("SDWriter: writeFloat failed (wrote %u of 1)\n",
+//                (unsigned)written);
+//         return false;
+//     }
+//     return true;
+// }
 
 bool SDWriter::writeFloats(const float* data, size_t count)
 {

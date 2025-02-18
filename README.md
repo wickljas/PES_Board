@@ -42,23 +42,24 @@
     Files checked before FS25:
 
         Markdown files read and checked:
-        - README.md (some TODO's left)
-        - build_mbed_linux.md   (ok)
-        - build_mbed_windows.md (ok)
-        - stepper_motor.md      (ok)
-        - course_setup.md       (ok)
-        - dc_motor.md           (ok)
-        - imu.md                (ok)
-        - ir_sensor.md          (ok)
-        - kinematics.md         (ok)
-        - line_follower.md      (ok)
-        - main_description.md   (ok)
-        - servo.md              (ok)
-        - tips.md               (ok)
-        - ultrasonic_sensor.md  (ok)
-        - ws1.md                (ok)
-        - ws2.md                (ok)
-        - ws3.md                (ok)
+        - README.md                     (ok)
+        - build_mbed_linux.md           (ok)
+        - build_mbed_windows.md         (ok)
+        - stepper_motor.md              (ok)
+        - course_setup.md               (ok)
+        - dc_motor.md                   (ok)
+        - imu.md                        (ok)
+        - ir_sensor.md                  (ok)
+        - kinematics.md                 (ok)
+        - line_follower.md              (ok)
+        - main_description.md           (ok)
+        - sd_card_logger.md
+        - servo.md                      (ok)
+        - tips.md                       (ok)
+        - ultrasonic_sensor.md          (ok)
+        - ws1.md                        (ok)
+        - ws2.md                        (ok)
+        - ws3.md                        (ok)
 
         Solutions:
         - main_base.cpp                       (ok)
@@ -67,7 +68,8 @@
         - main_line_follower.cpp              (ok)
         - main_line_follower_base_ss24.cpp    (ok)
         - main_pes_monster.cpp                (ok)
-        - main_sd_card_writter_unfinished.cpp
+        - main_sd_card_logger_e1.cpp          (ok)
+        - main_sd_card_logger_e2.cpp          (ok)
         - main_stepper_motor.cpp              (ok)
         - main_ws1.cpp                        (ok)
         - main_ws1_ir_sensor_class.cpp        (ok)
@@ -274,8 +276,9 @@ And below you find all the solutions, as well as some additional examples:
 - [Example Gimbal](docs/solutions/main_gimbal.cpp)
 - [Example Line Follower Base Example](docs/solutions/main_line_follower_base_ss24.cpp)
 - [Example Differential Drive Robot Kinematics Calibration](docs/solutions/main_calib_kinematic_ss24.cpp)
-- [Example Stepper Motor](docs/solution/main_stepper_motor.cpp)
-- [Example SD-Card] <!-- TODO: Add SD-Card example here -->
+- [Example Stepper Motor](docs/solutions/main_stepper_motor.cpp)
+- [Example SD-Card 1](docs/solutions/main_sd_card_logger_e1.cpp)
+- [Example SD-Card 2](docs/solutions/main_sd_card_logger_e2.cpp)
 
 ### Additional Information
 

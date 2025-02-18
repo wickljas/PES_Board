@@ -170,9 +170,7 @@ int main()
     IMU imu(PB_IMU_SDA, PB_IMU_SCL);
 
     // sd card logger
-    const uint8_t num_of_floats = 12;
-    SDLogger sd_logger(PB_SD_MOSI, PB_SD_MISO, PB_SD_SCK, PB_SD_CS, num_of_floats);
-    float data[num_of_floats];
+    SDLogger sd_logger(PB_SD_MOSI, PB_SD_MISO, PB_SD_SCK, PB_SD_CS);
 
     // additional timer to measure time
     Timer logging_timer;
@@ -322,22 +320,20 @@ int main()
         const float dtime_us = duration_cast<microseconds>(time_us - time_previous_us).count();
         time_previous_us = time_us;
 
-        // store detla time in microseconds
-        data[0]  = dtime_us;
-        data[1]  = ir_distance_avg;
-        data[2]  = us_distance_cm;
-        data[3]  = imu_data.rpy(0) * (180.0f / M_PIf);
-        data[4]  = imu_data.rpy(1) * (180.0f / M_PIf);
-        data[5]  = imu_data.rpy(2) * (180.0f / M_PIf);
-        data[6]  = motor_M1.getRotationTarget();
-        data[7]  = motor_M1.getRotation();
-        data[8]  = motor_M2.getRotationTarget();
-        data[9]  = motor_M2.getRotation();
-        data[10] = motor_M3.getRotationTarget();
-        data[11] = motor_M3.getRotation();
-
-        // log all floats in a single record
-        sd_logger.logFloats(data);
+        // write data to the internal buffer of the sd card logger and send it to the sd card
+        sd_logger.write(dtime_us);
+        sd_logger.write(ir_distance_avg);
+        sd_logger.write(us_distance_cm);
+        sd_logger.write(imu_data.rpy(0) * (180.0f / M_PIf));
+        sd_logger.write(imu_data.rpy(1) * (180.0f / M_PIf));
+        sd_logger.write(imu_data.rpy(2) * (180.0f / M_PIf));
+        sd_logger.write(motor_M1.getRotationTarget());
+        sd_logger.write(motor_M1.getRotation());
+        sd_logger.write(motor_M2.getRotationTarget());
+        sd_logger.write(motor_M2.getRotation());
+        sd_logger.write(motor_M3.getRotationTarget());
+        sd_logger.write(motor_M3.getRotation());
+        sd_logger.send();
 
         // for the evaluation see: PES_Board\docs\dev\dev_sdcard\sdcard_eval_pes_monster.m
 

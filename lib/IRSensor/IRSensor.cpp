@@ -38,11 +38,18 @@ float IRSensor::reset()
     m_distance_mV = m_AnalogIn.read() * 3300.0f;
 
     // apply calibration to cm (if calibrated)
+    float distance_cm = 0.0f;
     if (m_is_calibrated)
-        m_distance_cm = applyCalibration(m_distance_mV, m_a, m_b);
+        distance_cm = applyCalibration(m_distance_mV, m_a, m_b);
     else
-        m_distance_cm = m_distance_mV;
+        distance_cm = m_distance_mV;
 
+    // constrain distance to [IR_SENSOR_DISTANCE_MIN, IR_SENSOR_DISTANCE_MAX]
+    m_distance_cm = (distance_cm > IR_SENSOR_DISTANCE_MAX) ? IR_SENSOR_DISTANCE_MAX :
+                    (distance_cm < IR_SENSOR_DISTANCE_MIN) ? IR_SENSOR_DISTANCE_MIN :
+                     distance_cm;
+
+    // reset the filter to the current readout
     m_distance_avg = m_AvgFilter.reset(m_distance_cm);
 
     return m_distance_avg;
@@ -64,10 +71,16 @@ void IRSensor::threadTask()
         m_distance_mV = m_AnalogIn.read() * 3300.0f;
 
         // apply calibration to cm (if calibrated)
+        float distance_cm = 0.0f;
         if (m_is_calibrated)
-            m_distance_cm = applyCalibration(m_distance_mV, m_a, m_b);
+            distance_cm = applyCalibration(m_distance_mV, m_a, m_b);
         else
-            m_distance_cm = m_distance_mV;
+            distance_cm = m_distance_mV;
+
+        // constrain distance to [IR_SENSOR_DISTANCE_MIN, IR_SENSOR_DISTANCE_MAX]
+        m_distance_cm = (distance_cm > IR_SENSOR_DISTANCE_MAX) ? IR_SENSOR_DISTANCE_MAX :
+                        (distance_cm < IR_SENSOR_DISTANCE_MIN) ? IR_SENSOR_DISTANCE_MIN :
+                         distance_cm;
 
         // average filtered distance
         static bool is_first_run = true;

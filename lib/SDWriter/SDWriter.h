@@ -1,36 +1,49 @@
 /**
  * @file SDWriter.h
- * @brief This file defines the SDWriter class, used for low-level SD card file operations.
+ * @brief Defines the SDWriter class for low-level SD card file operations.
  *
- * The SDWriter class provides functionality to mount/unmount an SD card, open sequential files
- * (e.g. /sd/data/001.bin, /sd/data/002.bin), and write binary floats or single bytes. It encapsulates the
- * details of block device initialization and FAT file system operations, providing a streamlined interface
- * for embedded logging.
+ * The SDWriter class provides functionality for mounting and unmounting an SD card, 
+ * opening sequential files (`/sd/data/001.bin`, `/sd/data/002.bin`, etc.), and 
+ * writing binary floats or single bytes. It abstracts block device initialization 
+ * and FAT file system operations, offering a streamlined interface for embedded logging.
  *
- * Data is typically written in raw binary for efficiency. The user can also call flush() to ensure
- * data is physically committed, reducing the risk of corruption on power loss.
+ * Data is written in raw binary format for efficiency. The user can also call `flush()` 
+ * to ensure data is physically committed, reducing the risk of corruption due to power loss.
  *
  * @dependencies
- * This class relies on the following components:
- * - SDBlockDevice: For low-level communication with the SD card over SPI.
- * - FATFileSystem: For file creation, opening, writing, and closing.
+ * This class relies on:
+ * - **SDBlockDevice**: Handles low-level SD card communication over SPI.
+ * - **FATFileSystem**: Manages file creation, opening, writing, and closing.
  *
- * Usage:
- * To use the SDWriter class, first mount the SD card, open a new file (e.g. openNextFile()), then call
- * writeFloats(...) or writeByte(...) as needed, and closeFile() when finished.
+ * @usage
+ * 1. Mount the SD card using `mount()`.
+ * 2. Open a new sequential file using `openNextFile()`.
+ * 3. Write binary float data using `writeFloats(...)` or a single byte using `writeByte(...)`.
+ * 4. Optionally, call `flush()` to ensure data is physically written.
+ * 5. When done, close the file and unmount the SD card.
  *
- * Example:
+ * @example
  * ```
  * SDWriter writer(MOSI_PIN, MISO_PIN, SCK_PIN, CS_PIN);
- * writer.mount();
- * writer.openNextFile();
- * float data[10] = {1,2,3,...};
- * writer.writeFloats(data, 10);
- * writer.closeFile();
- * writer.unmount();
+ *
+ * if (writer.mount()) {
+ *     if (writer.openNextFile()) {
+ *         float data[10] = {1.0f, 2.0f, 3.0f, 4.0f, 5.0f,
+ *                           6.0f, 7.0f, 8.0f, 9.0f, 10.0f};
+ *         writer.writeFloats(data, 10);
+ *         
+ *         // ensure data is saved
+ *         writer.flush();
+ *         
+ *         writer.closeFile();
+ *     }
+ *     writer.unmount();
+ * } else {
+ *     printf("Failed to mount SD card.\n");
+ * }
  * ```
  *
- * @author 
+ * @author M. E. Peter
  * @date 02.01.2025
  */
 
@@ -58,8 +71,10 @@ public:
     // write a single byte (e.g. "number of floats" header).
     bool writeByte(uint8_t b);
 
+    // // write one floats to the file in binary.
+    // bool writeFloat(float value);
+
     // write 'count' floats to the file in binary.
-    bool writeFloat(float value);
     bool writeFloats(const float* data, size_t count);
 
     // flush data to SD so it's physically written.

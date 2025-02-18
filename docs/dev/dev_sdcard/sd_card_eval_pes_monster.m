@@ -1,8 +1,7 @@
 clc, clear all
 %%
 
-% file_id = fopen('030.bin');
-file_id = fopen('032.bin');
+file_id = fopen('053.bin');
 
 num_of_floats = fread(file_id, 1, 'uint8')
 
@@ -42,15 +41,15 @@ xlabel('Time (sec)'), ylabel('dTime (mus)')
 xlim([0 data.time(end-1)])
 ylim([0 1.2*max(diff(data.time * 1e6))])
 
-% dist
+% dist: ir, us
 figure(2)
 plot(data.time, data.values(:,1:2)), grid on
 
-% imu
+% imu: rpy
 figure(3)
 plot(data.time, data.values(:,3:5)), grid on
 
-% motor
+% motor: rot. target, rot.
 figure(4)
 subplot(311)
 plot(data.time, data.values(:,6:7)), grid on

@@ -6,6 +6,9 @@
 #include "ThreadFlag.h"
 #include "AvgFilter.h"
 
+#define IR_SENSOR_DISTANCE_MIN 0.0f
+#define IR_SENSOR_DISTANCE_MAX 200.0f
+
 class IRSensor
 {
 public:
