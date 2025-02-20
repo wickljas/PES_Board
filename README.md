@@ -32,9 +32,8 @@
     TODO: General:
     - document how to use PlatformIO
     - document how to use Putty
-    - add Python evaluation files for IR sensor calibration
-    - revisit and clean up sd card writer stuff
-    - create sd card example
+    - add python evaluation files for IR sensor calibration
+    - add python evaluation files for binary files
     - create serial stream example
     - include serial stream python version (in addition to matlab version)
     - in DCMotor.cpp PERFORM_GPA_MEAS and PERFORM_CHIRP_MEAS should be tested with the latest updates, here features like serial_pipe and serialStream could be introduced
@@ -53,7 +52,7 @@
         - kinematics.md                 (ok)
         - line_follower.md              (ok)
         - main_description.md           (ok)
-        - sd_card_logger.md
+        - sd_card_logger.md             (ok)
         - servo.md                      (ok)
         - tips.md                       (ok)
         - ultrasonic_sensor.md          (ok)
@@ -249,7 +248,7 @@ The following links contain the hardware tutorials. The documents contain specif
 - [Line Follower Array](docs/markdown/line_follower.md)
 - [IMU](docs/markdown/imu.md)
 - [Stepper Motor](docs/markdown/stepper_motor.md)
-- [SD-Card] <!-- TODO: Create and add document --> 
+- [SD-Card](docs/markdown/sd_card_logger.md)
 
 ## Tips
 

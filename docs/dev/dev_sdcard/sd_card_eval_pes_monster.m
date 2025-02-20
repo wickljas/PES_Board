@@ -1,7 +1,8 @@
 clc, clear all
 %%
 
-file_id = fopen('053.bin');
+% file_id = fopen('053.bin');
+file_id = fopen('005.bin');
 
 num_of_floats = fread(file_id, 1, 'uint8')
 
