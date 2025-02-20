@@ -45,7 +45,7 @@
  // main runs as an own thread
  int main()
  {
-     // attach button fall function address to user button object, button has a pull-up resistor
+     // attach button fall function address to user button object
      user_button.fall(&toggle_do_execute_main_fcn);
  
      // while loop gets executed every main_task_period_ms milliseconds, this is a
@@ -60,7 +60,7 @@
  
      // additional led
      // create DigitalOut object to command extra led, you need to add an aditional resistor, e.g. 220...500 Ohm
-     // a led has an anode (+) and a cathode (-), the cathode needs to be connected to ground via a resistor
+     // a led has an anode (+) and a cathode (-), the cathode needs to be connected to ground via the resistor
      DigitalOut led1(PB_9);
  
      // // ir distance sensor
@@ -162,7 +162,7 @@
          // printf("IR distance mV: %f IR distance cm: %f IR distance cm median: %f \n", ir_distance_mV, ir_distance_cm, ir_distance_cm_median);
  
          // read timer and make the main thread sleep for the remaining time span (non blocking)
-         int main_task_elapsed_time_ms = std::chrono::duration_cast<std::chrono::milliseconds>(main_task_timer.elapsed_time()).count();
+         int main_task_elapsed_time_ms = duration_cast<milliseconds>(main_task_timer.elapsed_time()).count();
          if (main_task_period_ms - main_task_elapsed_time_ms < 0)
              printf("Warning: Main task took longer than main_task_period_ms\n");
          else

@@ -17,14 +17,13 @@ bool do_reset_all_once = false;    // this variable is used to reset certain var
 
 // objects for user button (blue button) handling on nucleo board
 DebounceIn user_button(BUTTON1);   // create DebounceIn to evaluate the user button
-                                   // falling and rising edge
 void toggle_do_execute_main_fcn(); // custom function which is getting executed when user
                                    // button gets pressed, definition below
 
 // main runs as an own thread
 int main()
 {
-    // attach button fall function address to user button object, button has a pull-up resistor
+    // attach button fall function address to user button object
     user_button.fall(&toggle_do_execute_main_fcn);
 
     // while loop gets executed every main_task_period_ms milliseconds, this is a
@@ -39,7 +38,7 @@ int main()
 
     // additional led
     // create DigitalOut object to command extra led, you need to add an aditional resistor, e.g. 220...500 Ohm
-    // a led has an anode (+) and a cathode (-), the cathode needs to be connected to ground via a resistor
+    // a led has an anode (+) and a cathode (-), the cathode needs to be connected to ground via the resistor
     DigitalOut led1(PB_9);
 
     // create object to enable power electronics for the dc motors
@@ -178,7 +177,7 @@ int main()
         user_led = !user_led;
 
         // read timer and make the main thread sleep for the remaining time span (non blocking)
-        int main_task_elapsed_time_ms = std::chrono::duration_cast<std::chrono::milliseconds>(main_task_timer.elapsed_time()).count();
+        int main_task_elapsed_time_ms = duration_cast<milliseconds>(main_task_timer.elapsed_time()).count();
         if (main_task_period_ms - main_task_elapsed_time_ms < 0)
             printf("Warning: Main task took longer than main_task_period_ms\n");
         else
