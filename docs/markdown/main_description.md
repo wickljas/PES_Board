@@ -14,29 +14,29 @@ int main()
 }
 ```
 
-In general a file is executed starting from top to buttom. At the very beginning of the file, the Mbed library is included, which is a library that contains all the necessary functions and objects for the microcontroller to work properly with the Mbed operating system.
+In general a file is executed starting from top to bottom. At the very beginning of the file, the Mbed library is included, which is a library that contains all the necessary functions and objects for the microcontroller to work properly with the Mbed operating system.
 
 ```
 #include "mbed.h"
 ```
 
-Next a header file with some custom pin names of the PES board is included. In here we specify a naming conventaion to translate pin names from the Nucleo board to the PES board, see also [pes_board_peripherals.pdf](docs/datasheets/pes_board_peripherals.pdf).
+Next a header file with some custom pin names of the PES board is included. In here we specify a naming convention to translate pin names from the Nucleo board to the PES board, see also [pes_board_peripherals.pdf](docs/datasheets/pes_board_peripherals.pdf).
 
 ```
 // pes board pin map
 #include "PESBoardPinMap.h"
 ```
 
-Next we define additional drivers for hardware that we use in the project, for now we only include the ``DebounceIn.h`` driver, which is the driver we use to read in the blue **USER** button on the Nucleo board.
+Next we define additional drivers for hardware that we use in the project. For now we only include the ``DebounceIn.h`` driver, which is the driver we use to read in the blue **USER** button on the Nucleo board.
 
 ```
 // drivers
 #include "DebounceIn.h"
 ```
 
-Beginning now until the beginning of the ``main()`` function is space to define global variables and functions. Global meaning they are known within all scopes of the main file (a scope mean curly brackets).
+Then until the beginning of the ``main()`` function is space to define global variables and functions. Global meaning they are known within all scopes of the main file (a scopes mean curly brackets).
 
-These are placed outside of any scope, e.g. the scope of the ``main(){scope from main}`` function and are there for known by any scope within the ***main.cpp*** file (can be accessed from every scope).
+These are placed outside of any scope, e.g. the scope of the ``main(){scope from main}`` function and are therefor known by any scope within the ***main.cpp*** file (can be accessed from every scope).
 
 Be aware that it is not possible to execute any function globally. Functions can only be executed from within a scope, e.g. the scope of the ``main(){scope of main}`` function but are generally declared and defined globally.
 
@@ -54,7 +54,7 @@ void toggle_do_execute_main_fcn(); // custom function which is getting executed 
 
 ``toggle_do_execute_main_fcn()`` is declared here, but defined below the ``main()`` function. This is the function that will be executed when the blue **USER** button is pressed. It is declared here, so that the ``main()`` function knows that it exists and can be executed. The actual definition of the function is placed below the ``main()`` function at the end of the file.
 
-Below the code snippet of the first part of the ``main()`` function. All objects and variables that are defined here are visible only from the scope of ``main(){scope of main}``.
+Below the code snippet of the first part of the ``main()`` function, all objects and variables that are defined here are visible only from the scope of ``main(){scope of main}``.
 
 Be aware that code always should be as local as possible. So when ever possible, objects and variables should be defined within the scope of the part where they are actually used. Working with global variables and objects can lead to confusion and errors, especially when the project grows and becomes more complex (prone to errors).
 
@@ -86,11 +86,11 @@ int main()
     .
 ```
 
-Above the place in the ``main()`` function where you can define additional objects and variables that you intend to use. Here you can also execute functions, because now we are operating within a scope, e.g. ``user_button.fall(&toggle_do_execute_main_fcn)``.
+The codesnippet above shows the section in the ``main()`` function where you can define additional objects and variables that you intend to use. Here you can also execute functions, because now we are operating within a scope, e.g. ``user_button.fall(&toggle_do_execute_main_fcn)``.
 
-Below starts the ``while()`` loop, since the argument is ``while(true)`` and we don't have a break condition the program will repeat everything in the scope of ``while(){scope of while}`` until the end of time (or reset, or reflash... :-)).
+Below starts the ``while()`` loop. Since the argument is ``while(true)`` and we don't have a break condition the program will repeat everything in the scope of ``while(){scope of while}`` until the end of time (or reset, or reflash... :-)).
 
-If we want to command an actuator, read in a sensor or print output to the console or generally; perform any operations in an infinite manner, the corresponding task needs to be implemented within the ``while()`` loop.
+If we want to command an actuator, read in a sensor or print an output to the console or perform any other operations in an infinite manner, the corresponding task needs to be implemented within the ``while()`` loop.
 
 
 ```
