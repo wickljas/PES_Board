@@ -29,11 +29,11 @@ Creating a flowchart at the start of the project offers important benefits. It p
 
 When it comes to coding, the following steps are crucial for a successful project development:
 
--  <b>Have no Fear </b>- Start programming as soon as possible. Even if you don't have a clear idea of what you are doing - DO IT! You will learn a lot and gain experience that will be useful in the future. There is only a very small number of people that can read a book or whatch a video about programming and then start programming without any issues. Most of us have to learn by doing.
+-  <b>Have no Fear </b>- Start programming as soon as possible. Even if you don't have a clear idea of what you are doing - DO IT! You will learn a lot and gain experience that will be useful in the future. There is only a very small number of people that can read a book or watch a video about programming and then start programming without any issues. Most of us have to learn by doing.
 - <b>Just play</b> - Start small, play with your system, allow yourselft to make errors, learn from them... and have <b>FUN!</b>
 - <b>Step by Step Implementation</b> - Start implementing the ideas you have gathered. With an idea of what actuators and sensors you want to use, as well as how your robot is supposed to work - start writing code gradually. Familiarize yourself with the capabilities of the elements you are using and think about their application to your project. Consider creating small examples where you use the sensor or the actuator you intend to integrate in your project separately. This will help you understand the capabilities of the elements you are using.
-- <b>Test</b> - Test your code... test, test, test. Testing after each step is implemented is very important due to the fact that only doing so will protect you from larger errors. Debugging large and complex parts of code can be very painfull!
-- <b>Priftf Debug</b> - When encountering issues in your code, embrace debugging as a crucial problem-solving tool. It entails identifying and resolving errors, ensuring your program functions seamlessly. After detecting each error and before making each change, think about the solution and then make changes, and go back to the previous point!
+- <b>Test</b> - Test your code... test, test, test. Testing after each step is implemented is very important due to the fact that only doing so will protect you from larger errors. Debugging large and complex parts of code can be very painful!
+- <b>Printf Debug</b> - When encountering issues in your code, embrace debugging as a crucial problem-solving tool. It entails identifying and resolving errors, ensuring your program functions seamlessly. After detecting each error and before making each change, think about the solution and then make changes, and go back to the previous point!
 
 Some useful programming tips can be found under [Programming Tips](#programming-tips).
 
@@ -138,7 +138,7 @@ printf("Debugging: %d", value);
 
 #### 6. Use ChatGPT, GitHub Copilot and Similar Tools
 
-- First and foremost, don't trust any AI. Always check the answer and the code before using it. Never the less, these tools can be very helpful and often point you in the right direction. But in the end, you have to understand the code you are implementing.
+- First and foremost, don't trust any AI. Always check the answer and the code before using it. Nevertheless, these tools can be very helpful and often point you in the right direction. But in the end, you have to understand the code you are implementing.
 - Utilize ChatGPT for interactive assistance during programming. Describe issues, ask questions, or seek guidance on code-related problems to receive helpful suggestions.
 - Leverage ChatGPT to explore algorithms, design patterns, or coding concepts. Describe your requirements, and ChatGPT can provide insights, code snippets, or explanations to enhance your understanding.
 
