@@ -32,8 +32,6 @@
     TODO: General:
     - document how to use PlatformIO
     - document how to use Putty
-    - add python evaluation files for IR sensor calibration
-    - add python evaluation files for binary files
     - create serial stream example
     - include serial stream python version (in addition to matlab version)
     - in DCMotor.cpp PERFORM_GPA_MEAS and PERFORM_CHIRP_MEAS should be tested with the latest updates, here features like serial_pipe and serialStream could be introduced
@@ -115,7 +113,10 @@ Fast prototyping in robotics focuses on quickly building and testing a simple ve
         * [Ultrasonic Sensor](docs/markdown/ultrasonic_sensor.md)
         * [Servo](docs/markdown/servo.md)
         * [DC Motor](docs/markdown/dc_motor.md)
-        * [Line Follower](docs/markdown/line_follower.md)
+        * [Line Follower Array](docs/markdown/line_follower.md)
+        * [IMU](docs/markdown/imu.md)
+        * [Stepper Motor](docs/markdown/stepper_motor.md)
+        * [SD-Card](docs/markdown/sd_card_logger.md)
 3. [Tips](#tips)
     * [Project Development](docs/markdown/tips.md#project-development)
     * [Programming](docs/markdown/tips.md#programming)

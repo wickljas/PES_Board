@@ -5,7 +5,7 @@
 
 The first workshop aims to introduce the Nucleo-F446RE microcontroller. We will familiarize ourselfs with the Mbed Studio development environment, an IDE for coding and software/firmware development. The workshop will start by analysing a given ***main.cpp*** file, it's structure, and the implementation of basic commands.
 
-Participants will explore hardware utilization, specifically the IR Sensor and a calibration process. To optimize the calibration parameters we will use MATLAB.
+Participants will explore hardware utilization, specifically the IR Sensor and a calibration process. To optimize the calibration parameters we will use either MATLAB or Python.
 
 ## Hardware
 

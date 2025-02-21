@@ -99,7 +99,7 @@ void toggle_do_execute_main_fcn()
 
 float ir_sensor_compensation(float ir_distance_mV)
 {
-    // insert values that you got from the MATLAB file
+    // insert values that you got from the MATLAB or Python file
     static const float a = 2.574e+04f;
     static const float b = -29.37f;
 

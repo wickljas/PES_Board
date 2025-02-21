@@ -1,26 +1,28 @@
 clc, clear variables
-%% read the file, data contains delta as first entry
+%% Read the file
 
 file_name = '002.bin';
 data = read_sdcard_data_with_time(file_name);
 
 
-%% evaluate the data
+%% Evaluate the Data
 
-% average sampling time
+% Average Sampling Time
 Ts = mean(diff(data.time));
 
+dtime_mus = diff(data.time * 1e6);
+
 figure(1)
-plot(data.time(1:end-1), diff(data.time * 1e6)), grid on
+plot(data.time(1:end-1), dtime_mus), grid on
 title( sprintf(['Mean %0.0f mus, ', ...
                 'Std. %0.0f mus, ', ...
                 'Med. dT = %0.0f mus'], ...
-                mean(diff(data.time * 1e6)), ...
-                std(diff(data.time * 1e6)), ...
-                median(diff(data.time * 1e6))) )
+                mean(dtime_mus), ...
+                std(dtime_mus), ...
+                median(dtime_mus)) )
 xlabel('Time (sec)'), ylabel('dTime (mus)')
 xlim([0 data.time(end-1)])
-ylim([0 1.2*max(diff(data.time * 1e6))])
+ylim([0 1.2*max(dtime_mus)])
 
 % // write data to the internal buffer of the sd card logger and send it to the sd card
 % sd_logger.write(dtime_us);
