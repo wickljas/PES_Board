@@ -143,15 +143,15 @@ This document covers all the information about:
   
 ## Hardware
 
-During the course, we will use the Nucleo-F446RE board from ST Microelectronics in combination with the PES board designed and developed at ZHAW. The basic hardware kid that students receive includes a variety of sensors and actuators for practical applications.
+During the course, we will use the Nucleo-F446RE board from ST Microelectronics in combination with the PES board designed and developed at ZHAW. The basic hardware kit that students receive includes a variety of sensors and actuators for practical applications.
 
 >**IMPORTANT NOTE:**
 >
 >- <b>When working with hardware (connecting, reconnecting etc.), it is recommended that all power sources are disconnected. This is a general safety measurement! So for us, the Nucleo is disconnected and the PES board **Power Switch** is **OFF** when ever we change someting at the hardware setup.</b>
 >- <b>The USB cable should only be connected to the computer after the power switch has been switched on.</b>
->- <b>To not connect the charger when the battery packs are not connected, otherwise the PES board will be damaged.</b>
+>- <b>Do not connect the charger when the battery packs are not connected, otherwise the PES board will be damaged.</b>
 >- <b>Using the PES board with power ON and hardware running while connected to your computer/laptop happens at your own risk. There was a case where the students laptop was damaged in the past.</b>
->- <b>Various Nucleo boards, PES Borads and even laptops have been damaged in the past, so make sure to stick to the rules above.</b>
+>- <b>Various Nucleo boards, PES Boards and even laptops have been damaged in the past, so make sure to stick to the rules above.</b>
 
 ### Nucleo F446RE
 
@@ -201,7 +201,7 @@ The batteries enables the board itself to be powered independently of the connec
 
 #### Charging the Batteries
 
-<b>Using the Charger</b> - if you connect the charger to the PES board, the battery packs need to be connected. If the battery packs (2 packs for 12 volts or one pack and a jumper for 6 volts) are not connected when you plug in the charger, the PES board will be destroyed.
+<b>Using the Charger</b> - if you connect the charger to the PES board, the battery packs must be connected. If the battery packs (2 packs for 12 volts or one pack and a jumper for 6 volts) are not connected when you plug in the charger, the PES board will be destroyed. <b>THE CHARGER IS NOT A POWERSUPPLY</b>
 
 <b>Charging batteries</b> - the battery packs are only charged when the power switch is set to OFF.
 
