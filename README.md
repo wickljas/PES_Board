@@ -39,24 +39,24 @@
     Files checked before FS25:
 
         Markdown files read and checked:
-        - README.md                     (ok)
+        - README.md                     (ok)   ->   ws1-3, 1
         - build_mbed_linux.md           (ok)
         - build_mbed_windows.md         (ok)
         - stepper_motor.md              (ok)
-        - course_setup.md               (ok)
-        - dc_motor.md                   (ok)
+        - course_setup.md               (ok)   ->   ws1, 2
+        - dc_motor.md                   (ok)   ->   ws3, 3
         - imu.md                        (ok)
-        - ir_sensor.md                  (ok)
+        - ir_sensor.md                  (ok)   ->   ws1, 6
         - kinematics.md                 (ok)
         - line_follower.md              (ok)
-        - main_description.md           (ok)
+        - main_description.md           (ok)   ->   ws1, 5
         - sd_card_logger.md             (ok)
-        - servo.md                      (ok)
-        - tips.md                       (ok)
-        - ultrasonic_sensor.md          (ok)
-        - ws1.md                        (ok)
-        - ws2.md                        (ok)
-        - ws3.md                        (ok)
+        - servo.md                      (ok)   ->   ws2, 3
+        - tips.md                       (ok)   ->   ws1, 3
+        - ultrasonic_sensor.md          (ok)   ->   ws2, 4
+        - ws1.md                        (ok)   ->   ws1, 4
+        - ws2.md                        (ok)   ->   ws2, 2
+        - ws3.md                        (ok)   ->   ws3, 2
 
         Solutions:
         - main_base.cpp                       (ok)
