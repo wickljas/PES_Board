@@ -44,17 +44,29 @@ int main()
 
     const float voltage_max = 12.0f; // maximum voltage of battery packs, adjust this to
                                      // 6.0f V if you only use one battery pack
-    const float gear_ratio = 78.125f;
-    const float kn = 180.0f / 12.0f;
+    // const float gear_ratio = 78.125f;
+    // const float kn = 180.0f / 12.0f;
+    const float gear_ratio = 100.00f;
+    const float kn = 140.0f / 12.0f;
     // motor M1 and M2, do NOT enable motion planner when used with the LineFollower (disabled per default)
-    DCMotor motor_M1(PB_PWM_M1, PB_ENC_A_M1, PB_ENC_B_M1, gear_ratio, kn, voltage_max);
     DCMotor motor_M2(PB_PWM_M2, PB_ENC_A_M2, PB_ENC_B_M2, gear_ratio, kn, voltage_max);
+    DCMotor motor_M3(PB_PWM_M3, PB_ENC_A_M3, PB_ENC_B_M3, gear_ratio, kn, voltage_max);
 
-    const float d_wheel = 0.035f;  // wheel diameter in meters
-    const float b_wheel = 0.1518f; // wheelbase, distance from wheel to wheel in meters
-    const float bar_dist = 0.118f; // distance from wheel axis to leds on sensor bar / array in meters
+    // const float d_wheel = 0.035f;  // wheel diameter in meters
+    // const float b_wheel = 0.1518f; // wheelbase, distance from wheel to wheel in meters
+    // const float bar_dist = 0.118f; // distance from wheel axis to leds on sensor bar / array in meters
+    const float d_wheel = 0.0372f; // wheel diameter in meters
+    const float b_wheel = 0.156f;  // wheelbase, distance from wheel to wheel in meters
+    const float bar_dist = 0.114f; // distance from wheel axis to leds on sensor bar / array in meters
+
     // line follower
-    LineFollower lineFollower(PB_9, PB_8, bar_dist, d_wheel, b_wheel, motor_M2.getMaxPhysicalVelocity());
+    LineFollower lineFollower(PB_9, PB_8, bar_dist, d_wheel, b_wheel, motor_M3.getMaxPhysicalVelocity());
+
+    // const float Kp = 2.0f;
+    // const float Kp_nl = 17.0f;
+    const float Kp = 1.6f * 2.0f;
+    const float Kp_nl = 1.6f * 17.0f;
+    lineFollower.setRotationalVelocityGain(Kp, Kp_nl);
 
     // start timer
     main_task_timer.start();
@@ -67,8 +79,8 @@ int main()
             // visual feedback that the main task is executed, setting this once would actually be enough
             led1 = 1;
             enable_motors = 1;
-            motor_M1.setVelocity(lineFollower.getRightWheelVelocity()); // set a desired speed for speed controlled dc motors M1
-            motor_M2.setVelocity(lineFollower.getLeftWheelVelocity());  // set a desired speed for speed controlled dc motors M2
+            motor_M2.setVelocity(lineFollower.getRightWheelVelocity()); // set a desired speed for speed controlled dc motors M1
+            motor_M3.setVelocity(lineFollower.getLeftWheelVelocity());  // set a desired speed for speed controlled dc motors M2
         } else {
             // the following code block gets executed only once
             if (do_reset_all_once) {
