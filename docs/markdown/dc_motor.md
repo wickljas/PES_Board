@@ -265,6 +265,12 @@ const float kn_M2 = 180.0f / 12.0f;  // motor constant [rpm/V]
 DCMotor motor_M2(PB_PWM_M1, PB_ENC_A_M1, PB_ENC_B_M1, gear_ratio_M2, kn_M2, voltage_max);
 ```
 
+Then include the command that will drive the motor with half of the maximum rotational velocity:
+
+```
+motor_M2.setVelocity(motor_M2.getMaxVelocity() * 0.5f);
+```
+
 We can additionally use the driver functionality to limit the maximum rotational velocity to half the maximum physical velocity at which the motor can rotate.
 
 ```
