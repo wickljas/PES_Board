@@ -48,6 +48,8 @@ int main()
     DigitalOut enable_motors(PB_ENABLE_DCMOTORS);
     enable_motors = 1;  
 
+    motor_M1.setMaxVelocity(0.5f);
+
     // this loop will run forever
     while (true) {
         main_task_timer.reset();
