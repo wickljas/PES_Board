@@ -33,7 +33,7 @@ int main()
 
     // led on nucleo board
     DigitalOut user_led(LED1);
-    DigitalIn RX(PA_0);
+    DigitalIn RX(PC_0);
 
     // start timer
     main_task_timer.start();
@@ -70,6 +70,8 @@ int main()
 
                 if (buttonNow && !buttonBefore) {
                     state = MOVING;
+                } else if (RX.read() == 1) {
+                    state = MOVING;
                 }
 
                 buttonBefore = buttonNow;
@@ -83,6 +85,8 @@ int main()
                 user_led = 1;
 
                 if (buttonNow && !buttonBefore) {
+                    state = STOPPING;
+                } else if (RX.read() == 0) {
                     state = STOPPING;
                 }
                 buttonBefore = buttonNow;
