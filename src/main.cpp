@@ -2,6 +2,7 @@
 
 // pes board pin map
 #include "PESBoardPinMap.h"
+#include "DCMotor.h"
 
 // drivers
 #include "DebounceIn.h"
@@ -33,16 +34,26 @@ int main()
     int buttonNow = button.read();
     int buttonBefore = buttonNow;
 
+    const float voltage_max = 12.0f; // maximum voltage of battery packs, adjust this to
+    const float gear_ratio_M2 = 156.0f; // gear ratio
+    const float kn_M2 = 89.0f / 12.0f;  // motor constant [rpm/V]
+    DCMotor motor_M1(PB_PWM_M1, PB_ENC_A_M1, PB_ENC_B_M1, gear_ratio_M2, kn_M2, voltage_max);
+
+    
+
     // this loop will run forever
     while (true) {
         main_task_timer.reset();
 
+        motor_M1.setVelocity(0.5f);
         buttonNow = button.read();
         if (buttonNow && !buttonBefore) {
             user_led = !user_led;
+            
         }
 
         buttonBefore = buttonNow;
+        printf("Motor velocity: %f \n", motor_M1.getMaxVelocity());
 
         // read timer and make the main thread sleep for the remaining time span (non blocking)
         int main_task_elapsed_time_ms = duration_cast<milliseconds>(main_task_timer.elapsed_time()).count();
