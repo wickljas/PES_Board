@@ -14,6 +14,12 @@ bool do_reset_all_once = false;    // this variable is used to reset certain var
 // objects for user button (blue button) handling on nucleo board
 DigitalIn button(BUTTON1);
 
+enum State {
+    MOVING,
+    STOPPING
+};
+
+State state = STOPPING;
 
 // main runs as an own thread
 int main()
@@ -39,21 +45,49 @@ int main()
     const float kn_M2 = 89.0f / 12.0f;  // motor constant [rpm/V]
     DCMotor motor_M1(PB_PWM_M1, PB_ENC_A_M1, PB_ENC_B_M1, gear_ratio_M2, kn_M2, voltage_max);
 
-    
+    DigitalOut enable_motors(PB_ENABLE_DCMOTORS);
+    enable_motors = 1;  
 
     // this loop will run forever
     while (true) {
         main_task_timer.reset();
 
-        motor_M1.setVelocity(0.5f);
-        buttonNow = button.read();
+        switch (state) {
+            case STOPPING:
+                buttonNow = button.read();
+                motor_M1.setVelocity(0.0f);
+                user_led = 0;
+
+                if (buttonNow && !buttonBefore) {
+                    state = MOVING;
+                }
+
+                buttonBefore = buttonNow;
+                break;
+            
+            case MOVING:
+                buttonNow = button.read();
+                motor_M1.setVelocity(0.3f);
+                user_led = 1;
+
+                if (buttonNow && !buttonBefore) {
+                    state = STOPPING;
+                }
+                buttonBefore = buttonNow;
+                break;
+            
+            default:
+                state = STOPPING;
+                break;
+
+        }
         if (buttonNow && !buttonBefore) {
             user_led = !user_led;
-            
+            motor_M1.setVelocity(0.5f);
         }
 
         buttonBefore = buttonNow;
-        printf("Motor velocity: %f \n", motor_M1.getMaxVelocity());
+        printf("Motor velocity: %f \n", motor_M1.getVelocity());
 
         // read timer and make the main thread sleep for the remaining time span (non blocking)
         int main_task_elapsed_time_ms = duration_cast<milliseconds>(main_task_timer.elapsed_time()).count();
