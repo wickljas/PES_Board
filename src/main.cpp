@@ -71,7 +71,7 @@ int main()
                 if (buttonNow && !buttonBefore) {
                     state = MOVING;
                 } else if (RX.read() == 1) {
-                    state = MOVING;
+                    //state = MOVING;
                 }
 
                 buttonBefore = buttonNow;
@@ -87,7 +87,7 @@ int main()
                 if (buttonNow && !buttonBefore) {
                     state = STOPPING;
                 } else if (RX.read() == 0) {
-                    state = STOPPING;
+                    //state = STOPPING;
                 }
                 buttonBefore = buttonNow;
                 break;
