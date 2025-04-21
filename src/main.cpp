@@ -1,113 +1,109 @@
 #include "mbed.h"
-
-// pes board pin map
 #include "PESBoardPinMap.h"
 #include "DCMotor.h"
-
-// drivers
 #include "DebounceIn.h"
 
-bool do_execute_main_task = false; // this variable will be toggled via the user button (blue button) and                                   // decides whether to execute the main task or not
-bool do_reset_all_once = false;    // this variable is used to reset certain variables and objects and
-                                   // shows how you can run a code segment only once
+// —— CONFIGURATION —————————————————————————————————————————————————
+static constexpr int   MAIN_PERIOD_MS           = 20;
+static constexpr float VOLTAGE_MAX              = 12.0f;
+static constexpr float GEAR_RATIO               = 156.0f;
+static constexpr float KN_RPM_PER_V             = 89.0f/12.0f;
+static constexpr float MAX_VEL                  = 0.5f;
+static constexpr float WHEEL_CIRCUMFERENCE_MM   = 210.0f;   // adjust to your wheel
+static constexpr float ROTATION_ERROR_TOL_DEG   = 0.5f;     // acceptable tolerance
 
-// objects for user button (blue button) handling on nucleo board
-DigitalIn button(BUTTON1);
+// —— HARDWARE PINS —————————————————————————————————————————————————
+DigitalOut    user_led(LED1);
+DebounceIn    button(BUTTON1);
 
-enum State {
-    MOVING,
-    STOPPING
-};
+// UART from ESP32 on USART1: TX=PA_9, RX=PA_10
+static BufferedSerial esp_serial(PA_9, PA_10, 115200);
 
-State state = STOPPING;
+// Two DC Motors: M1 = drive, M2 = rotation
+DCMotor       motor_M1(PB_PWM_M1, PB_ENC_A_M1, PB_ENC_B_M1,
+                       GEAR_RATIO, KN_RPM_PER_V, VOLTAGE_MAX);
+DCMotor       motor_M2(PB_PWM_M2, PB_ENC_A_M2, PB_ENC_B_M2,
+                       GEAR_RATIO, KN_RPM_PER_V, VOLTAGE_MAX);
+DigitalOut    enable_motors(PB_ENABLE_DCMOTORS);
 
-// main runs as an own thread
-int main()
-{
-    // while loop gets executed every main_task_period_ms milliseconds, this is a
-    // simple approach to repeatedly execute main
-    const int main_task_period_ms = 20; // define main task period time in ms e.g. 20 ms, there for
-                                        // the main task will run 50 times per second
-    Timer main_task_timer;              // create Timer object which we use to run the main task
-                                        // every main_task_period_ms
+// Conversion helpers
+inline float deg2rot(float deg) { return deg / 360.0f; }
+inline float rot2deg(float rot) { return rot * 360.0f; }
 
-    // led on nucleo board
-    DigitalOut user_led(LED1);
-    DigitalIn RX(PC_0);
+int main() {
+    // Console via USB-STLink
+    setvbuf(stdout, nullptr, _IONBF, 0);
+    printf("[Nucleo] USART1 PA_9/PA_10 at 115200\n");
 
-    // start timer
-    main_task_timer.start();
+    // Enable motion planner for both motors
+    enable_motors = 1;
+    motor_M1.enableMotionPlanner();
+    motor_M2.enableMotionPlanner();
+    motor_M1.setMaxVelocity(MAX_VEL);
+    motor_M2.setMaxVelocity(MAX_VEL);
 
-    int buttonNow = button.read();
-    int buttonBefore = buttonNow;
+    // Track M1 initial rotation for relative moves
+    float m1_start_rot = motor_M1.getRotation();
 
-    const float voltage_max = 12.0f; // maximum voltage of battery packs, adjust this to
-    const float gear_ratio = 156.0f; // gear ratio
-    const float kn = 89.0f / 12.0f;  // motor constant [rpm/V]
-    DCMotor motor_M1(PB_PWM_M1, PB_ENC_A_M1, PB_ENC_B_M1, gear_ratio, kn, voltage_max);
-    DCMotor motor_M2(PB_PWM_M2, PB_ENC_A_M2, PB_ENC_B_M2, gear_ratio, kn, voltage_max);
-    DCMotor motor_M3(PB_PWM_M3, PB_ENC_A_M3, PB_ENC_B_M3, gear_ratio, kn, voltage_max);
+    // Receive buffer
+    static constexpr size_t BUF_SIZE = 256;
+    char buffer[BUF_SIZE];
+    size_t idx = 0;
 
-    DigitalOut enable_motors(PB_ENABLE_DCMOTORS);
-    enable_motors = 1;  
-
-    motor_M1.setMaxVelocity(0.5f);
-    motor_M2.setMaxVelocity(0.5f);
-    motor_M3.setMaxVelocity(0.5f);
-
-    const float speed = 0.3f;
-    // this loop will run forever
     while (true) {
-        main_task_timer.reset();
+        if (esp_serial.readable()) {
+            char c;
+            if (esp_serial.read(&c, 1) == 1) {
+                user_led = !user_led;  // blink on each byte
+                buffer[idx++] = c;
+                if (c == '\n' || idx >= BUF_SIZE-1) {
+                    buffer[idx] = '\0';
+                    printf("[Nucleo] CMD recv: %s", buffer);
 
-        switch (state) {
-            case STOPPING:
-                buttonNow = button.read();
-                motor_M1.setVelocity(0.0f);
-                motor_M2.setVelocity(0.0f);
-                motor_M3.setVelocity(0.0f);
-                user_led = 0;
+                    // Parse JSON fields
+                    bool isRotate  = strstr(buffer, "\"ROTATE\"")  != nullptr;
+                    bool isForward = strstr(buffer, "\"FORWARD\"") != nullptr;
+                    int value = 0;
+                    if (char* p = strstr(buffer, "\"value\"")) {
+                        value = atoi(p + 8);
+                    }
+                    printf("[Nucleo] Parsed: rotate=%d, forward=%d, value=%d\n",
+                           isRotate, isForward, value);
 
-                if (buttonNow && !buttonBefore) {
-                    state = MOVING;
-                } else if (RX.read() == 1) {
-                    //state = MOVING;
+                    // Execute rotate
+                    if (isRotate) {
+                        float target_rot = deg2rot((float)value);
+                        motor_M2.setRotation(target_rot);
+                        // Wait until within tolerance
+                        while (fabsf(motor_M2.getRotation() - target_rot) > ROTATION_ERROR_TOL_DEG / 360.0f) {
+                            thread_sleep_for(1);
+                        }
+                        int ackDeg = (int)rot2deg(motor_M2.getRotation());
+                        char out[64];
+                        int n = snprintf(out, sizeof(out), "{\"ack\":\"OK\",\"pos\":%d}\n", ackDeg);
+                        esp_serial.write(out, n);
+                        printf("[Nucleo] ACK sent: %s", out);
+                    }
+                    // Execute forward
+                    else if (isForward) {
+                        // Compute degrees for wheel rotation
+                        float wheel_rotations = (float)value / WHEEL_CIRCUMFERENCE_MM;
+                        float wheel_degrees   = rot2deg(wheel_rotations);
+                        motor_M1.setRotation(m1_start_rot + deg2rot(wheel_degrees));
+                        // Wait until within tolerance
+                        while (fabsf(motor_M1.getRotation() - (m1_start_rot + deg2rot(wheel_degrees))) > ROTATION_ERROR_TOL_DEG / 360.0f) {
+                            thread_sleep_for(1);
+                        }
+                        m1_start_rot = motor_M1.getRotation();  // update base
+                        char out[64];
+                        int n = snprintf(out, sizeof(out), "{\"ack\":\"OK\",\"pos\":%d}\n", value);
+                        esp_serial.write(out, n);
+                        printf("[Nucleo] ACK sent: %s", out);
+                    }
+                    idx = 0;
                 }
-
-                buttonBefore = buttonNow;
-                break;
-            
-            case MOVING:
-                buttonNow = button.read();
-                motor_M1.setVelocity(speed);
-                motor_M2.setVelocity(speed);
-                motor_M3.setVelocity(speed);
-                user_led = 1;
-
-                if (buttonNow && !buttonBefore) {
-                    state = STOPPING;
-                } else if (RX.read() == 0) {
-                    //state = STOPPING;
-                }
-                buttonBefore = buttonNow;
-                break;
-            
-            default:
-                state = STOPPING;
-                break;
-
+            }
         }
-
-
-    
-        //printf("Motor velocity: %f \n", motor_M1.getVelocity());
-        printf("ESP32 Button?: %d \n", RX.read());
-        // read timer and make the main thread sleep for the remaining time span (non blocking)
-        int main_task_elapsed_time_ms = duration_cast<milliseconds>(main_task_timer.elapsed_time()).count();
-        if (main_task_period_ms - main_task_elapsed_time_ms < 0)
-            printf("Warning: Main task took longer than main_task_period_ms\n");
-        else
-            thread_sleep_for(main_task_period_ms - main_task_elapsed_time_ms);
+        thread_sleep_for(MAIN_PERIOD_MS);
     }
 }
-
