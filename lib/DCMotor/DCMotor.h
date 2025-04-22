@@ -260,7 +260,7 @@ public:
     /**
      * @brief Set the PWM period in microseconds.
      *
-     * @param period_mus The Period in microseconds. Make sure period_mus >= PERIOD_MUS (see below).
+     * @param period_mus The Period in microseconds. Make sure period_mus <= PERIOD_MUS (see below).
      */
     void setFastPWMPeriod_mus(int period_mus);
 
