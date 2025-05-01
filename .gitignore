@@ -7,3 +7,4 @@
 BUILD
 mbed-os
 .mbed
+bme68x_sensorapi
