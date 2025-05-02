@@ -79,6 +79,8 @@ void init_bme680() {
     bme.intf_ptr = nullptr;
     if (bme68x_init(&bme) != BME68X_OK) {
         printf("BME init failed\n"); while (true);
+    } else {
+        printf("BME init success\n");
     }
     conf.os_hum   = BME68X_OS_2X;
     conf.os_temp  = BME68X_OS_4X;
@@ -153,9 +155,10 @@ void saveFrameAsPPM(int idx) {
 // ——— main ———
 int main() {
     // mount SD
+    printf("Starting Setup\n");
     if (fs.mount(&bd) != 0) {
         printf("ERROR: SD mount failed\n");
-        while (1);
+        //while (1);
     }
 
     totalSegments   = ceilf(totalTravelTurns / distanceToTravelTurns);
@@ -181,7 +184,7 @@ int main() {
                 // debounce
                 thread_sleep_for(50);
                 if (!start_btn.read()) break;
-
+                printf("pressed start button\n");
                 // 1) write a CSV header via stdio
                 {
                     FILE *f = fopen("/fs/data.csv", "w");
@@ -205,6 +208,7 @@ int main() {
                 frameCount = 0;
 
                 state = LOG_AND_SCAN;
+                printf("State: Log and scan");
             }
             break;
 
@@ -214,6 +218,7 @@ int main() {
             if (read_mlx_frame()) {
                 saveFrameAsPPM(frameCount++);
             }
+            printf("test 1\n");
             // 2) BME680
             bme68x_set_op_mode(BME68X_FORCED_MODE, &bme);
             bme.delay_us(heatr_conf.heatr_dur * 1000, nullptr);
@@ -223,9 +228,12 @@ int main() {
                 T = d.temperature; H = d.humidity;
                 P = d.pressure/100.0f; G = d.gas_resistance;
             }
+            printf("Test 2");
             // 3) Ultrasonic
             float dist = measureDistanceCm();
             // 4) Log CSV: angle, distance, T,H,P,G
+            
+            /*
             sd_logger.write(current_angle);
             sd_logger.write(dist);
             sd_logger.write(T);
@@ -233,7 +241,10 @@ int main() {
             sd_logger.write(P);
             sd_logger.write(G);
             sd_logger.send();
+            */
+            printf("Temp: %f", T);
             state = ROTATE_SENSOR;
+            printf("State: Rotate sensor");
             break;
         }
 
@@ -244,6 +255,7 @@ int main() {
             }
             current_angle += step_deg;
             state = (current_angle < 360.0f) ? LOG_AND_SCAN : ADVANCE_ROBOT;
+            printf("state: %c", state);
             break;
         }
 
@@ -286,6 +298,7 @@ int main() {
         }
         }
 
-        thread_sleep_for(10);
+        printf("ESP32 Button?: %d \n", start_btn.read());
+        thread_sleep_for(20);
     }
 }
