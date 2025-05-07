@@ -4,84 +4,87 @@
 #include "SDLogger.h"
 #include "bme68x.h"
 #include "bme680_mbed.h"
-
-// MLX90640 driver headers
 #include "MLX90640_I2C_Driver.h"
 #include "MLX90640_API.h"
 
-// For raw file writes
-#include "SDBlockDevice.h"
-#include "FATFileSystem.h"
+using namespace std::chrono_literals;
 
-// I/O
-DigitalIn  start_btn(BUTTON1);
-DigitalOut user_led(LED1);
-I2C        i2c(PB_9, PB_8);
-SDLogger   sd_logger(PB_SD_MOSI, PB_SD_MISO, PB_SD_SCK, PB_SD_CS);
+// I2C bus for sensors
+I2C i2c(PB_9, PB_8);
 
-// Mount block‐device on “fs:”  
-SDBlockDevice bd(PB_SD_MOSI, PB_SD_MISO, PB_SD_SCK, PB_SD_CS);
-FATFileSystem  fs("fs", &bd);
+// SDLogger for logging
+typedef SDLogger Logger;
+Logger sd_logger(PB_SD_MOSI, PB_SD_MISO, PB_SD_SCK, PB_SD_CS);
 
-// BME680
+// HC-SR04 ultrasonic sensor pins (D3 trig, D2 echo)
+DigitalOut us_trig(D3);
+DigitalIn  us_echo(D2, PullDown);
+#define MAX_WAIT_US 30000
+
+// BME680 globals
 bme68x_dev        bme;
 bme68x_conf       conf;
 bme68x_heatr_conf heatr_conf;
 
-// Ultrasonic
-DigitalOut  us_trig(PB_6);
-DigitalIn   us_echo(PB_7);
+// MLX90640 globals
+#define MLX_ADDR 0x33
+static uint16_t eeMLX[832];
+static paramsMLX90640 mlxParams;
+static uint16_t rawMLX[834];
+static float    frameMLX[768];
 
-// Motors
+// Motor enable and objects
+DigitalOut enable_motors(PB_ENABLE_DCMOTORS);
 const float gear_ratio  = 156.0f;
 const float kn          = 89.0f/12.0f;
 const float voltage_max = 12.0f;
 DCMotor motor1(PB_PWM_M1, PB_ENC_A_M1, PB_ENC_B_M1, gear_ratio, kn, voltage_max);
 DCMotor motor2(PB_PWM_M2, PB_ENC_A_M2, PB_ENC_B_M2, gear_ratio, kn, voltage_max);
-DigitalOut enable_motors(PB_ENABLE_DCMOTORS);
+
+// Button and LED
+DigitalIn  start_btn(BUTTON1, PullUp);
+DigitalOut status_led(LED1);
+
+// Sequence parameters
+const float step_deg         = 5.0f;
+const float turns_per_step   = step_deg / 360.0f;
+const float travel_turns     = 2.0f; // wheel turns per segment
+const float total_rotation   = 360.0f;
+const int   steps            = total_rotation / step_deg;
+const int   totalSegments    = 2;    // limited to two turns
+const auto  sensorTimeout    = 5000ms;
+
+// Speeds
+const float sensorSpeed = 0.3f;
+const float driveSpeed  = 0.5f;
 
 // State machine
 enum State { WAIT_FOR_START, LOG_AND_SCAN, ROTATE_SENSOR, ADVANCE_ROBOT, RETURN_HOME };
 State state = WAIT_FOR_START;
+int current_step = 0;
+int segmentCount = 0;
+float current_angle = 0.0f;
 
-// Scan parameters
-const float step_deg        = 5.0f;               // sensor turn per step
-const float turns_per_step  = step_deg / 360.0f;   // full motor turns needed
-float       current_angle   = 0.0f;               // cumulative scan angle
-const float totalTravelTurns = 10.0f; // e.g. 10 full wheel turns = X mm
-// Compute how many segments (i.e. how many scans) fit:
-static int   totalSegments;           
-static int   segmentCounter;
+// Sensor read functions
+float measureDistanceCm() {
+    us_trig = 0; wait_us(2);
+    us_trig = 1; wait_us(10);
+    us_trig = 0;
+    Timer t, to; to.start();
+    while (!us_echo) if (to.elapsed_time().count() > MAX_WAIT_US) return NAN;
+    t.start();
+    while (us_echo) if (to.elapsed_time().count() > 2*MAX_WAIT_US) { t.stop(); return NAN; }
+    t.stop();
+    return (t.elapsed_time().count() * 0.0343f) / 2.0f;
+}
 
-
-// Forward travel (motor turns)
-const float distanceToTravelTurns = 2.0f;
-float       robot_start_pos        = 0.0f;
-float       robot_target_pos       = 0.0f;
-
-// Heater‐cycle timer
-Timer scan_timer;
-
-// MLX90640 buffers & params
-#define MLX_ADDR        0x33
-static uint16_t eeMLX[832];
-static paramsMLX90640 mlxParams;
-static uint16_t rawMLX[834];
-static float    frameMLX[768];
-static int      frameCount = 0;
-
-// ——— BME680 init ———
-void init_bme680() {
+bool init_bme680() {
     bme.intf     = BME68X_I2C_INTF;
     bme.read     = user_i2c_read;
     bme.write    = user_i2c_write;
     bme.delay_us = user_delay_us;
-    bme.intf_ptr = nullptr;
-    if (bme68x_init(&bme) != BME68X_OK) {
-        printf("BME init failed\n"); while (true);
-    } else {
-        printf("BME init success\n");
-    }
+    bme.intf_ptr = &i2c;
+    if (bme68x_init(&bme) != BME68X_OK) return false;
     conf.os_hum   = BME68X_OS_2X;
     conf.os_temp  = BME68X_OS_4X;
     conf.os_pres  = BME68X_OS_8X;
@@ -91,214 +94,140 @@ void init_bme680() {
     heatr_conf.heatr_temp = 320;
     heatr_conf.heatr_dur  = 150;
     bme68x_set_heatr_conf(BME68X_FORCED_MODE, &heatr_conf, &bme);
-}
-
-// ——— Ultrasonic ———
-float measureDistanceCm() {
-    us_trig = 0; wait_us(2);
-    us_trig = 1; wait_us(10);
-    us_trig = 0;
-    Timer t;
-    while (!us_echo);
-    t.start();
-    while (us_echo);
-    t.stop();
-    return (t.elapsed_time().count() * 0.0343f) / 2.0f;
-}
-
-// ——— MLX90640 init & read ———
-void init_mlx() {
-    MLX90640_I2CInit();
-    MLX90640_I2CFreqSet(1000);                              // 1 MHz
-    MLX90640_DumpEE(MLX_ADDR, eeMLX);                       // EEPROM → eeMLX
-    MLX90640_ExtractParameters(eeMLX, &mlxParams);      // parse cal
-    MLX90640_SetRefreshRate(MLX_ADDR, 0x05);
-    MLX90640_SetChessMode(MLX_ADDR);
-
-    }
-
-bool read_mlx_frame() {
-    if (MLX90640_GetFrameData(MLX_ADDR, rawMLX) < 0) return false;
-    float Ta = MLX90640_GetTa(rawMLX, &mlxParams);
-    // Correct order here:
-    MLX90640_CalculateTo(
-        rawMLX,
-        &mlxParams,
-        1.0f,
-        Ta,
-        frameMLX
-    );
     return true;
 }
 
-
-void saveFrameAsPPM(int idx) {
-    char fn[32];
-    sprintf(fn, "/fs/frame%04d.ppm", idx);
-    FILE *f = fopen(fn, "wb");
-    if (!f) return;
-    // PPM header
-    fprintf(f, "P6 32 24 255\n");
-    // map 20–40 °C → 0–255
-    for (int i = 0; i < 768; i++) {
-        float t = frameMLX[i];
-        int v = (int)roundf((t - 20.0f) * (255.0f / 20.0f));
-        uint8_t c = v < 0 ? 0 : v > 255 ? 255 : v;
-        // write RGB triplet
-        fputc(c, f);
-        fputc(c, f);
-        fputc(c, f);
+bool read_bme680(float &T, float &H, float &P, float &G) {
+    bme68x_set_op_mode(BME68X_FORCED_MODE, &bme);
+    bme.delay_us(heatr_conf.heatr_dur * 1000, nullptr);
+    bme68x_data data; uint8_t n = 0;
+    if (bme68x_get_data(BME68X_FORCED_MODE, &data, &n, &bme) == BME68X_OK && n) {
+        T = data.temperature;
+        H = data.humidity;
+        P = data.pressure / 100.0f;
+        G = data.gas_resistance;
+        return true;
     }
-    fclose(f);
+    return false;
 }
 
-// ——— main ———
+bool init_mlx90640() {
+    MLX90640_I2CInit();
+    MLX90640_I2CFreqSet(1000);
+    if (MLX90640_DumpEE(MLX_ADDR, eeMLX) != 0) return false;
+    if (MLX90640_ExtractParameters(eeMLX, &mlxParams) != 0) return false;
+    MLX90640_SetRefreshRate(MLX_ADDR, 0x05);
+    MLX90640_SetChessMode(MLX_ADDR);
+    return true;
+}
+
+bool read_mlx90640_frame(float &amb, float &center) {
+    if (MLX90640_GetFrameData(MLX_ADDR, rawMLX) < 0) return false;
+    amb = MLX90640_GetTa(rawMLX, &mlxParams);
+    MLX90640_CalculateTo(rawMLX, &mlxParams, 1.0f, amb, frameMLX);
+    center = frameMLX[(32/2) + (24/2)*32];
+    return true;
+}
+
 int main() {
-    // mount SD
-    printf("Starting Setup\n");
-    if (fs.mount(&bd) != 0) {
-        printf("ERROR: SD mount failed\n");
-        //while (1);
+
+    if (bd.init() != 0) {
+        error("SD init failed");
     }
-
-    totalSegments   = ceilf(totalTravelTurns / distanceToTravelTurns);
-    segmentCounter  = 0;
-
-
+    if (fs.mount(&bd) != 0) {
+        error("SD mount failed");
+    
+    printf("Initializing system...\n");
+    if (!init_bme680() || !init_mlx90640()) {
+        printf("Sensor init failed!\n");
+        error("Init error");
+    }
+    // enable motors and setup
     enable_motors = 1;
-    motor1.setMaxVelocity(0.5f);
-    motor2.setMaxVelocity(0.5f);
+    motor1.setMaxVelocity(1.0f);
+    motor2.setMaxVelocity(1.0f);
     motor1.enableMotionPlanner();
     motor2.enableMotionPlanner();
 
-    init_bme680();
-    init_mlx();
-    scan_timer.start();
-
     while (true) {
         switch (state) {
-
-        case WAIT_FOR_START:
-            user_led = 0;
-            if (start_btn.read()) {
-                // debounce
-                thread_sleep_for(50);
-                if (!start_btn.read()) break;
-                printf("pressed start button\n");
-                // 1) write a CSV header via stdio
-                {
-                    FILE *f = fopen("/fs/data.csv", "w");
-                    if (f) {
-                        fprintf(f, "angle,dist_cm,temp_C,hum_pct,press_hPa,gas_ohm\n");
-                        fclose(f);
-                    }
+            case WAIT_FOR_START:
+                status_led = 0;
+                if (start_btn.read() == 0) {
+                    ThisThread::sleep_for(50ms);
+                    if (start_btn.read() != 0) break;
+                    printf("Start sequence\n");
+                    current_step = 0;
+                    segmentCount = 0;
+                    current_angle = 0.0f;
+                    state = LOG_AND_SCAN;
                 }
+                break;
 
-                // 2) compute segments & reset
-                totalSegments  = int(totalTravelTurns / distanceToTravelTurns);
-                segmentCounter = 0;
+            case LOG_AND_SCAN: {
+                status_led = 1;
+                float dist = NAN, T = NAN, H = NAN, P = NAN, G = NAN, amb = NAN, cen = NAN;
+                // trigger reads
+                dist = measureDistanceCm();
+                read_bme680(T, H, P, G);
+                read_mlx90640_frame(amb, cen);
+                // print sensor values
+                printf("Ultrasonic: %.2f cm\n", isnan(dist)? -1.0f : dist);
+                printf("BME680 -> T: %.2f C, H: %.2f %%RH, P: %.2f hPa, G: %.0f Ohm\n",
+                       isnan(T)? -999.0f : T, isnan(H)? -999.0f : H,
+                       isnan(P)? -999.0f : P, isnan(G)? -999.0f : G);
+                printf("MLX90640 -> Ambient: %.2f C, Center: %.2f C\n",
+                       isnan(amb)? -999.0f : amb, isnan(cen)? -999.0f : cen);
+                // wait or timeout
+                Timer to; to.start();
+                while ((isnan(dist) || isnan(T) || isnan(amb)) && to.elapsed_time() < sensorTimeout) {}
+                // log
+                sd_logger.write(current_angle);
+                sd_logger.write(dist);
+                sd_logger.write(T);
+                sd_logger.write(H);
+                sd_logger.write(P);
+                sd_logger.write(G);
+                sd_logger.write(amb);
+                sd_logger.write(cen);
+                sd_logger.send();
+                state = ROTATE_SENSOR;
+                break;
+            }
 
-                // 3) record home & first targets
-                robot_start_pos  = motor1.getRotation();
-                robot_target_pos = robot_start_pos + distanceToTravelTurns;
+            case ROTATE_SENSOR:
+                status_led = 1;
+                printf("Moving to %.1f degrees\n", current_angle + step_deg);
+                motor2.setRotationRelative(turns_per_step);
+                while (fabs(motor2.getRotationTarget() - motor2.getRotation()) > 0.005f)
+                    ThisThread::sleep_for(20ms);
+                current_angle += step_deg;
+                state = (current_angle >= total_rotation) ? ADVANCE_ROBOT : LOG_AND_SCAN;
+                break;
 
-                // 4) reset scan
-                current_angle = 0;
+            case ADVANCE_ROBOT:
+                status_led = 1;
+                printf("Advancing segment %d of %d\n", segmentCount+1, totalSegments);
+                motor1.setRotationRelative(travel_turns);
+                while (fabs(motor1.getRotationTarget() - motor1.getRotation()) > 0.01f)
+                    ThisThread::sleep_for(20ms);
+                segmentCount++;
+                current_angle = 0.0f;
+                state = (segmentCount < totalSegments) ? LOG_AND_SCAN : RETURN_HOME;
+                break;
+
+            case RETURN_HOME:
+                status_led = 1;
+                printf("Returning home\n");
                 motor2.setRotationRelative(-motor2.getRotation());
-                frameCount = 0;
-
-                state = LOG_AND_SCAN;
-                printf("State: Log and scan");
-            }
-            break;
-
-        case LOG_AND_SCAN: {
-            user_led = 1;
-            // 1) IR frame
-            if (read_mlx_frame()) {
-                saveFrameAsPPM(frameCount++);
-            }
-            printf("test 1\n");
-            // 2) BME680
-            bme68x_set_op_mode(BME68X_FORCED_MODE, &bme);
-            bme.delay_us(heatr_conf.heatr_dur * 1000, nullptr);
-            bme68x_data d; uint8_t n;
-            float T=0,H=0,P=0,G=0;
-            if (bme68x_get_data(BME68X_FORCED_MODE, &d, &n, &bme)==BME68X_OK && n) {
-                T = d.temperature; H = d.humidity;
-                P = d.pressure/100.0f; G = d.gas_resistance;
-            }
-            printf("Test 2");
-            // 3) Ultrasonic
-            float dist = measureDistanceCm();
-            // 4) Log CSV: angle, distance, T,H,P,G
-            
-            /*
-            sd_logger.write(current_angle);
-            sd_logger.write(dist);
-            sd_logger.write(T);
-            sd_logger.write(H);
-            sd_logger.write(P);
-            sd_logger.write(G);
-            sd_logger.send();
-            */
-            printf("Temp: %f", T);
-            state = ROTATE_SENSOR;
-            printf("State: Rotate sensor");
-            break;
+                while (fabs(motor2.getRotation()) > 0.005f)
+                    ThisThread::sleep_for(20ms);
+                motor1.setRotationRelative(-motor1.getRotation());
+                while (fabs(motor1.getRotation()) > 0.01f)
+                    ThisThread::sleep_for(20ms);
+                state = WAIT_FOR_START;
+                break;
         }
-
-        case ROTATE_SENSOR: {
-            motor2.setRotationRelative(turns_per_step);
-            while (fabs(motor2.getRotationTarget() - motor2.getRotation()) > (0.5f/360.0f)) {
-                thread_sleep_for(2);
-            }
-            current_angle += step_deg;
-            state = (current_angle < 360.0f) ? LOG_AND_SCAN : ADVANCE_ROBOT;
-            printf("state: %c", state);
-            break;
-        }
-
-        case ADVANCE_ROBOT: {
-            // drive to the *current* target
-            motor1.setRotation(robot_target_pos);
-            while (fabs(motor1.getRotationTarget() - motor1.getRotation()) > 0.01f)
-                thread_sleep_for(5);
-
-            segmentCounter++;
-
-            if (segmentCounter < totalSegments) {
-                // bump the *absolute* target out by another crawl
-                robot_target_pos += distanceToTravelTurns;
-
-                // prep next 360° scan
-                current_angle = 0;
-                motor2.setRotationRelative(-motor2.getRotation());
-                state = LOG_AND_SCAN;
-            } else {
-                state = RETURN_HOME;
-            }
-            break;
-        }
-
-
-        case RETURN_HOME: {
-            // sensor home
-            motor2.setRotationRelative(-motor2.getRotation());
-            while (fabs(motor2.getRotation()) > (0.5f/360.0f)) {
-                thread_sleep_for(2);
-            }
-            // robot home
-            motor1.setRotation(robot_start_pos);
-            while (fabs(motor1.getRotation() - robot_start_pos) > 0.01f) {
-                thread_sleep_for(5);
-            }
-            state = WAIT_FOR_START;
-            break;
-        }
-        }
-
-        printf("ESP32 Button?: %d \n", start_btn.read());
-        thread_sleep_for(20);
+        ThisThread::sleep_for(20ms);
     }
 }
