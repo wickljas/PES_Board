@@ -6,17 +6,16 @@
 #include "bme680_mbed.h"
 #include "MLX90640_I2C_Driver.h"
 #include "MLX90640_API.h"
+#include <chrono>
 
 using namespace std::chrono_literals;
+using namespace std::chrono;
 
 // I2C bus for sensors
 I2C i2c(PB_9, PB_8);
 
-// SDLogger for logging
-typedef SDLogger Logger;
-Logger sd_logger(PB_SD_MOSI, PB_SD_MISO, PB_SD_SCK, PB_SD_CS);
 
-// HC-SR04 ultrasonic sensor pins (D3 trig, D2 echo)
+// HC-SR04 ultrasonic sensor pins
 DigitalOut us_trig(D3);
 DigitalIn  us_echo(D2, PullDown);
 #define MAX_WAIT_US 30000
@@ -33,37 +32,32 @@ static paramsMLX90640 mlxParams;
 static uint16_t rawMLX[834];
 static float    frameMLX[768];
 
-// Motor enable and objects
+// Motor enable and objects (simulated)
 DigitalOut enable_motors(PB_ENABLE_DCMOTORS);
-const float gear_ratio  = 156.0f;
-const float kn          = 89.0f/12.0f;
-const float voltage_max = 12.0f;
-DCMotor motor1(PB_PWM_M1, PB_ENC_A_M1, PB_ENC_B_M1, gear_ratio, kn, voltage_max);
-DCMotor motor2(PB_PWM_M2, PB_ENC_A_M2, PB_ENC_B_M2, gear_ratio, kn, voltage_max);
+DCMotor motor1(PB_PWM_M1, PB_ENC_A_M1, PB_ENC_B_M1, 156.0f, 89.0f/12.0f, 12.0f);
+DCMotor motor2(PB_PWM_M2, PB_ENC_A_M2, PB_ENC_B_M2, 156.0f, 89.0f/12.0f, 12.0f);
 
 // Button and LED
 DigitalIn  start_btn(BUTTON1, PullUp);
 DigitalOut status_led(LED1);
 
 // Sequence parameters
-const float step_deg         = 5.0f;
-const float turns_per_step   = step_deg / 360.0f;
-const float travel_turns     = 2.0f; // wheel turns per segment
-const float total_rotation   = 360.0f;
-const int   steps            = total_rotation / step_deg;
-const int   totalSegments    = 2;    // limited to two turns
-const auto  sensorTimeout    = 5000ms;
-
-// Speeds
-const float sensorSpeed = 0.3f;
-const float driveSpeed  = 0.5f;
+const float step_deg       = 5.0f;
+const float turns_per_step = step_deg / 360.0f;
+const float travel_turns   = 2.0f;
+const float total_rotation = 360.0f;
+const int   totalSegments  = 2;
+const auto  sensorTimeout  = 5000ms;
 
 // State machine
 enum State { WAIT_FOR_START, LOG_AND_SCAN, ROTATE_SENSOR, ADVANCE_ROBOT, RETURN_HOME };
 State state = WAIT_FOR_START;
-int current_step = 0;
-int segmentCount = 0;
 float current_angle = 0.0f;
+int   segmentCount  = 0;
+
+// Logging timer
+Timer logging_timer;
+static microseconds time_previous_us{0};
 
 // Sensor read functions
 float measureDistanceCm() {
@@ -130,58 +124,63 @@ bool read_mlx90640_frame(float &amb, float &center) {
 }
 
 int main() {
-
-    if (bd.init() != 0) {
-        error("SD init failed");
-    }
-    if (fs.mount(&bd) != 0) {
-        error("SD mount failed");
-    
     printf("Initializing system...\n");
     if (!init_bme680() || !init_mlx90640()) {
         printf("Sensor init failed!\n");
         error("Init error");
     }
-    // enable motors and setup
+
+
+    // enable motors (simulated)
     enable_motors = 1;
     motor1.setMaxVelocity(1.0f);
     motor2.setMaxVelocity(1.0f);
-    motor1.enableMotionPlanner();
-    motor2.enableMotionPlanner();
+
+    const int main_task_period_ms = 20;
+    Timer main_task_timer; 
+
+        // sd card logger
+    SDLogger sd_logger(PB_SD_MOSI, PB_SD_MISO, PB_SD_SCK, PB_SD_CS);
+
+    // additional timer to measure time
+    Timer logging_timer;
+    logging_timer.start();
+
+    // start timer
+    main_task_timer.start();
+
 
     while (true) {
+        main_task_timer.reset();
         switch (state) {
             case WAIT_FOR_START:
                 status_led = 0;
                 if (start_btn.read() == 0) {
                     ThisThread::sleep_for(50ms);
-                    if (start_btn.read() != 0) break;
-                    printf("Start sequence\n");
-                    current_step = 0;
-                    segmentCount = 0;
-                    current_angle = 0.0f;
-                    state = LOG_AND_SCAN;
+                    if (start_btn.read() == 0) {
+                        printf("Start sequence\n");
+                        current_angle = 0.0f;
+                        segmentCount  = 0;
+                        state = LOG_AND_SCAN;
+                    }
                 }
                 break;
 
             case LOG_AND_SCAN: {
                 status_led = 1;
-                float dist = NAN, T = NAN, H = NAN, P = NAN, G = NAN, amb = NAN, cen = NAN;
-                // trigger reads
-                dist = measureDistanceCm();
+                float dist = measureDistanceCm();
+                float T, H, P, G, amb, cen;
                 read_bme680(T, H, P, G);
                 read_mlx90640_frame(amb, cen);
-                // print sensor values
-                printf("Ultrasonic: %.2f cm\n", isnan(dist)? -1.0f : dist);
-                printf("BME680 -> T: %.2f C, H: %.2f %%RH, P: %.2f hPa, G: %.0f Ohm\n",
-                       isnan(T)? -999.0f : T, isnan(H)? -999.0f : H,
-                       isnan(P)? -999.0f : P, isnan(G)? -999.0f : G);
-                printf("MLX90640 -> Ambient: %.2f C, Center: %.2f C\n",
-                       isnan(amb)? -999.0f : amb, isnan(cen)? -999.0f : cen);
-                // wait or timeout
-                Timer to; to.start();
-                while ((isnan(dist) || isnan(T) || isnan(amb)) && to.elapsed_time() < sensorTimeout) {}
-                // log
+
+                                // measure delta time
+                static microseconds time_previous_us{0}; // static variables are only initialized once
+                const microseconds time_us = logging_timer.elapsed_time();
+                const float dtime_us = duration_cast<microseconds>(time_us - time_previous_us).count();
+                time_previous_us = time_us;
+                
+                // log to SD
+                sd_logger.write(dtime_us);
                 sd_logger.write(current_angle);
                 sd_logger.write(dist);
                 sd_logger.write(T);
@@ -191,6 +190,20 @@ int main() {
                 sd_logger.write(amb);
                 sd_logger.write(cen);
                 sd_logger.send();
+
+
+                printf("Ultrasonic: %.2f cm\n", isnan(dist)? -1.0f : dist);
+                printf("BME680 -> T: %.2f C, H: %.2f %%RH, P: %.2f hPa, G: %.0f Ohm\n",
+                       isnan(T)? -999.0f : T, isnan(H)? -999.0f : H,
+                       isnan(P)? -999.0f : P, isnan(G)? -999.0f : G);
+                printf("MLX90640 -> Ambient: %.2f C, Center: %.2f C\n",
+                       isnan(amb)? -999.0f : amb, isnan(cen)? -999.0f : cen);
+
+                Timer to; to.start();
+                while ((isnan(dist) || isnan(T) || isnan(amb)) && to.elapsed_time() < sensorTimeout) {}
+
+
+
                 state = ROTATE_SENSOR;
                 break;
             }
@@ -198,9 +211,7 @@ int main() {
             case ROTATE_SENSOR:
                 status_led = 1;
                 printf("Moving to %.1f degrees\n", current_angle + step_deg);
-                motor2.setRotationRelative(turns_per_step);
-                while (fabs(motor2.getRotationTarget() - motor2.getRotation()) > 0.005f)
-                    ThisThread::sleep_for(20ms);
+                //ThisThread::sleep_for(200ms);  // simulate rotation
                 current_angle += step_deg;
                 state = (current_angle >= total_rotation) ? ADVANCE_ROBOT : LOG_AND_SCAN;
                 break;
@@ -208,9 +219,7 @@ int main() {
             case ADVANCE_ROBOT:
                 status_led = 1;
                 printf("Advancing segment %d of %d\n", segmentCount+1, totalSegments);
-                motor1.setRotationRelative(travel_turns);
-                while (fabs(motor1.getRotationTarget() - motor1.getRotation()) > 0.01f)
-                    ThisThread::sleep_for(20ms);
+                //ThisThread::sleep_for(500ms);  // simulate drive
                 segmentCount++;
                 current_angle = 0.0f;
                 state = (segmentCount < totalSegments) ? LOG_AND_SCAN : RETURN_HOME;
@@ -219,15 +228,19 @@ int main() {
             case RETURN_HOME:
                 status_led = 1;
                 printf("Returning home\n");
-                motor2.setRotationRelative(-motor2.getRotation());
-                while (fabs(motor2.getRotation()) > 0.005f)
-                    ThisThread::sleep_for(20ms);
-                motor1.setRotationRelative(-motor1.getRotation());
-                while (fabs(motor1.getRotation()) > 0.01f)
-                    ThisThread::sleep_for(20ms);
+                //ThisThread::sleep_for(1000ms); // simulate return
                 state = WAIT_FOR_START;
                 break;
         }
-        ThisThread::sleep_for(20ms);
+
+        sd_logger.send();
+        int buffer_size = sd_logger.BUFFER_SIZE;
+        //printf("Buffer Size %d \n", buffer_size);
+        auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(main_task_timer.elapsed_time()).count();
+        if (elapsed < main_task_period_ms) {
+            thread_sleep_for(main_task_period_ms - elapsed);
+        } else {
+            printf("Warning: main loop too long\n");
+        }
     }
 }
