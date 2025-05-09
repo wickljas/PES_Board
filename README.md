@@ -32,6 +32,8 @@
     TODO: General:
     - adjust line follwer example according to the new line follower hardware (grey robots)
     - document how to use PlatformIO
+      - especially with regards to gcc instead of armclang
+      - remove important note in sd card logger (maybe)
     - document how to use Putty
     - create serial stream example
     - include serial stream python version (in addition to matlab version)

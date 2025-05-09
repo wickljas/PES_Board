@@ -73,10 +73,11 @@ int main()
         user_led = !user_led;
 
         // print to the serial terminal
-        printf("Counter: %d \n", cntr);
+        if ((cntr % 50 == 0) && (cntr != 0))
+            printf("Counter: %d \n", cntr);
 
         // write data to the internal buffer of the sd card logger and send it to the sd card
-        sd_logger.write(float(cntr)); // the logger only supports float, so we need to cast the counter to float
+        sd_logger.write((float)(cntr)); // the logger only supports float, so we need to cast the counter to float
         sd_logger.send();
 
         // read timer and make the main thread sleep for the remaining time span (non blocking)
