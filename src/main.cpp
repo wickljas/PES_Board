@@ -1,7 +1,6 @@
 #include "mbed.h"
 #include "PESBoardPinMap.h"
 #include "DCMotor.h"
-#include "SDLogger.h"
 #include "bme68x.h"
 #include "bme680_mbed.h"
 #include "MLX90640_I2C_Driver.h"
@@ -12,7 +11,7 @@
 #endif
 
 // Tire geometry (for linear position)
-const float wheel_radius_cm        = 3.0f;
+const float wheel_radius_cm        = 0.3;
 const float wheel_circumference_cm = 2.0f * M_PI * wheel_radius_cm;
 
 using namespace std::chrono_literals;
@@ -21,8 +20,7 @@ using namespace std::chrono_literals;
 I2C i2c(PB_9, PB_8);
 
 // SDLogger for logging
-typedef SDLogger Logger;
-Logger sd_logger(PB_SD_MOSI, PB_SD_MISO, PB_SD_SCK, PB_SD_CS);
+
 
 // HC-SR04 ultrasonic sensor pins (D3 trig, D2 echo)
 DigitalOut us_trig(D3);
@@ -54,13 +52,17 @@ DigitalIn  start_btn(BUTTON1, PullUp);
 DigitalOut status_led(LED1);
 
 // Sequence parameters
-const float step_deg         = 5.0f;
+const float step_deg         = 10.0f;
 const float turns_per_step   = step_deg / 360.0f;
-const float travel_turns     = 1.0f; // wheel turns per segment
+const float travel_turns     = 0.3f; // wheel turns per segment
 const float total_rotation   = 360.0f;
 const int   steps            = total_rotation / step_deg;
-const int   totalSegments    = 2;    // limited to two turns
+const int   totalSegments    = 20;    // limited to two turns
 const auto  sensorTimeout    = 5000ms;
+
+float degreeToRev(int degrees) {
+    return (degrees / 360.0f) * 0.9;
+}
 
 // Speeds
 const float sensorSpeed = 0.3f;
@@ -138,17 +140,11 @@ bool read_mlx90640_frame(float &amb, float &center) {
 }
 
 int main() {
-/*
-    if (bd.init() != 0) {
-        error("SD init failed");
-    }
-    if (fs.mount(&bd) != 0) {
-        error("SD mount failed");
-    */
+
     printf("Initializing system...\n");
     if (!init_bme680() || !init_mlx90640()) {
         printf("Sensor init failed!\n");
-        error("Init error");
+        //error("Init error");
     }
     // enable motors and setup
     enable_motors = 1;
@@ -181,6 +177,7 @@ int main() {
                 read_mlx90640_frame(amb, cen);
                 float current_position_cm = segmentCount * travel_turns * wheel_circumference_cm;
                 // print sensor values
+                
                 printf("LOGSTART,%.1f,%.2f,%.2f,%.2f,%.2f,%.2f,%.0f,",
                     current_angle,
                     current_position_cm,
@@ -195,20 +192,12 @@ int main() {
                     if (i < 767) printf(",");
                     else         printf(",LOGEND\n");
                 }
+                
                 // wait or timeout
                 Timer to; to.start();
                 //while ((isnan(dist) || isnan(T) || isnan(amb)) && to.elapsed_time() < sensorTimeout) {}
                 // log
-                /*sd_logger.write(current_angle);
-                sd_logger.write(dist);
-                sd_logger.write(T);
-                sd_logger.write(H);
-                sd_logger.write(P);
-                sd_logger.write(G);
-                sd_logger.write(amb);
-                sd_logger.write(cen);
-                sd_logger.send();
-                */
+
                 state = ROTATE_SENSOR;
                 break;
             }
@@ -216,30 +205,23 @@ int main() {
             case ROTATE_SENSOR: {
                 status_led = 1;
                 float next_angle = current_angle + step_deg;
-
                 if (next_angle < total_rotation - 1e-3f) {
-                    // just step around
-                    printf("Moving to %.1f degrees\n", next_angle);
-                    motor2.setRotationRelative(turns_per_step);
-                    while (fabs(motor2.getRotationTarget() - motor2.getRotation()) > 0.005f)
+                    float revs = degreeToRev(step_deg);
+                    //printf("Moving +%.1f° → %.2f motor revs\n", step_deg, revs);
+                    motor2.setRotationRelative(revs);
+                    while (fabs(motor2.getRotationTarget() - motor2.getRotation()) > 0.005f) {
+                        //printf("Motor Angle: %f\n", motor2.getRotation());
                         ThisThread::sleep_for(20ms);
+                    }
                     current_angle = next_angle;
                     state = LOG_AND_SCAN;
-                }
-                else {
-                    // finish the final partial step (to exactly 360°)
-                    float last_turns = (total_rotation - current_angle) / 360.0f;
-                    printf("Completing full rotation to %.1f°\n", total_rotation);
-                    motor2.setRotationRelative(last_turns);
-                    while (fabs(motor2.getRotationTarget() - motor2.getRotation()) > 0.005f)
-                        ThisThread::sleep_for(20ms);
+                } else {
 
-                    // now reverse back to 0°
-                    printf("Reversing sensor back to 0°\n");
-                    motor2.setRotationRelative(- (total_rotation / 360.0f));
-                    while (fabs(motor2.getRotation()) > 0.005f)
-                        ThisThread::sleep_for(20ms);
 
+                    printf("Reversing back 360° (%.2f revs)\n", degreeToRev(total_rotation));
+                    motor2.setRotation(0.0f);
+                    while (fabs(motor2.getRotation()) > 0.1f)
+                        ThisThread::sleep_for(20ms);
                     current_angle = 0.0f;
                     state = ADVANCE_ROBOT;
                 }
@@ -247,12 +229,15 @@ int main() {
             }
 
 
+
             case ADVANCE_ROBOT:
                 status_led = 1;
                 printf("Advancing segment %d of %d\n", segmentCount+1, totalSegments);
-                motor1.setRotationRelative(travel_turns);
-                while (fabs(motor1.getRotationTarget() - motor1.getRotation()) > 0.01f)
+                motor1.setRotationRelative(-travel_turns);
+                
+                while (fabs(motor1.getRotationTarget() - motor1.getRotation()) > 0.1f)
                     ThisThread::sleep_for(20ms);
+                
                 segmentCount++;
                 current_angle = 0.0f;
                 state = (segmentCount < totalSegments) ? LOG_AND_SCAN : RETURN_HOME;
@@ -270,6 +255,7 @@ int main() {
                 state = WAIT_FOR_START;
                 break;
         }
+        //printf("Motor Angle: %f\n", motor2.getRotation());
         ThisThread::sleep_for(20ms);
     }
 }
